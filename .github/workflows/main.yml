@@ -32,4 +32,4 @@ jobs:
           git config --local user.email "github-actions@github.com"
           git add .
           git commit -m "自动构建" || echo "No changes to commit"
-          git push
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/ONi-Project/ONi.git

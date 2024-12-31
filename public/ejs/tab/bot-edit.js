@@ -34,7 +34,7 @@ document.querySelectorAll(".bot__edit-button-components-refresh").forEach(elemen
             console.log("刷新超时")
         }, 10000)
         ws.send(JSON.stringify({
-            "type": "oc/task",
+            "type": "oc/task/runSingle",
             "target": uuid,
             "data": [
                 {

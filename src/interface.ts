@@ -1,3 +1,17 @@
+import { WebSocket } from 'ws'
+
+export interface SessionWeb extends WebSocket {
+    sessionId: string
+    authenticated: boolean
+    user: User
+}
+
+export interface SessionOc extends WebSocket {
+    sessionId: string
+    authenticated: boolean
+    bot: Bot
+}
+
 export interface User {
     uuid: string
     name: string

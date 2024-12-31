@@ -1,7 +1,7 @@
-import { Bot, Config } from "../interface.js"
+import { Bot, Config, SessionOc } from "../interface.js"
 import fs from "fs"
 import { loggerGlobal as logger } from "../logger.js"
-import { wsWebBroadcast } from "../websocket.js"
+import { wssOc, wsWebBroadcast } from "../websocket.js"
 
 var bot = {
     // BOT 列表
@@ -60,14 +60,88 @@ var bot = {
         return _
     },
 
-    set(bot: Bot) {
-        this.list.forEach((item, index) => {
-            if (item.uuid == bot.uuid) {
-                this.list[index] = bot
-                wsWebBroadcast("data/bot", [bot])
-                return
+    components: {
+        set(uuid: string, components: any) {
+            let targetBot = bot.list.find(item => item.uuid == uuid)
+            if (targetBot) {
+                targetBot.components = components
+                bot.components.update(uuid)
+            } else {
+                logger.error("bot.components.set", "Bot not found.")
             }
-        })
+        },
+        update(uuid: string) {
+            let targetBot = bot.list.find(item => item.uuid == uuid)
+            if (targetBot) {
+                wsWebBroadcast("data/bot", [targetBot])
+            }
+        }
+    },
+
+    tasks: {
+        runSingle(uuid: string, tasks: any) {
+            let targetBot = bot.list.find(item => item.uuid == uuid)
+            if (targetBot) {
+                let ok = false
+                wssOc.clients.forEach(ws => {
+                    if ((ws as SessionOc).authenticated && (ws as SessionOc).bot.uuid == uuid) {
+                        ws.send(JSON.stringify({
+                            type: "task",
+                            data: tasks
+                        }))
+                        ok = true
+                    }
+                })
+                if (!ok) {
+                    logger.warn("bot.tasks.runSingleTask", `Trying to send task to oc but bot ${uuid} not found or offline`)
+                }
+            } else {
+                logger.error("bot.tasks.runSingleTask", "Bot not found.")
+            }
+        },
+        add(uuid: string, tasks: any) {
+            let targetBot = bot.list.find(item => item.uuid == uuid)
+            if (targetBot) {
+                tasks.forEach((task: any) => {
+                    targetBot.tasks.push(task)
+                })
+                bot.tasks.update(uuid)
+            } else {
+                logger.error("bot.tasks.add", "Bot not found.")
+            }
+        },
+        remove(uuid: string, taskUuid: string) {
+            let targetBot = bot.list.find(item => item.uuid == uuid)
+            if (targetBot) {
+                let targetTask = targetBot.tasks.find(item => item.taskUuid == taskUuid)
+                if (targetTask) {
+                    targetBot.tasks.splice(targetBot.tasks.indexOf(targetTask), 1)
+                    bot.tasks.update(uuid)
+                } else {
+                    logger.error("bot.tasks.remove", "Task not found.")
+                }
+            } else {
+                logger.error("bot.tasks.remove", "Bot not found.")
+            }
+        },
+        update(uuid: string) {
+            let ok = false
+            wssOc.clients.forEach(ws => {
+                if ((ws as SessionOc).authenticated && (ws as SessionOc).bot.uuid == uuid) {
+                    let targetBot = bot.list.find(item => item.uuid == uuid)
+                    if (targetBot) {
+                        ws.send(JSON.stringify({
+                            type: "task",
+                            data: targetBot.tasks
+                        }))
+                        ok = true
+                    }
+                }
+            })
+            if (!ok) {
+                logger.warn("bot.tasks.updateTasks", `Trying to send task to oc but bot ${uuid} not found or offline`)
+            }
+        }
     },
 
     init(config: Config) {

@@ -5,7 +5,7 @@ document.querySelectorAll(".control-redstone-analog__card").forEach(element => {
 
     element.querySelector("mdui-slider").addEventListener("change", event => {
         ws.send(JSON.stringify({
-            "type": "oc/task",
+            "type": "oc/task/runSingle",
             "target": botUuid,
             "data": [
                 {

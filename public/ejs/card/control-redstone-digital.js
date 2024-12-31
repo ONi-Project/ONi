@@ -5,7 +5,7 @@ document.querySelectorAll(".control-redstone-digital__card").forEach(element => 
 
     element.querySelector("mdui-switch").addEventListener("change", event => {
         ws.send(JSON.stringify({
-            "type": "oc/task",
+            "type": "oc/task/runSingle",
             "target": botUuid,
             "data": [
                 {

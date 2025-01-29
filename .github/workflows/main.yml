@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-backend:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,8 +18,8 @@ jobs:
         with:
           node-version: '20.18.0'
 
-      - name: enter backend directory
-        run: cd backend
+      - name: Enter backend directory
+        working-directory: backend
 
       - name: Install backend dependencies
         run: npm install
@@ -27,14 +27,63 @@ jobs:
       - name: Build backend project
         run: npm run build
 
-      - name: enter frontend directory
-        run: cd ../frontend
+      - name: Upload backend build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: backend-build
+          path: backend/build
+
+  build-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.18.0'
+
+      - name: Enter frontend directory
+        working-directory: frontend
 
       - name: Install frontend dependencies
         run: npm install
 
       - name: Build frontend project
         run: npm run build
+
+      - name: Upload frontend build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: frontend-build
+          path: frontend/build
+
+  push-changes:
+    runs-on: ubuntu-latest
+    needs: [build-backend, build-frontend]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.18.0'
+
+      - name: Download backend build artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: backend-build
+          path: backend/build
+
+      - name: Download frontend build artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: frontend-build
+          path: frontend/build
 
       - name: Push changes
         env:
@@ -44,4 +93,4 @@ jobs:
           git config --local user.email "github-actions@github.com"
           git add .
           git commit -m "自动构建" || echo "No changes to commit"
-          git push
+          git push origin main

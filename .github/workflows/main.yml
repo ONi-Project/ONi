@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - main  # 你可以根据需要更改为其他分支
+      - main
 
 jobs:
   build:
@@ -13,15 +13,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '20.18.0'  # 你可以指定所需的 Node.js 版本
+          node-version: '20.18.0'
 
-      - name: Install dependencies
+      - name: enter backend directory
+        run: cd backend
+
+      - name: Install backend dependencies
         run: npm install
 
-      - name: Build project
+      - name: Build backend project
+        run: npm run build
+
+      - name: enter frontend directory
+        run: cd ../frontend
+
+      - name: Install frontend dependencies
+        run: npm install
+
+      - name: Build frontend project
         run: npm run build
 
       - name: Push changes

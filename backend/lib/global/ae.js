@@ -88,7 +88,7 @@ var ae = {
             let targetAe = ae.list.find(ae => ae.uuid === uuid);
             if (targetAe) {
                 targetAe.timeUpdated = new Date().getTime();
-                wsWebBroadcast("data/ae", [targetAe]);
+                wsWebBroadcast("update/ae", [targetAe]);
             }
         }
     },
@@ -132,7 +132,7 @@ var ae = {
             let targetAe = ae.list.find(ae => ae.uuid === uuid);
             if (targetAe) {
                 targetAe.timeUpdated = new Date().getTime();
-                wsWebBroadcast("data/ae", [targetAe]);
+                wsWebBroadcast("update/ae", [targetAe]);
             }
         }
     },

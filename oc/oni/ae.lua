@@ -30,7 +30,7 @@ end
 
 function ae.getAeComponents(ws, taskUuid)
     local message = {
-        type = "data/ae/components",
+        type = "update/ae/components",
         data = {
             taskUuid = taskUuid,
             components = {}
@@ -48,7 +48,7 @@ function ae.getCpus(ws, taskUuid, uuid, targetAeUuid)
     local comp = aeComponents[uuid]
 
     local message = {
-        type = "data/ae/cpus",
+        type = "update/ae/cpus",
         data = {
             uuid = targetAeUuid,
             cpus = {}
@@ -85,7 +85,7 @@ end
 -- 发送一个包含 craftUuid 的信息，用于调用 check 函数查询合成状态
 -- 发送的信息格式如下：
 -- {
---     "type": "data/ae/craftRequest",
+--     "type": "update/ae/craftRequest",
 --     "data": {
 --         "craftUuid": "...",
 --         "taskUuid": "..."
@@ -135,7 +135,7 @@ function ae.request(ws, taskUuid, uuid, name, damage, amount)
     craftTasks[carftTaskQueue[queuePointer]] = craftable[1].request(amount)
 
     local message = {
-        type = "data/ae/craftRequest",
+        type = "update/ae/craftRequest",
         data = {
             taskUuid = taskUuid,
             craftUuid = carftTaskQueue[queuePointer]
@@ -154,7 +154,7 @@ end
 -- 使用 craft uuid 查询合成状态
 -- 发送的合成信息格式如下：
 -- {
---     "type": "data/ae/craftStatus",
+--     "type": "update/ae/craftStatus",
 --     "data": { "canceled": false, "done": true, "computing": false, "failed": false }
 -- }
 function ae.check(ws, taskUuid, craftUuid)
@@ -171,7 +171,7 @@ function ae.check(ws, taskUuid, craftUuid)
     end
 
     local message = {
-        type = "data/ae/craftStatus",
+        type = "update/ae/craftStatus",
         data = {
             taskUuid = taskUuid,
             computing = status.isComputing(),
@@ -187,7 +187,7 @@ end
 -- 查询网络中存储的所有物品/流体
 -- 返回信息格式为：
 -- {
---     "type" = "data/ae/itemList",
+--     "type" = "update/ae/itemList",
 --     "data" = {
 --         "uuid" = targetAeUuid,
 --         "itemList" = itemList
@@ -230,7 +230,7 @@ function ae.getItems(ws, taskUuid, uuid, targetAeUuid)
     end
 
     local message = {
-        type = "data/ae/itemList",
+        type = "update/ae/itemList",
         data = {
             uuid = targetAeUuid,
             itemList = itemList

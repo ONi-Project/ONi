@@ -130,5 +130,7 @@ dist
 .pnp.*
 
 # Oni
-public/resources/itempanel/item/
-public/resources/itempanel/fluid/
+frontend/public/resources/itempanel/item/
+frontend/public/resources/itempanel/fluid/
+itempanel/item/
+itempanel/fluid/

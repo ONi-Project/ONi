@@ -72,7 +72,7 @@ var handler = {
         }
         else {
             // 如果已登录，处理数据
-            if (json.type == "data/common") {
+            if (json.type == "update/common") {
                 processor.data.common(json, ws);
             }
             else if (json.type == "data/event") {
@@ -81,10 +81,10 @@ var handler = {
             else if (json.type == "component") {
                 processor.component(json, ws);
             }
-            else if (json.type == "data/ae/itemList") {
+            else if (json.type == "update/ae/itemList") {
                 processor.data.ae.itemList(json, ws);
             }
-            else if (json.type == "data/ae/cpus") {
+            else if (json.type == "update/ae/cpus") {
                 processor.data.ae.cpus(json, ws);
             }
             else {
@@ -168,7 +168,7 @@ var processor = {
             // 发送 control 布局文件
             ws.send(JSON.stringify({ type: "layout/control", data: Global.redstone.getLayout() }));
             // 发送 data 数据
-            ws.send(JSON.stringify({ type: "global/data", data: Global.data.list }));
+            ws.send(JSON.stringify({ type: "global/common", data: Global.data.list }));
             // 发送 mcServerStatus 数据
             ws.send(JSON.stringify({ type: "global/mcServerStatus", data: Global.mcServerStatus.status }));
             // 发送 events 布局

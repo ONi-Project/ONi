@@ -62,7 +62,7 @@ var bot = {
         update(uuid) {
             let targetBot = bot.list.find(item => item.uuid == uuid);
             if (targetBot) {
-                wsWebBroadcast("data/bot", [targetBot]);
+                wsWebBroadcast("update/bot", [targetBot]);
             }
         }
     },

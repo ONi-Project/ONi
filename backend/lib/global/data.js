@@ -8,7 +8,7 @@ var data = {
         this.list.forEach((item, index) => {
             if (item.uuid == data.uuid) {
                 this.list[index] = data;
-                wsWebBroadcast("data/common", [data]);
+                wsWebBroadcast("update/common", [data]);
                 return;
             }
         });

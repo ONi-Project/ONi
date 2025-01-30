@@ -1,7 +1,7 @@
-import { Bot, Config, SessionOc } from "../interface.js"
+import { Bot, Config, SessionOc, SessionWeb } from "../interface.js"
 import fs from "fs"
 import { loggerGlobal as logger } from "../logger.js"
-import { wssOc, wsWebBroadcast } from "../websocket.js"
+import { wssOc, wssWeb, wsWebBroadcast } from "../websocket.js"
 
 var bot = {
     // BOT 列表
@@ -79,7 +79,7 @@ var bot = {
     },
 
     tasks: {
-        runSingle(uuid: string, tasks: any) {
+        runSingle(uuid: string, task: any) {
             let targetBot = bot.list.find(item => item.uuid == uuid)
             if (targetBot) {
                 let ok = false
@@ -87,7 +87,7 @@ var bot = {
                     if ((ws as SessionOc).authenticated && (ws as SessionOc).bot.uuid == uuid) {
                         ws.send(JSON.stringify({
                             type: "task",
-                            data: tasks
+                            data: [task]
                         }))
                         ok = true
                     }
@@ -99,12 +99,10 @@ var bot = {
                 logger.error("bot.tasks.runSingleTask", "Bot not found.")
             }
         },
-        add(uuid: string, tasks: any) {
+        add(uuid: string, task: any) {
             let targetBot = bot.list.find(item => item.uuid == uuid)
             if (targetBot) {
-                tasks.forEach((task: any) => {
-                    targetBot.tasks.push(task)
-                })
+                targetBot.tasks.push(task)
                 bot.tasks.update(uuid)
             } else {
                 logger.error("bot.tasks.add", "Bot not found.")
@@ -138,6 +136,10 @@ var bot = {
                     }
                 }
             })
+            let targetBot = bot.list.find(item => item.uuid == uuid)
+            if (targetBot) {
+                wsWebBroadcast("update/bot", [targetBot])
+            }
             if (!ok) {
                 logger.warn("bot.tasks.updateTasks", `Trying to send task to oc but bot ${uuid} not found or offline`)
             }

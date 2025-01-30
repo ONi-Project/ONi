@@ -48,7 +48,7 @@ function ae.getCpus(ws, taskUuid, uuid, targetAeUuid)
     local comp = aeComponents[uuid]
 
     local message = {
-        type = "update/ae/cpus",
+        type = "data/ae/cpus",
         data = {
             uuid = targetAeUuid,
             cpus = {}
@@ -187,7 +187,7 @@ end
 -- 查询网络中存储的所有物品/流体
 -- 返回信息格式为：
 -- {
---     "type" = "update/ae/itemList",
+--     "type" = "data/ae/itemList",
 --     "data" = {
 --         "uuid" = targetAeUuid,
 --         "itemList" = itemList
@@ -230,7 +230,7 @@ function ae.getItems(ws, taskUuid, uuid, targetAeUuid)
     end
 
     local message = {
-        type = "update/ae/itemList",
+        type = "data/ae/itemList",
         data = {
             uuid = targetAeUuid,
             itemList = itemList

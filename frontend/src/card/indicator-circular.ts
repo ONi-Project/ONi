@@ -25,7 +25,7 @@ export function init() {
     // 卡片更新监听事件
     eventEmitter.addEventListener("message", async (event: any) => {
         const { type, data } = event.data
-        if (type == "update/common") {
+        if (type == "data/common/set") {
             document.querySelectorAll(".card-indicator-circular__card").forEach(element => {
 
                 let uuid = element.querySelector("data")!.getAttribute("uuid")!

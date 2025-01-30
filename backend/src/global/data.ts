@@ -11,7 +11,7 @@ var data = {
         this.list.forEach((item, index) => {
             if (item.uuid == data.uuid) {
                 this.list[index] = data
-                wsWebBroadcast("update/common", [data])
+                wsWebBroadcast("data/common/set", [data])
                 return
             }
         })

@@ -31,11 +31,11 @@ var handler = {
             ws.send(JSON.stringify({ "type": "error", "data": "Not authenticated" }))
         } else {
             // 如果已登录，处理数据
-            if (json.type == "data/event") {
+            if (json.type == "data/event/set") {
                 // 事件数据
                 processor.data.event(json, ws)
             } else if (json.type == "oc/task/runSingle") {
-                // 添加任务
+                // 运行单次任务
                 processor.web2oc.taskRunSingle(json, ws)
             } else if (json.type == "oc/task/add") {
                 // 添加任务
@@ -74,15 +74,15 @@ var handler = {
             ws.send(JSON.stringify({ "type": "error", "data": "Not authenticated" }))
         } else {
             // 如果已登录，处理数据
-            if (json.type == "update/common") {
+            if (json.type == "data/common/set") {
                 processor.data.common(json, ws)
-            } else if (json.type == "data/event") {
+            } else if (json.type == "data/event/set") {
                 processor.data.event(json, ws)
             } else if (json.type == "component") {
                 processor.component(json, ws)
-            } else if (json.type == "update/ae/itemList") {
+            } else if (json.type == "data/ae/itemList") {
                 processor.data.ae.itemList(json, ws)
-            } else if (json.type == "update/ae/cpus") {
+            } else if (json.type == "data/ae/cpus") {
                 processor.data.ae.cpus(json, ws)
             } else {
                 logger.warn(`Unknown message type ${json.type}`)
@@ -124,10 +124,10 @@ var processor = {
     },
     web2oc: {
         taskRunSingle(json: any, ws: SessionWeb) {
-            Global.bot.tasks.runSingle(json.target, json.data.task)
+            Global.bot.tasks.runSingle(json.target, json.data)
         },
         taskAdd(json: any, ws: SessionWeb) {
-            Global.bot.tasks.add(json.target, json.data.task)
+            Global.bot.tasks.add(json.target, json.data)
         },
         taskRemove(json: any, ws: SessionWeb) {
             Global.bot.tasks.remove(json.target, json.data.taskUuid)

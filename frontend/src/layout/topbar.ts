@@ -1,3 +1,5 @@
+import { toggleLeftNavi } from "./navrail"
+
 export const html = /*html*/`
 <mdui-top-app-bar variant="medium" scroll-behavior="shrink elevate" scroll-target="#main-content-area">
 
@@ -17,7 +19,7 @@ export const html = /*html*/`
 
   <div style="align-self: center; opacity: 0.2;" id="slogan"></div>
 
-  <mdui-button-icon icon="menu" id="navi-toggler" onclick="toggleLeftNavi()"></mdui-button-icon>
+  <mdui-button-icon icon="menu" id="navi-toggler"></mdui-button-icon>
 
 </mdui-top-app-bar>
 `
@@ -33,4 +35,5 @@ export function init() {
     let elem = document.getElementById("slogan")!
     elem.innerText = `"${slogan[Math.floor(Math.random() * slogan.length)]}"`
   }
+  document.getElementById("navi-toggler")!.addEventListener("click", () => { toggleLeftNavi() })
 }

@@ -1,3 +1,4 @@
+import { botTaskUpdate } from "./dialog/bot-task"
 import { eventEmitter } from "./websocket"
 
 export let common: any = []
@@ -12,7 +13,7 @@ export function init() {
 
         if (type == "global/common") {
             common = data
-        } else if (type == "update/common") {
+        } else if (type == "data/common/set") {
             data.forEach((element: any) => {
                 let target = data.find((data: any) => data.uuid === element.uuid)
                 if (target) {
@@ -29,14 +30,11 @@ export function init() {
                 let target = bot.find((bot: any) => bot.uuid === element.uuid)
                 if (target) {
                     Object.assign(target, element)
-                } else {
-                    bot.push(element)
                 }
             })
-
         } else if (type == "global/botTask") {
             botTask = data
-            // dialog__botTaskUpdate()
+            botTaskUpdate(null)
         }
 
         else if (type == "global/ae") {

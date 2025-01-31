@@ -1,22 +1,10 @@
 import log4js from "log4js";
-import { wsWebBroadcast } from "./websocket.js";
 var Logger = {
     init(config) {
-        function wsSendLog(layout) {
-            return (loggingEvent) => {
-                wsWebBroadcast("event/log", layout(loggingEvent));
-            };
-        }
-        const wsLoggerAppender = {
-            configure: (config, layouts) => {
-                return wsSendLog(layouts.basicLayout);
-            }
-        };
         log4js.configure({
             appenders: {
                 file: { type: "file", filename: "logs/oni.log", maxLogSize: 1048576, compress: true, keepFileExt: true, backups: 3 },
-                console: { type: "console" },
-                oni_ws: { type: wsLoggerAppender }
+                console: { type: "console" }
             },
             categories: {
                 default: { appenders: ["file", "console", "oni_ws"], level: config.log_level || "trace" }

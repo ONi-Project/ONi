@@ -14,7 +14,7 @@ var mcServerStatus = {
     },
     set(status) {
         this.status = status;
-        wsWebBroadcast("update/mcServerStatus", this.status);
+        wsWebBroadcast("data/mcServerStatus/set", this.status);
     },
     init(config) {
         if (!config.mc_server_ip) {

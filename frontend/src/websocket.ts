@@ -56,9 +56,9 @@ export function init() {
         const json = JSON.parse(event.data)
 
         if (json.type == "auth/response") {
-            if (json.data.user != undefined) {
-                user = json.data.user
-                console.log("用户认证成功：" + JSON.stringify(user))
+            if (json.data != undefined) {
+                user = json.data
+                console.log("用户认证成功：", user)
             } else {
                 (document.getElementById("dialog-login")! as Dialog).open = true
             }

@@ -102,7 +102,7 @@ var ae = {
             let targetAe = ae.list.find(ae => ae.uuid === uuid)
             if (targetAe) {
                 targetAe.timeUpdated = new Date().getTime()
-                wsWebBroadcast("update/ae", [targetAe])
+                wsWebBroadcast("data/ae/set", targetAe)
             }
         }
     },
@@ -142,7 +142,7 @@ var ae = {
             let targetAe = ae.list.find(ae => ae.uuid === uuid)
             if (targetAe) {
                 targetAe.timeUpdated = new Date().getTime()
-                wsWebBroadcast("update/ae", [targetAe])
+                wsWebBroadcast("data/ae/set", targetAe)
             }
         }
     },

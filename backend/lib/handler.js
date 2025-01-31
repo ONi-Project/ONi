@@ -25,12 +25,12 @@ var handler = {
         }
         else {
             // 如果已登录，处理数据
-            if (json.type == "data/event") {
+            if (json.type == "data/event/set") {
                 // 事件数据
-                processor.data.event(json, ws);
+                processor.data.eventSet(json, ws);
             }
             else if (json.type == "oc/task/runSingle") {
-                // 添加任务
+                // 运行单次任务
                 processor.web2oc.taskRunSingle(json, ws);
             }
             else if (json.type == "oc/task/add") {
@@ -72,19 +72,22 @@ var handler = {
         }
         else {
             // 如果已登录，处理数据
-            if (json.type == "update/common") {
-                processor.data.common(json, ws);
+            if (json.type == "data/common/set") {
+                processor.data.commonSet(json, ws);
             }
-            else if (json.type == "data/event") {
-                processor.data.event(json, ws);
+            else if (json.type == "data/event/set") {
+                processor.data.eventSet(json, ws);
             }
-            else if (json.type == "component") {
+            else if (json.type == "data/event/add") {
+                processor.data.eventAdd(json, ws);
+            }
+            else if (json.type == "data/bot/component") {
                 processor.component(json, ws);
             }
-            else if (json.type == "update/ae/itemList") {
+            else if (json.type == "data/ae/itemList") {
                 processor.data.ae.itemList(json, ws);
             }
-            else if (json.type == "update/ae/cpus") {
+            else if (json.type == "data/ae/cpus") {
                 processor.data.ae.cpus(json, ws);
             }
             else {
@@ -96,7 +99,7 @@ var handler = {
 export default handler;
 var processor = {
     data: {
-        common(json, ws) {
+        commonSet(json, ws) {
             let target = Global.data.list.find(data => data.uuid === json.data.uuid);
             if (target) {
                 const data = Object.assign({}, target, json.data);
@@ -106,15 +109,18 @@ var processor = {
                 ws.send(JSON.stringify({ "type": "error", "data": "Data not found" }));
             }
         },
-        event(json, ws) {
+        eventSet(json, ws) {
             let target = Global.event.list.find(event => event.uuid === json.data.uuid);
             if (target) {
                 const event = Object.assign({}, target, json.data);
                 Global.event.set(event);
             }
             else {
-                Global.event.add(json.data);
+                ws.send(JSON.stringify({ "type": "error", "data": "Event not found" }));
             }
+        },
+        eventAdd(json, ws) {
+            Global.event.add(json.data);
         },
         ae: {
             itemList(json, ws) {
@@ -127,10 +133,10 @@ var processor = {
     },
     web2oc: {
         taskRunSingle(json, ws) {
-            Global.bot.tasks.runSingle(json.target, json.data.task);
+            Global.bot.tasks.runSingle(json.target, json.data);
         },
         taskAdd(json, ws) {
-            Global.bot.tasks.add(json.target, json.data.task);
+            Global.bot.tasks.add(json.target, json.data);
         },
         taskRemove(json, ws) {
             Global.bot.tasks.remove(json.target, json.data.taskUuid);
@@ -158,7 +164,7 @@ var processor = {
             ws.authenticated = true;
             ws.user = user;
             // 返回用户信息
-            ws.send(JSON.stringify({ type: "auth/response", data: { user: ws.user } }));
+            ws.send(JSON.stringify({ type: "auth/response", data: ws.user }));
             // 发送历史日志
             const logFile = fs.readFileSync('./logs/main.log', 'utf8');
             const _ = logFile.split('\n').slice(-100).join('\n');
@@ -202,13 +208,13 @@ var processor = {
             ws.authenticated = true;
             ws.bot = bot;
             // 返回用户信息
-            ws.send(JSON.stringify({ type: "auth/response", data: { bot: bot } }));
+            ws.send(JSON.stringify({ type: "auth/response", data: bot }));
             // 发送 tasks 数据
             ws.send(JSON.stringify({ type: "task", data: bot.tasks }));
         }
         else {
             logger.warn(`Invalid token ${json.data.token} for bot ${ws.sessionId.substring(0, 8)}`);
-            ws.send(JSON.stringify({ type: "auth/response", data: { bot: undefined } }));
+            ws.send(JSON.stringify({ type: "auth/response", data: undefined }));
         }
     },
 };

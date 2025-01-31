@@ -104,7 +104,7 @@ function updateComponent()
     local modified, componentList = component.update()
     if modified then
         local message = {
-            type = "component",
+            type = "data/bot/component",
             data = {
                 components = componentList
             }

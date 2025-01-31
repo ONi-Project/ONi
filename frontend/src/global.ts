@@ -14,24 +14,18 @@ export function init() {
         if (type == "global/common") {
             common = data
         } else if (type == "data/common/set") {
-            data.forEach((element: any) => {
-                let target = data.find((data: any) => data.uuid === element.uuid)
-                if (target) {
-                    Object.assign(target, element)
-                } else {
-                    data.push(element)
-                }
-            })
+            let target = data.find((data: any) => data.uuid === data.uuid)
+            if (target) {
+                Object.assign(target, data)
+            }
 
         } else if (type == "global/bot") {
             bot = data
-        } else if (type == "update/bot") {
-            data.forEach((element: any) => {
-                let target = bot.find((bot: any) => bot.uuid === element.uuid)
-                if (target) {
-                    Object.assign(target, element)
-                }
-            })
+        } else if (type == "data/bot/set") {
+            let target = bot.find((bot: any) => bot.uuid === data.uuid)
+            if (target) {
+                Object.assign(target, data)
+            }
         } else if (type == "global/botTask") {
             botTask = data
             botTaskUpdate(null)
@@ -39,20 +33,16 @@ export function init() {
 
         else if (type == "global/ae") {
             ae = data
-        } else if (type == "update/ae") {
-            data.forEach((element: any) => {
-                let target = ae.find((ae: any) => ae.uuid === element.uuid)
-                if (target) {
-                    Object.assign(target, element)
-                } else {
-                    ae.push(element)
-                }
-            })
+        } else if (type == "data/ae/set") {
+            let target = ae.find((ae: any) => ae.uuid === data.uuid)
+            if (target) {
+                Object.assign(target, data)
+            }
         }
 
         else if (type == "global/mcServerStatus") {
             mcServerStatus = data
-        } else if (type == "update/mcServerStatus") {
+        } else if (type == "data/mcServerStatus/set") {
             mcServerStatus = data
         }
 

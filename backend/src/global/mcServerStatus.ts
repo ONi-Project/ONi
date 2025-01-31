@@ -17,7 +17,7 @@ var mcServerStatus = {
 
     set(status: McServerStatus) {
         this.status = status
-        wsWebBroadcast("update/mcServerStatus", this.status)
+        wsWebBroadcast("data/mcServerStatus/set", this.status)
     },
 
     init(config: Config) {

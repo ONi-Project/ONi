@@ -73,7 +73,7 @@ var bot = {
         update(uuid: string) {
             let targetBot = bot.list.find(item => item.uuid == uuid)
             if (targetBot) {
-                wsWebBroadcast("update/bot", [targetBot])
+                wsWebBroadcast("data/bot/set", targetBot)
             }
         }
     },
@@ -138,7 +138,7 @@ var bot = {
             })
             let targetBot = bot.list.find(item => item.uuid == uuid)
             if (targetBot) {
-                wsWebBroadcast("update/bot", [targetBot])
+                wsWebBroadcast("data/bot/set", targetBot)
             }
             if (!ok) {
                 logger.warn("bot.tasks.updateTasks", `Trying to send task to oc but bot ${uuid} not found or offline`)

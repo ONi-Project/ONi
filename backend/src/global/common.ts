@@ -1,17 +1,17 @@
-import { Config, Data } from "../interface.js"
+import { Config, Common } from "../interface.js"
 import fs from "fs"
 import { loggerGlobal as logger } from "../logger.js"
 import { wsWebBroadcast } from "../websocket.js"
 
-var data = {
+var common = {
     // 通用数据
-    list: [] as Data[],
+    list: [] as Common[],
 
-    set(data: Data) {
+    set(data: Common) {
         this.list.forEach((item, index) => {
             if (item.uuid == data.uuid) {
                 this.list[index] = data
-                wsWebBroadcast("data/common/set", [data])
+                wsWebBroadcast("data/common/set", data)
                 return
             }
         })
@@ -29,4 +29,4 @@ var data = {
     }
 }
 
-export default data
+export default common

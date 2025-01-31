@@ -3,7 +3,7 @@
 
 import fs from "fs"
 import Global from "./global/index.js"
-import { Data, SessionOc, SessionWeb } from "./interface.js"
+import { Common, SessionOc, SessionWeb } from "./interface.js"
 import { loggerHandler as logger } from "./logger.js"
 import { wssOc } from "./websocket.js"
 
@@ -33,7 +33,7 @@ var handler = {
             // 如果已登录，处理数据
             if (json.type == "data/event/set") {
                 // 事件数据
-                processor.data.event(json, ws)
+                processor.data.eventSet(json, ws)
             } else if (json.type == "oc/task/runSingle") {
                 // 运行单次任务
                 processor.web2oc.taskRunSingle(json, ws)
@@ -75,10 +75,12 @@ var handler = {
         } else {
             // 如果已登录，处理数据
             if (json.type == "data/common/set") {
-                processor.data.common(json, ws)
+                processor.data.commonSet(json, ws)
             } else if (json.type == "data/event/set") {
-                processor.data.event(json, ws)
-            } else if (json.type == "component") {
+                processor.data.eventSet(json, ws)
+            } else if (json.type == "data/event/add") {
+                processor.data.eventAdd(json, ws)
+            } else if (json.type == "data/bot/component") {
                 processor.component(json, ws)
             } else if (json.type == "data/ae/itemList") {
                 processor.data.ae.itemList(json, ws)
@@ -95,23 +97,26 @@ export default handler
 
 var processor = {
     data: {
-        common(json: any, ws: SessionOc) {
+        commonSet(json: any, ws: SessionOc) {
             let target = Global.data.list.find(data => data.uuid === json.data.uuid)
             if (target) {
-                const data: Data = Object.assign({}, target, json.data)
+                const data: Common = Object.assign({}, target, json.data)
                 Global.data.set(data)
             } else {
                 ws.send(JSON.stringify({ "type": "error", "data": "Data not found" }))
             }
         },
-        event(json: any, ws: SessionWeb | SessionOc) {
+        eventSet(json: any, ws: SessionWeb | SessionOc) {
             let target = Global.event.list.find(event => event.uuid === json.data.uuid)
             if (target) {
                 const event = Object.assign({}, target, json.data)
                 Global.event.set(event)
             } else {
-                Global.event.add(json.data)
+                ws.send(JSON.stringify({ "type": "error", "data": "Event not found" }))
             }
+        },
+        eventAdd(json: any, ws: SessionWeb | SessionOc) {
+            Global.event.add(json.data)
         },
         ae: {
             itemList(json: any, ws: SessionOc) {
@@ -155,7 +160,7 @@ var processor = {
             ws.authenticated = true
             ws.user = user
             // 返回用户信息
-            ws.send(JSON.stringify({ type: "auth/response", data: { user: ws.user } }))
+            ws.send(JSON.stringify({ type: "auth/response", data: ws.user }))
 
             // 发送历史日志
             const logFile = fs.readFileSync('./logs/main.log', 'utf8')
@@ -215,12 +220,12 @@ var processor = {
             ws.authenticated = true
             ws.bot = bot
             // 返回用户信息
-            ws.send(JSON.stringify({ type: "auth/response", data: { bot: bot } }))
+            ws.send(JSON.stringify({ type: "auth/response", data: bot }))
             // 发送 tasks 数据
             ws.send(JSON.stringify({ type: "task", data: bot.tasks }))
         } else {
             logger.warn(`Invalid token ${json.data.token} for bot ${ws.sessionId.substring(0, 8)}`)
-            ws.send(JSON.stringify({ type: "auth/response", data: { bot: undefined } }))
+            ws.send(JSON.stringify({ type: "auth/response", data: undefined }))
         }
     },
 

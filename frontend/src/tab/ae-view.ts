@@ -233,12 +233,10 @@ export function init() {
 
     eventEmitter.addEventListener("message", async (event: any) => {
         const { type, data } = event.data
-        if (type == "update/ae") {
-            data.forEach((ae: any) => {
-                aeView__renderStatusText(ae.uuid, ae)
-                aeView__renderCpusList(ae.uuid, ae)
-                aeView__renderItemList(ae.uuid, ae)
-            })
+        if (type == "data/ae/set") {
+            aeView__renderStatusText(data.uuid, data)
+            aeView__renderCpusList(data.uuid, data)
+            aeView__renderItemList(data.uuid, data)
         }
     })
 

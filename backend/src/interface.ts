@@ -69,7 +69,7 @@ export interface Ae {
     }]
 }
 
-export interface Data {
+export interface Common {
     uuid: string
     name: string
     description?: string

@@ -32,7 +32,7 @@ export function init() {
     let uuid = element.querySelector("data")!.getAttribute("uuid")
 
     element.querySelector(".event__card-finish-button")!.addEventListener("click", _event => {
-      send({ type: 'update/event', data: { uuid: uuid, status: 1 } })
+      send({ type: "data/event/set", data: { uuid: uuid, status: 1 } })
     })
   })
 }

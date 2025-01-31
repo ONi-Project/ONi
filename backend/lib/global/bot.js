@@ -62,12 +62,12 @@ var bot = {
         update(uuid) {
             let targetBot = bot.list.find(item => item.uuid == uuid);
             if (targetBot) {
-                wsWebBroadcast("update/bot", [targetBot]);
+                wsWebBroadcast("data/bot/set", targetBot);
             }
         }
     },
     tasks: {
-        runSingle(uuid, tasks) {
+        runSingle(uuid, task) {
             let targetBot = bot.list.find(item => item.uuid == uuid);
             if (targetBot) {
                 let ok = false;
@@ -75,7 +75,7 @@ var bot = {
                     if (ws.authenticated && ws.bot.uuid == uuid) {
                         ws.send(JSON.stringify({
                             type: "task",
-                            data: tasks
+                            data: [task]
                         }));
                         ok = true;
                     }
@@ -88,12 +88,10 @@ var bot = {
                 logger.error("bot.tasks.runSingleTask", "Bot not found.");
             }
         },
-        add(uuid, tasks) {
+        add(uuid, task) {
             let targetBot = bot.list.find(item => item.uuid == uuid);
             if (targetBot) {
-                tasks.forEach((task) => {
-                    targetBot.tasks.push(task);
-                });
+                targetBot.tasks.push(task);
                 bot.tasks.update(uuid);
             }
             else {
@@ -130,6 +128,10 @@ var bot = {
                     }
                 }
             });
+            let targetBot = bot.list.find(item => item.uuid == uuid);
+            if (targetBot) {
+                wsWebBroadcast("data/bot/set", targetBot);
+            }
             if (!ok) {
                 logger.warn("bot.tasks.updateTasks", `Trying to send task to oc but bot ${uuid} not found or offline`);
             }

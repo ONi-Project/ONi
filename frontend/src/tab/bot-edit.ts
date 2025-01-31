@@ -171,7 +171,7 @@ export function init() {
 
   eventEmitter.addEventListener("message", async (event: any) => {
     const { type, data } = event.data
-    if (type == "update/bot") {
+    if (type == "data/bot/set") {
       data.forEach((bot: any) => {
         let target = Array.from(document.querySelectorAll(".bot__edit")).find(element => element.querySelector("data")!.getAttribute("uuid") === bot.uuid)
         if (target) {

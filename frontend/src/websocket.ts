@@ -56,7 +56,7 @@ export function init() {
         const json = JSON.parse(event.data)
 
         if (json.type == "auth/response") {
-            if (json.data != undefined) {
+            if (Object.keys(json.data).length !== 0) {
                 user = json.data
                 console.log("用户认证成功：", user)
             } else {

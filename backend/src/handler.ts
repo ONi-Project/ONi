@@ -162,11 +162,6 @@ var processor = {
             // 返回用户信息
             ws.send(JSON.stringify({ type: "auth/response", data: ws.user }))
 
-            // 发送历史日志
-            const logFile = fs.readFileSync('./logs/main.log', 'utf8')
-            const _ = logFile.split('\n').slice(-100).join('\n')
-            ws.send(JSON.stringify({ type: "event/log", data: _ }))
-
             // 发送 overview 布局文件
             ws.send(JSON.stringify({ type: "layout/overview", data: JSON.parse(fs.readFileSync('./data/layout/overview.json', 'utf8')) }))
 

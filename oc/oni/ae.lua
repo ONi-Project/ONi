@@ -2,7 +2,7 @@ local ocComponent = require("component")
 local oc_info = require("oni/oc_info")
 local json = require("dkjson")
 local ocUuid = require("uuid")
-
+local internet = require("internet")
 
 local file = "/lib/oni/ae.lua"
 
@@ -230,6 +230,7 @@ function ae.getItems(ws, taskUuid, uuid, targetAeUuid)
     end
 
     local message = {
+        token = "CWN78VN0MB00WFYIL8AN",
         type = "data/ae/itemList",
         data = {
             uuid = targetAeUuid,
@@ -237,7 +238,14 @@ function ae.getItems(ws, taskUuid, uuid, targetAeUuid)
         }
     }
 
-    ws:send(json.encode(message))
+    local url = "http://localhost:5600/api/oc/wsSend"
+
+    local header = {}
+    header["content-type"] = "application/json"
+
+    local response = internet.request(url, json.encode(message), header, "POST")
+
+    -- ws:send(json.encode(message))
 end
 
 -- 返回与 config 内容对应的处理任务的函数

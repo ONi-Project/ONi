@@ -127,6 +127,29 @@ var processor = {
                 Global.ae.itemList.set(json.data.uuid, json.data.itemList);
             },
             cpus(json, ws) {
+                json.data.cpus.forEach((cpu) => {
+                    var _a;
+                    const ae = Global.ae.list.find(ae => ae.uuid === json.data.uuid);
+                    if (ae) {
+                        const cpuPrev = ae.cpus.find(c => c.name === cpu.name);
+                        if (cpuPrev) {
+                            if (cpuPrev.busy && cpu.busy && cpuPrev.timeStarted && ((_a = cpuPrev.finalOutput) === null || _a === void 0 ? void 0 : _a.total)) {
+                                cpu.timeStarted = cpuPrev.timeStarted;
+                                cpu.finalOutput.total = cpuPrev.finalOutput.total;
+                            }
+                            else if (!cpu.busy) {
+                                cpu.timeStarted = 0;
+                            }
+                            else {
+                                cpu.timeStarted = Date.now();
+                                cpu.finalOutput.total = cpu.finalOutput.amount;
+                            }
+                        }
+                    }
+                    else {
+                        ws.send(JSON.stringify({ "type": "error", "data": "AE not found" }));
+                    }
+                });
                 Global.ae.cpus.set(json.data.uuid, json.data.cpus);
             }
         }
@@ -165,10 +188,6 @@ var processor = {
             ws.user = user;
             // 返回用户信息
             ws.send(JSON.stringify({ type: "auth/response", data: ws.user }));
-            // 发送历史日志
-            const logFile = fs.readFileSync('./logs/main.log', 'utf8');
-            const _ = logFile.split('\n').slice(-100).join('\n');
-            ws.send(JSON.stringify({ type: "event/log", data: _ }));
             // 发送 overview 布局文件
             ws.send(JSON.stringify({ type: "layout/overview", data: JSON.parse(fs.readFileSync('./data/layout/overview.json', 'utf8')) }));
             // 发送 control 布局文件

@@ -7,7 +7,7 @@ var Logger = {
                 console: { type: "console" }
             },
             categories: {
-                default: { appenders: ["file", "console", "oni_ws"], level: config.log_level || "trace" }
+                default: { appenders: ["file", "console"], level: config.log_level || "trace" }
             },
         });
     }

@@ -245,9 +245,9 @@ export function init() {
       if (type == "string") {
         value = element.querySelector("mdui-text-field")!.value
       } else if (type == "number") {
-        value = element.querySelector("mdui-text-field")!.value
+        value = Number(element.querySelector("mdui-text-field")!.value)
       } else if (type == "boolean") {
-        value = element.querySelector("mdui-switch")!.checked
+        value = Boolean(element.querySelector("mdui-switch")!.checked)
       } else if (type == "redstoneUuid") {
         value = element.querySelector("mdui-select")!.value
       } else if (type == "aeUuid") {

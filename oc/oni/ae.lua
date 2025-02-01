@@ -64,7 +64,7 @@ function ae.getCpus(ws, taskUuid, uuid, targetAeUuid)
             coproccessors = v.coproccessors,
             storage = v.storage,
             busy = v.busy,
-            active = v.cpu.isActive(),
+            active = v.cpu.isActive()
         }
         if output ~= nil then
             info.finalOutput = {
@@ -96,34 +96,24 @@ function ae.request(ws, taskUuid, uuid, name, damage, amount)
     local comp = aeComponents[uuid]
 
     if name == nil or damage == nil or amount == nil then
-        oc_info.error(ws,
-            "missing necessary argument",
-            file,
-            "request",
-            taskUuid
-        )
+        oc_info.error(ws, "missing necessary argument", file, "request", taskUuid)
         return
     end
 
-    local craftable = comp.getCraftables({ name = name, damage = damage })
+    local craftable = comp.getCraftables({
+        name = name,
+        damage = damage
+    })
 
     if #craftable == 0 then
-        oc_info.error(ws,
-            "no item with name = " .. name .. ", damage = " .. damage,
-            file,
-            "request",
-            taskUuid
-        )
+        oc_info.error(ws, "no item with name = " .. name .. ", damage = " .. damage, file, "request", taskUuid)
         return
     end
 
     if #craftable > 1 then
         oc_info.error(ws,
             "Craft same items with different nbt is not supported now. name = " .. name .. ", damage = " .. damage,
-            file,
-            "request",
-            taskUuid
-        )
+            file, "request", taskUuid)
         return
     end
 
@@ -161,12 +151,7 @@ function ae.check(ws, taskUuid, craftUuid)
     local status = craftTasks[craftUuid]
 
     if status == nil then
-        oc_info.error(ws,
-            "invalid craft uuid or uuid expired",
-            file,
-            "check",
-            taskUuid
-        )
+        oc_info.error(ws, "invalid craft uuid or uuid expired", file, "check", taskUuid)
         return
     end
 
@@ -231,10 +216,12 @@ function ae.getItems(ws, taskUuid, uuid, targetAeUuid)
 
     local message = {
         token = "CWN78VN0MB00WFYIL8AN",
-        type = "data/ae/itemList",
         data = {
-            uuid = targetAeUuid,
-            itemList = itemList
+            type = "data/ae/itemList",
+            data = {
+                uuid = targetAeUuid,
+                itemList = itemList
+            }
         }
     }
 
@@ -264,31 +251,17 @@ function ae.newTask(ws, taskUuid, config)
         end
 
         if uuid == nil then
-            oc_info.error(
-                ws,
-                "no AE component attached",
-                file,
-                "newTask",
-                taskUuid
-            )
+            oc_info.error(ws, "no AE component attached", file, "newTask", taskUuid)
             return nil
         end
 
         if aeComponents[uuid] == nil then
-            oc_info.error(
-                ws,
-                "AE component with uuid = " .. uuid .. " dosen't exist",
-                file,
-                "newTask",
-                taskUuid
-            )
+            oc_info.error(ws, "AE component with uuid = " .. uuid .. " dosen't exist", file, "newTask", taskUuid)
             return nil
         end
 
         return uuid
     end
-
-
 
     if config.mode == "getCpus" then
         return (function()

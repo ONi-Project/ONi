@@ -40,6 +40,7 @@ var Server = {
         //     "token": "XXX",
         //     "data": {...}
         // }
+        app.use(express.json({ limit: '200mb' }));
         app.post("/api/oc/wsSend", express.json(), (req, res) => {
             logger.trace(req.body);
             if (Object.keys(req.body).length == 0) {

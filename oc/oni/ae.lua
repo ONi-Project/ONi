@@ -276,6 +276,8 @@ function ae.newTask(ws, taskUuid, config)
             )
             return nil
         end
+
+        return uuid
     end
 
 

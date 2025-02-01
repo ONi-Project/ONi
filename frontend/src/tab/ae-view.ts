@@ -1,7 +1,7 @@
 import { throttle } from "mdui"
 import * as pinyinPro from "pinyin-pro"
 import * as global from "../global"
-import { numberDisplayConvert, timeDisplayConvert, timePassedDisplayConvert } from "../utils"
+import { numberDisplayConvert, timeDisplayConvert, timeLengthDisplayConvert, timePassedDisplayConvert } from "../utils"
 import { eventEmitter } from "../websocket"
 
 export function html(config: any) {
@@ -256,7 +256,7 @@ export function init() {
 
         aeview.querySelector(".ae__view-time-updated")!.innerHTML = `数据更新 - ${timePassedDisplayConvert(ae.timeUpdated)}`
         aeview.querySelector(".ae__view-time-created")!.innerHTML = `创建于 ${timeDisplayConvert(ae.timeCreated)}`
-        aeview.querySelector(".ae__view-cpu-status")!.innerHTML = `${ae.cpus.filter((cpu: any) => cpu.busy).length} / ${ae.cpus.length} 核心空闲`
+        aeview.querySelector(".ae__view-cpu-status")!.innerHTML = `${ae.cpus.length - ae.cpus.filter((cpu: any) => cpu.busy).length} / ${ae.cpus.length} 核心空闲`
 
     }
 
@@ -325,15 +325,18 @@ export function init() {
             (targetElement as HTMLElement).style["display"] = "grid"
 
             aeCpus.forEach((cpu: any, i: number) => {
+                const finalOutputTotal = cpu.busy ? cpu.finalOutput.total : -1
+                const finalOutputAmount = cpu.busy ? cpu.finalOutput.amount : 0
                 const icon = cpu.busy ? "settings_suggest" : "download_done"
                 const iconBig = cpu.busy ? "hourglass_bottom" : "schedule"
                 const nameStr = cpu.name ? `- "${cpu.name}"` : ""
-                const statusStr = cpu.busy ? "合成中 · 1 分钟" : `空闲 · ${cpu.storage / 1024}K`
-                const finalOutput = cpu.busy ? `<div style="margin-top: .5rem;margin-bottom: .5rem;"><b>${cpu.finalOutput.display}</b> - 0 / ${cpu.finalOutput.amount}</div>` : ""
+                const statusStr = cpu.busy ? `合成中 · ${timeLengthDisplayConvert(cpu.timeStarted)}` : `空闲 · ${cpu.storage / 1024}K`
+                const finalOutput = cpu.busy ? `<div style="margin-top: .5rem;margin-bottom: .5rem;"><b>${cpu.finalOutput.display}</b> - ${finalOutputTotal - finalOutputAmount} / ${finalOutputTotal}</div>` : ""
+                const percentage = ((finalOutputTotal - finalOutputAmount) / finalOutputTotal * 100).toFixed(0)
                 const progressBar = cpu.busy ? `
                 <div style="display: flex;align-items: center;margin-bottom: 0.25rem;">
-                    <div style="opacity: 0.5;">69%&nbsp;&nbsp;</div>
-                    <mdui-linear-progress value="0" max="1"></mdui-linear-progress>
+                    <div style="opacity: 0.5;">${percentage}%&nbsp;&nbsp;</div>
+                    <mdui-linear-progress value="${percentage}"min="0" max="100"></mdui-linear-progress>
                 </div>` : ""
 
                 _ += `
@@ -490,9 +493,12 @@ export function init() {
                     amount += "(C)"
                 }
 
+                // const picSource = "./resources/itempanel"
+                const picSource = "https://akyuu.cn/oni/itempanel"
+
                 _ += `
                 <div class="hover-highlight" style="position: relative;cursor: pointer;" onclick="dialog__aeShowItemInfo('${target}','${item.id}','${type}')">
-                  <img src="./resources/itempanel/${link}" style="height: 3rem;"></img>
+                  <img src="${picSource}/${link}" style="height: 3rem;"></img>
                   <div style="position: absolute;bottom: 1px;right: 1px;text-align: right;text-shadow: 0px 0px 4px rgba(0,0,0,1);">${amount}</div>
                 </div>
                 `

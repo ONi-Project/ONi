@@ -45,6 +45,35 @@ export function timePassedDisplayConvert(timestamp: number) {
     }
 }
 
+// 将时间长度转换成 xxx 秒、xxx 分钟、xxx 小时、xxx 天、xxx 月、xxx 年 的显示风格
+export function timeLengthDisplayConvert(timestamp: number) {
+    const now = new Date().getTime()
+    const passed = now - timestamp
+    const minute = 60 * 1000
+    const hour = 60 * minute
+    const day = 24 * hour
+    const month = 30 * day
+    const year = 365 * day
+
+    if (timestamp == 0) {
+        return "无数据"
+    } else if (passed < 10 * 1000) {
+        return "刚刚"
+    } else if (passed < minute) {
+        return Math.floor(passed / 1000) + " 秒"
+    } else if (passed < hour) {
+        return Math.floor(passed / minute) + " 分钟"
+    } else if (passed < day) {
+        return Math.floor(passed / hour) + " 小时"
+    } else if (passed < month) {
+        return Math.floor(passed / day) + " 天"
+    } else if (passed < year) {
+        return Math.floor(passed / month) + " 月"
+    } else {
+        return "很久"
+    }
+}
+
 // 将时间戳转换成 yyyy-mm-dd hh:mm:ss 的显示风格
 export function timeDisplayConvert(timestamp: number) {
     const date = new Date(timestamp)

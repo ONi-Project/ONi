@@ -49,6 +49,7 @@ export interface Ae {
         coproccessors: number
         storage: number
         busy: boolean
+        timeStarted: number
         active: boolean
         finalOutput?: {
             name: string
@@ -56,6 +57,7 @@ export interface Ae {
             amount: number
             id: number
             display: string
+            total: number
         }
     }]
     itemList: [{

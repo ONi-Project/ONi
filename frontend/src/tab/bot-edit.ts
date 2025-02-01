@@ -1,4 +1,4 @@
-import { botTaskNew, botTaskSet } from "../dialog/bot-task"
+import { botTaskNew } from "../dialog/bot-task"
 import * as global from "../global"
 import { randomUUID } from "../utils"
 import { eventEmitter, send } from "../websocket"

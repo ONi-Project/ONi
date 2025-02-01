@@ -123,6 +123,25 @@ var processor = {
                 Global.ae.itemList.set(json.data.uuid, json.data.itemList)
             },
             cpus(json: any, ws: SessionOc) {
+                json.data.cpus.forEach((cpu: any) => {
+                    const ae = Global.ae.list.find(ae => ae.uuid === json.data.uuid)
+                    if (ae) {
+                        const cpuPrev = ae.cpus.find(c => c.name === cpu.name)
+                        if (cpuPrev) {
+                            if (cpuPrev.busy && cpu.busy && cpuPrev.timeStarted && cpuPrev.finalOutput?.total) {
+                                cpu.timeStarted = cpuPrev.timeStarted
+                                cpu.finalOutput.total = cpuPrev.finalOutput.total
+                            } else if (!cpu.busy) {
+                                cpu.timeStarted = 0
+                            } else {
+                                cpu.timeStarted = Date.now()
+                                cpu.finalOutput.total = cpu.finalOutput.amount
+                            }
+                        }
+                    } else {
+                        ws.send(JSON.stringify({ "type": "error", "data": "AE not found" }))
+                    }
+                })
                 Global.ae.cpus.set(json.data.uuid, json.data.cpus)
             }
         }

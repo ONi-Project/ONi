@@ -334,12 +334,6 @@ export function init() {
   // BOT TASK END
 }
 
-export function botTaskSet(task: any, c: (task: any) => void) {
-  (document.getElementById("bot__task-dialog-step2")! as Dialog).open = true
-  botTaskSelectedTask = `${task.task}.${task.config.mode}`
-  callback = c
-}
-
 export function botTaskNew(c: (task: any) => void) {
   (document.getElementById("bot__task-dialog-step1")! as Dialog).open = true
   callback = c

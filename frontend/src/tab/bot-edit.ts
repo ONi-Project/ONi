@@ -170,15 +170,13 @@ export function init() {
   })
 
   eventEmitter.addEventListener("message", async (event: any) => {
-    const { type, data } = event.data
+    const { type, data: bot } = event.data
     if (type == "data/bot/set") {
-      data.forEach((bot: any) => {
-        let target = Array.from(document.querySelectorAll(".bot__edit")).find(element => element.querySelector("data")!.getAttribute("uuid") === bot.uuid)
-        if (target) {
-          renderComponentList(target, bot)
-          renderTaskList(target, bot)
-        }
-      })
+      let target = Array.from(document.querySelectorAll(".bot__edit")).find(element => element.querySelector("data")!.getAttribute("uuid") === bot.uuid)
+      if (target) {
+        renderComponentList(target, bot)
+        renderTaskList(target, bot)
+      }
     }
   })
 
@@ -196,8 +194,7 @@ export function init() {
       setTimeout(() => {
         target.parentElement!.querySelector("mdui-list")!.style.opacity = "1"
         target.removeAttribute("loading")
-        console.log("刷新超时")
-      }, 10000)
+      }, 30000)
       send({
         "type": "oc/task/runSingle",
         "target": uuid,

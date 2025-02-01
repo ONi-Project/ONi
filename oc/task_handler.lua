@@ -33,7 +33,7 @@ function login(ws)
 end
 
 function connect()
-    local ws = webSocket.new({
+    ws = webSocket.new({
         address = address,
         port = port,
         path = path

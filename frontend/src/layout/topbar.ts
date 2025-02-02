@@ -1,3 +1,4 @@
+import { isMobileDevice } from "../utils"
 import { toggleLeftNavi } from "./navrail"
 
 export const html = /*html*/`
@@ -25,11 +26,7 @@ export const html = /*html*/`
 `
 
 export function init() {
-  function isMobileDevice() {
-    const ua = navigator.userAgent.toLowerCase()
-    const kw = ['iphone', 'ipod', 'android', 'windows phone', 'blackberry', 'mobile']
-    return kw.some(keyword => ua.includes(keyword))
-  }
+
   if (!isMobileDevice()) {
     let elem = document.getElementById("slogan")!
 

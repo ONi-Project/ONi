@@ -139,3 +139,21 @@ mdui-top-app-bar:not([shrink]) {
 ::-webkit-scrollbar-thumb:hover {
   background-color: #555;
 }
+
+.tooltip {
+  position: absolute;
+  background-color: black;
+  opacity: 0.9;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: none;
+  z-index: 1000;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+#navi-drawer::part(panel) {
+  height: 100% !important;
+  width: 5.0625rem !important;
+}

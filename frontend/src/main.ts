@@ -51,6 +51,8 @@ ${layoutBg.html}
 
 </div>
 
+<div class="tooltip" id="tooltip-ae"></div>
+
 ${dialogAeOrder.html}
 ${dialogAeItemInfo.html}
 ${dialogBotTask.html}
@@ -82,24 +84,3 @@ dialogSettings.init()
 settings.init()
 websocket.init()
 global.init()
-
-// 样式注入
-window.onload = function () {
-  // 顶栏
-  const e1 = document.querySelector("mdui-top-app-bar-title")!
-  const sr = e1.shadowRoot!
-
-  sr.children[0].classList.replace("variant-small", "variant-medium")
-  sr.children[1].classList.replace("variant-small", "variant-medium")
-
-  // 侧边栏
-  const e2 = document.getElementById("navi-drawer")!
-  let s2 = document.createElement('style')
-  s2.innerHTML = `
-      .panel {
-      height: 100% !important;
-      width: 5.0625rem !important;
-      }
-  `
-  e2.appendChild(s2)
-}

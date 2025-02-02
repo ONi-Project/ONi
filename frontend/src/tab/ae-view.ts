@@ -1,8 +1,9 @@
 import { throttle } from "mdui"
 import * as pinyinPro from "pinyin-pro"
 import * as global from "../global"
-import { numberDisplayConvert, timeDisplayConvert, timeLengthDisplayConvert, timePassedDisplayConvert } from "../utils"
+import { commaNumberDisplayConvert, isMobileDevice, numberDisplayConvert, timeDisplayConvert, timeLengthDisplayConvert, timePassedDisplayConvert } from "../utils"
 import { eventEmitter } from "../websocket"
+import { showItemInfo } from "../dialog/ae-item-info"
 
 export function html(config: any) {
     return /*html*/`
@@ -107,9 +108,26 @@ export function html(config: any) {
 `}
 
 export function init() {
-    var aeView__filter: any = []
-    var aeView__itemsPerPage = 40
-    var aeView__cpusPerPage = 8
+    let filters: any = []
+    let itemsPerPage = 40
+    let cpusPerPage = 8
+
+    let lastMousePosition = { x: 0, y: 0 }
+    let tooltip = document.getElementById("tooltip-ae")!
+
+    document.querySelectorAll(".ae__view-item-list").forEach((element: Element) => {
+        const HTMLElement = element as HTMLElement
+        HTMLElement.addEventListener("mousemove", (e: MouseEvent) => {
+            lastMousePosition.x = e.pageX + 10
+            lastMousePosition.y = e.pageY + 10
+            requestAnimationFrame(updateTooltipPosition)
+        })
+    })
+
+    function updateTooltipPosition() {
+        tooltip.style.left = lastMousePosition.x + "px"
+        tooltip.style.top = lastMousePosition.y + "px"
+    }
 
     document.querySelectorAll(".ae__view-back").forEach(element => {
         element.addEventListener("click", _event => {
@@ -120,7 +138,7 @@ export function init() {
     })
 
     global.ae.forEach((ae: any) => {
-        aeView__filter.push({
+        filters.push({
             uuid: ae.uuid,
             filter: {
                 type: "all", // all | item | fluid | vis
@@ -141,7 +159,7 @@ export function init() {
     document.querySelectorAll(".ae__view").forEach(aeview => {
 
         const uuid = aeview.querySelector("data")!.getAttribute("uuid")
-        let filter = aeView__filter.find((ae: any) => ae.uuid == uuid).filter
+        let filter: any = filters.find((ae: any) => ae.uuid == uuid).filter
         // let ae = global.ae.find((ae: any) => ae.uuid === uuid)
 
         aeview.querySelectorAll(".ae__view-storage-filter-button").forEach(button => {
@@ -215,14 +233,14 @@ export function init() {
         })
 
         aeview.querySelector(".ae__view-cpu-list-more-button")!.addEventListener("click", _event => {
-            aeView__filter.find((ae: any) => ae.uuid == uuid).cpusShowMore = true;
+            filters.find((ae: any) => ae.uuid == uuid).cpusShowMore = true;
             (aeview.querySelector(".ae__view-cpu-list-more-button")! as HTMLElement).style["display"] = "none";
             (aeview.querySelector(".ae__view-cpu-list-less-button")! as HTMLElement).style["display"] = "block"
             aeView__renderCpusList(uuid, undefined)
         })
 
         aeview.querySelector(".ae__view-cpu-list-less-button")!.addEventListener("click", _event => {
-            aeView__filter.find((ae: any) => ae.uuid == uuid).cpusShowMore = false;
+            filters.find((ae: any) => ae.uuid == uuid).cpusShowMore = false;
             (aeview.querySelector(".ae__view-cpu-list-more-button")! as HTMLElement).style["display"] = "block";
             (aeview.querySelector(".ae__view-cpu-list-less-button")! as HTMLElement).style["display"] = "none"
             aeView__renderCpusList(uuid, undefined)
@@ -300,11 +318,11 @@ export function init() {
             }
         })
 
-        if (aeCpus.length <= aeView__cpusPerPage) {
+        if (aeCpus.length <= cpusPerPage) {
             (targetElementShowMore as HTMLElement).style["display"] = "none";
             (targetElementShowLess as HTMLElement).style["display"] = "none"
         } else {
-            if (aeView__filter.find((ae: any) => ae.uuid === target).cpusShowMore) {
+            if (filters.find((ae: any) => ae.uuid === target).cpusShowMore) {
                 (targetElementShowMore as HTMLElement).style["display"] = "none";
                 (targetElementShowLess as HTMLElement).style["display"] = "block"
             } else {
@@ -313,8 +331,8 @@ export function init() {
             }
         }
 
-        if (!aeView__filter.find((ae: any) => ae.uuid === target).cpusShowMore) {
-            aeCpus = aeCpus.slice(0, aeView__cpusPerPage)
+        if (!filters.find((ae: any) => ae.uuid === target).cpusShowMore) {
+            aeCpus = aeCpus.slice(0, cpusPerPage)
         }
 
         if (aeCpus.length === 0) {
@@ -388,7 +406,7 @@ export function init() {
             ae = global.ae.find((ae: any) => ae.uuid === target)
         }
 
-        const filter = aeView__filter.find((ae: any) => ae.uuid === target).filter
+        const filter = filters.find((ae: any) => ae.uuid === target).filter
 
         const itemListFiltered = ae.itemList.filter((item: any) => {
             if (filter.type === "all") {
@@ -458,9 +476,9 @@ export function init() {
             }
         })
 
-        const itemListFilteredSliced = itemListFiltered.slice(0, filter.page * aeView__itemsPerPage)
+        const itemListFilteredSliced = itemListFiltered.slice(0, filter.page * itemsPerPage)
 
-        if (itemListFiltered.length > filter.page * aeView__itemsPerPage) {
+        if (itemListFiltered.length > filter.page * itemsPerPage) {
             (targetElementShowMore as HTMLElement).style["display"] = "block"
         } else {
             (targetElementShowMore as HTMLElement).style["display"] = "none"
@@ -478,6 +496,7 @@ export function init() {
                 let link = ""
                 let type = ""
                 let amount = numberDisplayConvert(item.amount)
+                let craftable = ""
 
                 if (item.type == "item") {
                     link = `item/${item.id}_${item.damage}.png`
@@ -491,21 +510,63 @@ export function init() {
                 }
 
                 if (item.craftable) {
-                    amount += "(C)"
+                    craftable = /*html*/`<mdui-icon name="settings_suggest" style="position: absolute;top: 1px;right: 1px;font-size: 18px;color: rgb(var(--mdui-color-primary));text-shadow: 0px 0px 4px rgba(0,0,0,1);"></mdui-icon>`
                 }
 
                 // const picSource = "./resources/itempanel"
                 const picSource = "https://akyuu.cn/oni/itempanel"
 
                 _ += `
-                <div class="hover-highlight" style="position: relative;cursor: pointer;" onclick="dialog__aeShowItemInfo('${target}','${item.id}','${type}')">
+                <div class="hover-highlight ae__view-item-list-item" style="position: relative;cursor: pointer;" id="${item.id}" damage="${item.damage ? item.damage : 0}" type="${type}" display="${item.display}" name="${item.name}" craftable="${item.craftable ? 1 : 0}" amount="${item.amount}">
                   <img src="${picSource}/${link}" style="height: 3rem;"></img>
                   <div style="position: absolute;bottom: 1px;right: 1px;text-align: right;text-shadow: 0px 0px 4px rgba(0,0,0,1);">${amount}</div>
+                  ${craftable}
                 </div>
                 `
             })
         }
 
         targetElement!.innerHTML = _
+
+        document.querySelectorAll(".ae__view-item-list-item").forEach((item: any) => {
+            item.addEventListener("click", (_event: any) => {
+                const id = item.getAttribute("id")
+                const damage = item.getAttribute("damage")
+                const type = item.getAttribute("type")
+                showItemInfo(target, id, damage, type)
+            })
+            if (!isMobileDevice()) {
+                item.addEventListener("mouseover", (_event: any) => {
+                    const name = item.getAttribute("name")
+                    const display = item.getAttribute("display")
+                    const type = item.getAttribute("type")
+                    const craftable = item.getAttribute("craftable")
+                    const amount = item.getAttribute("amount")
+                    let modBar = ""
+                    let craftableBar = ""
+                    if (type == "item") {
+                        modBar = `<div style="font-size: smaller; color: #88f;">${name.split(":")[0]}</div>`
+                    } else if (type == "fluid") {
+                        modBar = `<div style="font-size: smaller; color: #bbb;">${name}</div>`
+                    }
+                    if (craftable == "1") {
+                        craftableBar = /*html*/`
+                        <div style="font-size: smaller; color: #888;">可合成</div>
+                        `
+                    }
+                    tooltip.style.display = "block"
+                    tooltip.innerHTML = /*html*/`
+                    <div>${display}</div>
+                    ${modBar}
+                    ${craftableBar}
+                    <div style="font-size: smaller; color: #888;">数量：${commaNumberDisplayConvert(amount)}</div>
+                    `
+                })
+                item.addEventListener("mouseout", (_event: any) => {
+                    tooltip.style.display = "none"
+                })
+
+            }
+        })
     }
 }

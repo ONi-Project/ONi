@@ -6,14 +6,19 @@ export function numberDisplayConvert(number: number) {
     let grade = (digit - digit % 3) / 3
 
     if (number < 10000) {
-        return number
+        return String(number)
     }
 
     if (digit % 3 == 0) {
-        return (number / Math.pow(10, digit)).toFixed(1) + unitList[grade]
+        return String((number / Math.pow(10, digit)).toFixed(1) + unitList[grade])
     }
 
-    return (number / Math.pow(10, grade * 3)).toFixed(0) + unitList[grade]
+    return String((number / Math.pow(10, grade * 3)).toFixed(0) + unitList[grade])
+}
+
+// 将数字转换成带逗号的显示方式
+export function commaNumberDisplayConvert(num: number): string {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 
 // 将时间戳转换成 xxx 秒前、xxx 分钟前、xxx 小时前 的显示风格
@@ -93,4 +98,10 @@ export function randomUUID() {
         let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8)
         return v.toString(16)
     })
+}
+
+export function isMobileDevice() {
+    const ua = navigator.userAgent.toLowerCase()
+    const kw = ['iphone', 'ipod', 'android', 'windows phone', 'blackberry', 'mobile']
+    return kw.some(keyword => ua.includes(keyword))
 }

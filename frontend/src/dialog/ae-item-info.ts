@@ -1,3 +1,7 @@
+import type { Button, Dialog } from "mdui"
+import { ae } from "../global"
+import { numberDisplayConvert } from "../utils"
+
 export const html = /*html*/`
 <mdui-dialog close-on-overlay-click id="ae__item-info-dialog" style="padding: 0 !important;">
 
@@ -20,6 +24,48 @@ export const html = /*html*/`
 </mdui-dialog>
 `
 
-export function init(){
+export function init() {
+  document.getElementById("ae__item-info-dialog-close-button")!.addEventListener("click", _event => {
+    (document.getElementById("ae__item-info-dialog") as Dialog).open = false
+  })
+
+  document.getElementById("ae__item-info-dialog-request-button")!.addEventListener("click", _event => {
+    (document.getElementById("ae__item-info-dialog") as Dialog).open = false
+  })
+
+}
+
+export function showItemInfo(aeuuid: string, id: string, damage: string, type: string) {
+
+  let item
+
+  if (type == "item") {
+    item = ae.find((ae: any) => ae.uuid == aeuuid).itemList.find((item: any) => item.type == "item" && item.id == id && item.damage == damage)
+  } else if(type == "fluid") {
+    item = ae.find((ae: any) => ae.uuid == aeuuid).itemList.find((item: any) => item.type == "fluid" && item.id == id)
+  }else if(type == "vis") {
+    // TODO: vis
+  }
+
+  let link = ""
+
+  if (type == "item") {
+    link = `item/${item.id}_${item.damage}.png`
+  } else if (type == "fluid") {
+    link = `fluid/${item.id}.png`
+  } else if (type == "vis") {
+    link = `vis/${item.id}.png`
+  }
+
+  const picSource = "https://akyuu.cn/oni/itempanel"
+
+  console.log(item)
+
+  document.getElementById("ae__item-info-dialog-display")!.innerHTML = item.display
+  document.getElementById("ae__item-info-dialog-amount")!.innerHTML = numberDisplayConvert(item.amount)
+  document.getElementById("ae__item-info-dialog-icon")!.setAttribute("src", `${picSource}/${link}`);
+  (document.getElementById("ae__item-info-dialog-request-button") as Button).disabled = !item.craftable;
+
+  (document.getElementById("ae__item-info-dialog") as Dialog).open = true
 
 }

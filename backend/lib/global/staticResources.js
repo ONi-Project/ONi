@@ -3,11 +3,13 @@ import { loggerGlobal as logger } from '../logger.js';
 var staticResources = {
     itemPanelItem: [],
     itemPanelFluid: [],
+    itemPanelItemMap: new Map(),
+    itemPanelFluidMap: new Map(),
     botTask: [],
     init(config) {
         try {
-            const itmePanelItemRaw = fs.readFileSync('./data/itempanel/item.csv', 'utf8');
-            let itemPanel = itmePanelItemRaw.split('\r\n').map(line => line.split(','));
+            const itemPanelItemRaw = fs.readFileSync('./data/itempanel/item.csv', 'utf8');
+            let itemPanel = itemPanelItemRaw.split('\r\n').map(line => line.split(','));
             itemPanel.shift(); // remove header row
             itemPanel.forEach(row => {
                 this.itemPanelItem.push({
@@ -35,6 +37,12 @@ var staticResources = {
             logger.error("staticResourcesItemPanelFluid", "initialization failed.");
             logger.error("staticResourcesItemPanelFluid", e);
         }
+        this.itemPanelItem.forEach(item => {
+            this.itemPanelItemMap.set(item.name + "/" + item.damage, item);
+        });
+        this.itemPanelFluid.forEach(fluid => {
+            this.itemPanelFluidMap.set(fluid.name, fluid);
+        });
         try {
             const botTaskRaw = fs.readFileSync('./data/bot/task.json', 'utf8');
             this.botTask = JSON.parse(botTaskRaw);

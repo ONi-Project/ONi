@@ -101,9 +101,8 @@ var ae = {
                     itemList = itemList.filter((item) => item.name !== "ae2fc:fluid_drop");
                     itemList.forEach((item, index) => {
                         if (item.type === "item" || item.type === "fluid") {
-                            const resourceType = item.type === "item" ? Global.staticResources.itemPanelItem : Global.staticResources.itemPanelFluid;
-                            const resource = resourceType.find((resourceItem) => (resourceItem.name === item.name) &&
-                                (item.type === "item" ? resourceItem.damage === item.damage : true));
+                            const resourceType = item.type === "item" ? Global.staticResources.itemPanelItemMap : Global.staticResources.itemPanelFluidMap;
+                            const resource = resourceType.get(item.type === "item" ? item.name + "/" + item.damage : item.name);
                             if (resource) {
                                 item.id = resource.id;
                                 item.display = resource.display;

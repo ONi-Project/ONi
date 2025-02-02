@@ -2,7 +2,7 @@ import { Ae, Config } from "../interface.js"
 import fs from "fs"
 import { loggerGlobal as logger } from "../logger.js"
 import { wsWebBroadcast } from "../websocket.js"
-import { deepEqual } from "../utils.js"
+import { deepEqual, performanceTimer } from "../utils.js"
 import Global from "./index.js"
 
 var ae = {
@@ -111,30 +111,29 @@ var ae = {
         set(uuid: string, itemList: any) {
             let targetAe = ae.list.find(ae => ae.uuid === uuid)
             if (targetAe) {
-                itemList.forEach((item: any) => {
-                    if (item.type == "item") {
-                        const itemPanelItem = Global.staticResources.itemPanelItem.find(itemPanelItem => (itemPanelItem.name == item.name) && (itemPanelItem.damage == item.damage))
-                        if (itemPanelItem) {
-                            item.id = itemPanelItem.id
-                            item.display = itemPanelItem.display
+                performanceTimer("ae.itemList.set", () => {
+                    itemList = itemList.filter((item: any) => item.name !== "ae2fc:fluid_drop")
+                    itemList.forEach((item: any, index: number) => {
+                        if (item.type === "item" || item.type === "fluid") {
+                            const resourceType = item.type === "item" ? Global.staticResources.itemPanelItem : Global.staticResources.itemPanelFluid
+                            const resource = resourceType.find((resourceItem: any) =>
+                                (resourceItem.name === item.name) &&
+                                (item.type === "item" ? resourceItem.damage === item.damage : true)
+                            )
+                            if (resource) {
+                                item.id = resource.id
+                                item.display = resource.display
+                            } else {
+                                logger.warn(`${item.type.charAt(0).toUpperCase() + item.type.slice(1)} ${item.name} not found in staticResources.itemPanel`)
+                            }
+                        } else if (item.type === "vis") {
+                            // TODO: 处理 vis 类型
                         } else {
-                            logger.warn(`Item ${item.name} not found in staticResources.itemPanel`)
+                            logger.error(`Unknown item type ${item.type}`)
                         }
-                    } else if (item.type == "fluid") {
-                        const itemPanelFluid = Global.staticResources.itemPanelFluid.find(itemPanelFluid => itemPanelFluid.name == item.name)
-                        if (itemPanelFluid) {
-                            item.id = itemPanelFluid.id
-                            item.display = itemPanelFluid.display
-                        } else {
-                            logger.warn(`Fluid ${item.name} not found in staticResources.itemPanel`)
-                        }
-                    } else if (item.type == "vis") {
-                        // TODO: 处理 vis 类型
-                    } else {
-                        logger.error(`Unknown item type ${item.type}`)
-                    }
+                    })
+                    targetAe.itemList = itemList
                 })
-                targetAe.itemList = itemList
                 ae.itemList.update(uuid)
             }
         },

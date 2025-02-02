@@ -1,3 +1,4 @@
+import { loggerPerformance } from "./logger.js"
 
 export function deepEqual(obj1: any, obj2: any) {
     if (obj1 === obj2) return true
@@ -13,4 +14,13 @@ export function deepEqual(obj1: any, obj2: any) {
     }
 
     return true
+}
+
+export function performanceTimer<T>(funcName: string, func: () => T): T {
+    const startTime = performance.now()
+    const result = func()
+    const endTime = performance.now()
+    const duration = endTime - startTime
+    loggerPerformance.log(`Function ${funcName} took ${duration} milliseconds.`)
+    return result
 }

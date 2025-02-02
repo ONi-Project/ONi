@@ -437,6 +437,7 @@ export function init() {
                 }
 
             }
+            if (item.display == undefined) { item.display = "" }
             else if (pinyinPro.match(item.display, filter.word)
                 || item.name.toLocaleLowerCase().includes(filter.word.toLocaleLowerCase())
                 || item.id == filter.word

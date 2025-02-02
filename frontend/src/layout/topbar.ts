@@ -31,8 +31,9 @@ export function init() {
     return kw.some(keyword => ua.includes(keyword))
   }
   if (!isMobileDevice()) {
-    const slogan = ["豆！豆！痛いよ！", "人間！妖怪！誰でも歓迎！"]
     let elem = document.getElementById("slogan")!
+
+    const slogan = ["豆！豆！痛いよ！", "人間！妖怪！誰でも歓迎！"]
     elem.innerText = `"${slogan[Math.floor(Math.random() * slogan.length)]}"`
   }
   document.getElementById("navi-toggler")!.addEventListener("click", () => { toggleLeftNavi() })

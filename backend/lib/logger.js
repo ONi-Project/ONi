@@ -19,3 +19,4 @@ export const loggerWebsocket = log4js.getLogger("websocket");
 export const loggerServer = log4js.getLogger("server");
 export const loggerTask = log4js.getLogger("task");
 export const loggerHandler = log4js.getLogger("handler");
+export const loggerPerformance = log4js.getLogger("performance");

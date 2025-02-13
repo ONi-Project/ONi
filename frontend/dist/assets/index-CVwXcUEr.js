@@ -644,7 +644,7 @@
 
   <data hidden uuid="${t.uuid}" botUuid="${t.botUuid}" side="${t.side}"></data>
 </mdui-card>
-`}function Ah(){document.querySelectorAll(".control-redstone-analog__card").forEach(t=>{let e=t.querySelector("data").getAttribute("uuid"),n=t.querySelector("data").getAttribute("botUuid"),i=t.querySelector("data").getAttribute("side");t.querySelector("mdui-slider").addEventListener("change",o=>{$i({type:"oc/task/runSingle",target:n,data:[{task:"redstone",interval:-1,taskUuid:$o(),config:{mode:"setOutput",strength:o.target.value,uuid:e,side:i}}]})})})}function Ih(t){return`
+`}function Ah(){document.querySelectorAll(".control-redstone-analog__card").forEach(t=>{let e=t.querySelector("data").getAttribute("uuid"),n=t.querySelector("data").getAttribute("botUuid"),i=t.querySelector("data").getAttribute("side");t.querySelector("mdui-slider").addEventListener("change",o=>{$i({type:"oc/task/runSingle",target:n,data:{task:"redstone",interval:-1,taskUuid:$o(),config:{mode:"setOutput",strength:o.target.value,uuid:e,side:i}}})})})}function Ih(t){return`
 <mdui-card variant="filled" class="card control-redstone-digital__card">
   
   <div style="display: flex;align-items: center;">
@@ -665,7 +665,7 @@
   <data hidden uuid="${t.uuid}" botUuid="${t.botUuid}" side="${t.side}"></data>
 
 </mdui-card>
-`}function Th(){document.querySelectorAll(".control-redstone-digital__card").forEach(t=>{let e=t.querySelector("data").getAttribute("uuid"),n=t.querySelector("data").getAttribute("botUuid"),i=t.querySelector("data").getAttribute("side");t.querySelector("mdui-switch").addEventListener("change",o=>{$i({type:"oc/task/runSingle",target:n,data:[{task:"redstone",interval:-1,taskUuid:$o(),config:{mode:"setOutput",strength:o.target.checked?15:0,uuid:e,side:i}}]})})})}function Ph(t){return`
+`}function Th(){document.querySelectorAll(".control-redstone-digital__card").forEach(t=>{let e=t.querySelector("data").getAttribute("uuid"),n=t.querySelector("data").getAttribute("botUuid"),i=t.querySelector("data").getAttribute("side");t.querySelector("mdui-switch").addEventListener("change",o=>{$i({type:"oc/task/runSingle",target:n,data:{task:"redstone",interval:-1,taskUuid:$o(),config:{mode:"setOutput",strength:o.target.checked?15:0,uuid:e,side:i}}})})})}function Ph(t){return`
 <div style="text-align: center;opacity: 0.5;">+ Create Bot</div>
 `}function Rh(){}function Mh(t){return`
 ${t.priority==0&&t.status==0?'<mdui-card variant="filled" class="card-compact event__card" style="background-color: rgba(50, 50, 127, 0.5);">':""}

@@ -23,7 +23,15 @@ var mcServerStatus = {
             return __awaiter(this, void 0, void 0, function* () {
                 try {
                     const mc = yield import('minecraftstatuspinger').then(mc => mc.default);
-                    const result = yield mc.lookup({ host: Global.mcServerStatus.status.ip });
+                    let address, port;
+                    if (config.mc_server_ip.includes(":")) {
+                        [address, port] = config.mc_server_ip.split(":");
+                    }
+                    else {
+                        address = config.mc_server_ip;
+                        port = "25565";
+                    }
+                    const result = yield mc.lookup({ host: address, port: parseInt(port) });
                     const data = result.status;
                     var status = {
                         ip: Global.mcServerStatus.status.ip,

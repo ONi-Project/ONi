@@ -17,7 +17,14 @@ var mcServerStatus = {
         async function mcServerStatusUpdate() {
             try {
                 const mc = await import('minecraftstatuspinger').then(mc => mc.default)
-                const result = await mc.lookup({ host: Global.mcServerStatus.status.ip })
+                let address: string, port: string
+                if (config.mc_server_ip.includes(":")) {
+                    [address, port] = config.mc_server_ip.split(":")
+                } else {
+                    address = config.mc_server_ip
+                    port = "25565"
+                }
+                const result = await mc.lookup({ host: address, port: parseInt(port) })
                 const data = result.status
 
                 var status: McServerStatus = {

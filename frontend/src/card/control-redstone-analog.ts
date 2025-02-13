@@ -34,19 +34,17 @@ export function init() {
       send({
         "type": "oc/task/runSingle",
         "target": botUuid,
-        "data": [
-          {
-            "task": "redstone",
-            "interval": -1,
-            "taskUuid": randomUUID(),
-            "config": {
-              "mode": "setOutput",
-              "strength": (event.target! as Slider).value,
-              "uuid": uuid,
-              "side": side
-            }
+        "data": {
+          "task": "redstone",
+          "interval": -1,
+          "taskUuid": randomUUID(),
+          "config": {
+            "mode": "setOutput",
+            "strength": (event.target! as Slider).value,
+            "uuid": uuid,
+            "side": side
           }
-        ]
+        }
       })
     })
   })

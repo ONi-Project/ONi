@@ -131,7 +131,7 @@ var processor = {
                             if (cpuPrev.busy && cpu.busy && cpuPrev.timeStarted && cpuPrev.finalOutput?.total) {
                                 cpu.timeStarted = cpuPrev.timeStarted
                                 cpu.finalOutput.total = cpuPrev.finalOutput.total
-                            } else if (!cpu.busy) {
+                            } else if (!cpu.busy || cpu.finalOutput === undefined) {
                                 cpu.timeStarted = 0
                             } else {
                                 cpu.timeStarted = Date.now()

@@ -33,7 +33,7 @@ var mcServerStatus = {
                     }
                     const result = yield mc.lookup({ host: address, port: parseInt(port) });
                     const data = result.status;
-                    var status = {
+                    const status = {
                         ip: Global.mcServerStatus.status.ip,
                         online: data == null ? false : true,
                         motd: data == null ? "" : data.description,
@@ -47,7 +47,7 @@ var mcServerStatus = {
                     logger.trace("mcServerStatus", Global.mcServerStatus);
                 }
                 catch (error) {
-                    var status = {
+                    const status = {
                         ip: Global.mcServerStatus.status.ip,
                         online: false,
                         motd: "",

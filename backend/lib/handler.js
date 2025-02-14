@@ -45,6 +45,10 @@ var handler = {
                 // debug 转发
                 processor.web2oc.forward(json, ws);
             }
+            else if (json.type == "ae/order") {
+                // AE 订单
+                processor.ae.order(json, ws);
+            }
             else {
                 logger.warn(`Unknown message type ${json.type}`);
             }
@@ -82,7 +86,7 @@ var handler = {
                 processor.data.eventAdd(json, ws);
             }
             else if (json.type == "data/bot/component") {
-                processor.component(json, ws);
+                processor.data.bot.component(json, ws);
             }
             else if (json.type == "data/ae/itemList") {
                 processor.data.ae.itemList(json, ws);
@@ -152,6 +156,51 @@ var processor = {
                 });
                 Global.ae.cpus.set(json.data.uuid, json.data.cpus);
             }
+        },
+        bot: {
+            component(json, ws) {
+                Global.bot.components.set(ws.bot.uuid, json.data.components);
+            },
+        }
+    },
+    ae: {
+        order(json, ws) {
+            const ae = Global.ae.list.find(ae => ae.uuid === json.data.uuid);
+            if (!ae) {
+                logger.error(`processor.ae.order: AE ${json.data.uuid} not found`);
+                return;
+            }
+            let targetBot = [];
+            Global.bot.list.forEach(bot => {
+                let flag = false;
+                bot.tasks.forEach(task => {
+                    if (task.task === "ae" && task.config.targetAeUuid === ae.uuid) {
+                        flag = true;
+                    }
+                });
+                if (flag) {
+                    targetBot.push(bot);
+                }
+            });
+            if (targetBot.length === 0) {
+                logger.error(`processor.ae.order: No bot found for AE ${json.data.uuid}`);
+                return;
+            }
+            let runner = targetBot[0];
+            if (targetBot.length > 1) {
+                logger.warn(`processor.ae.order: More than one bot found for AE ${json.data.uuid}, using ${runner.name}`);
+            }
+            Global.bot.tasks.runSingle(runner.uuid, {
+                "task": "ae",
+                "interval": -1,
+                "taskUuid": json.data.taskUuid,
+                "config": {
+                    "mode": "request",
+                    "name": json.data.name,
+                    "damage": json.data.damage,
+                    "amount": json.data.amount
+                }
+            });
         }
     },
     web2oc: {
@@ -177,9 +226,6 @@ var processor = {
                 logger.warn(`Trying to forward debug message to oc but bot ${json.target} not found or offline`);
             }
         }
-    },
-    component(json, ws) {
-        Global.bot.components.set(ws.bot.uuid, json.data.components);
     },
     webAuth(json, ws) {
         const user = Global.user.list.find(user => user.token === json.data.token);

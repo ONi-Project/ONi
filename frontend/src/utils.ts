@@ -105,3 +105,7 @@ export function isMobileDevice() {
     const kw = ['iphone', 'ipod', 'android', 'windows phone', 'blackberry', 'mobile']
     return kw.some(keyword => ua.includes(keyword))
 }
+
+export function capitalizeFirstLetter(string: string) {
+    return string.charAt(0).toUpperCase() + string.slice(1)
+}

@@ -1,7 +1,8 @@
 import { randomUUID } from "./utils"
-import { snackbar } from "mdui"
+import { Snackbar, snackbar } from "mdui"
 import { endpoint, token } from "./settings"
 import { openLoginDialog, setText } from "./dialog/login"
+import { initSlogan } from "./layout/topbar"
 
 // 定义事件推送器
 
@@ -28,69 +29,96 @@ export let ws: WebSocket
 
 export function init() {
 
+    let disconectInfo: Snackbar
+    let connectedOnce = false // 是否曾经连接成功过
+
     if (endpoint == "" && token == "") {
         setText("欢迎来到 ONi！请输入后端地址和令牌来登录。")
         openLoginDialog()
         return
     }
 
-    ws = new WebSocket("ws://" + endpoint + "/ws/web")
+    tryConnect()
 
-    ws.onopen = () => {
-        console.log("ws 连接成功")
-        ws.send(JSON.stringify({ type: "auth/request", uuid: randomUUID(), data: { "token": token } }))
+    function tryConnect() {
+        ws = new WebSocket("ws://" + endpoint + "/ws/web")
+
+        ws.onopen = () => {
+            connectDeco()
+            if (disconectInfo) { disconectInfo.open = false }
+            connectedOnce = true
+            console.log("ws 连接成功")
+            ws.send(JSON.stringify({ type: "auth/request", uuid: randomUUID(), data: { "token": token } }))
+        }
+
+        ws.onclose = () => {
+            if(connectedOnce){
+                disconectInfo = snackbar({
+                    message: "WebSocket 连接已断开，正在尝试重新连接...",
+                    autoCloseDelay: 60000,
+                    closeable: false
+                })
+                disconectDeco()
+                setTimeout(() => {
+                    tryConnect()
+                }, 1000)
+            }
+            console.log("ws 连接断开")
+        }
+
+        ws.onerror = (event) => {
+            console.log("ws 连接失败：", event)
+            snackbar({
+                message: "WebSocket 连接错误。",
+                autoCloseDelay: 0,
+                closeable: true
+            })
+            setText("WebSocket 连接失败，请检查后端地址是否正确。")
+            openLoginDialog()
+            ws.close()
+        }
+
+        ws.onmessage = (event) => {
+
+            const json = JSON.parse(event.data)
+
+            if (json.type == "auth/response") {
+                if (Object.keys(json.data).length !== 0) {
+                    user = json.data
+                    console.log("用户认证成功：", user)
+                    setTimeout(() => {
+                        snackbar({
+                            message: `欢迎回来，${user.name}！`,
+                            autoCloseDelay: 1500,
+                            closeable: false
+                        })
+                    }, 300)
+                    initSlogan()
+                } else {
+                    if (token === "") {
+                        setText("欢迎来到 ONi！请输入后端地址和令牌来登录。")
+                    } else {
+                        setText("令牌验证失败，请重新输入。")
+                    }
+                    openLoginDialog()
+                }
+            } else {
+                eventEmitter.message(json)
+            }
+
+        }
     }
 
-    ws.onclose = () => {
-        snackbar({
-            message: "WebSocket 连接已断开。",
-            autoCloseDelay: 0,
-            closeable: true
-        })
-        // 向网页添加半透明遮罩层
+    function disconectDeco() {
         document.getElementById("bg-texture")!.children[0].setAttribute("hidden", "true")
         document.getElementById("bg-texture")!.children[1].removeAttribute("hidden")
         document.getElementById("bg-texture")!.style.opacity = "0.15"
-        console.log("ws 连接断开")
     }
 
-    ws.onerror = (event) => {
-        console.log("ws 连接出错：", event)
-        snackbar({
-            message: "WebSocket 连接出错，请检查控制台日志。",
-            autoCloseDelay: 0,
-            closeable: true
-        })
-        setText("WebSocket 连接失败，请检查后端地址是否正确。")
-        openLoginDialog()
-        ws.close()
-    }
-
-    ws.onmessage = (event) => {
-
-        const json = JSON.parse(event.data)
-
-        if (json.type == "auth/response") {
-            if (Object.keys(json.data).length !== 0) {
-                user = json.data
-                console.log("用户认证成功：", user)
-                snackbar({
-                    message: `欢迎回来，${user.name}！`,
-                    autoCloseDelay: 1500,
-                    closeable: false
-                })
-            } else {
-                if (token === "") {
-                    setText("欢迎来到 ONi！请输入后端地址和令牌来登录。")
-                } else {
-                    setText("令牌验证失败，请重新输入。")
-                }
-                openLoginDialog()
-            }
-        } else {
-            eventEmitter.message(json)
-        }
-
+    function connectDeco() {
+        document.getElementById("bg-texture")!.children[0].removeAttribute("hidden")
+        document.getElementById("bg-texture")!.children[1].setAttribute("hidden", "true")
+        document.getElementById("bg-texture")!.style.opacity = ""
     }
 }
 

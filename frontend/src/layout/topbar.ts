@@ -1,5 +1,7 @@
 import { isMobileDevice } from "../utils"
 import { toggleLeftNavi } from "./navrail"
+import { user } from "../websocket"
+import { endpoint } from "../settings"
 
 export const html = /*html*/`
 <mdui-top-app-bar variant="medium" scroll-behavior="shrink elevate" scroll-target="#main-content-area">
@@ -27,11 +29,15 @@ export const html = /*html*/`
 
 export function init() {
 
-  if (!isMobileDevice()) {
-    let elem = document.getElementById("slogan")!
-
-    const slogan = ["豆！豆！痛いよ！", "人間！妖怪！誰でも歓迎！"]
-    elem.innerText = `"${slogan[Math.floor(Math.random() * slogan.length)]}"`
-  }
   document.getElementById("navi-toggler")!.addEventListener("click", () => { toggleLeftNavi() })
+}
+
+export function initSlogan() {
+  if (!isMobileDevice()) {
+    // const slogan = ["豆！豆！痛いよ！", "人間！妖怪！誰でも歓迎！"]
+    // elem.innerText = `"${slogan[Math.floor(Math.random() * slogan.length)]}"`
+
+    const elem = document.getElementById("slogan")!
+    elem.innerText = `${user.name} @ ${endpoint}`
+  }
 }

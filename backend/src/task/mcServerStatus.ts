@@ -27,7 +27,7 @@ var mcServerStatus = {
                 const result = await mc.lookup({ host: address, port: parseInt(port) })
                 const data = result.status
 
-                var status: McServerStatus = {
+                const status: McServerStatus = {
                     ip: Global.mcServerStatus.status.ip,
                     online: data == null ? false : true,
                     motd: data == null ? "" : data.description,
@@ -43,7 +43,7 @@ var mcServerStatus = {
 
             } catch (error) {
 
-                var status: McServerStatus = {
+                const status: McServerStatus = {
                     ip: Global.mcServerStatus.status.ip,
                     online: false,
                     motd: "",

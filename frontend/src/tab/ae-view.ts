@@ -4,6 +4,7 @@ import * as global from "../global"
 import { commaNumberDisplayConvert, isMobileDevice, numberDisplayConvert, timeDisplayConvert, timeLengthDisplayConvert, timePassedDisplayConvert } from "../utils"
 import { eventEmitter } from "../websocket"
 import { showItemInfo } from "../dialog/ae-item-info"
+import { picSource } from "../settings"
 
 export function html(config: any) {
     return /*html*/`
@@ -149,16 +150,12 @@ export function init() {
             },
             cpusShowMore: false
         })
-
-        aeView__renderStatusText(ae.uuid, ae)
-        aeView__renderCpusList(ae.uuid, ae)
-        aeView__renderItemList(ae.uuid, ae)
     })
 
 
     document.querySelectorAll(".ae__view").forEach(aeview => {
 
-        const uuid = aeview.querySelector("data")!.getAttribute("uuid")
+        const uuid = aeview.querySelector("data")!.getAttribute("uuid")!
         let filter: any = filters.find((ae: any) => ae.uuid == uuid).filter
         // let ae = global.ae.find((ae: any) => ae.uuid === uuid)
 
@@ -169,7 +166,8 @@ export function init() {
                     button.removeAttribute("selected")
                 });
                 (event.target as HTMLElement).setAttribute("selected", "")
-                aeView__renderItemList(uuid, undefined)
+                filter.page = 1
+                renderItemList(uuid, undefined, aeview)
             })
         })
 
@@ -192,7 +190,7 @@ export function init() {
             }
 
             filter.page = 1
-            aeView__renderItemList(uuid, undefined)
+            renderItemList(uuid, undefined, aeview)
         })
 
         aeview.querySelector(".ae__view-storage-filter-sort-button")!.addEventListener("click", event => {
@@ -218,45 +216,52 @@ export function init() {
             }
 
             filter.page = 1
-            aeView__renderItemList(uuid, undefined)
+            renderItemList(uuid, undefined, aeview)
         })
 
         aeview.querySelector(".ae__view-storage-filter-search-input")!.addEventListener("input", throttle(event => {
             filter.word = event.target.value
             filter.page = 1
-            aeView__renderItemList(uuid, undefined)
+            renderItemList(uuid, undefined, aeview)
         }, 100))
 
         aeview.querySelector(".ae__view-item-list-more-button")!.addEventListener("click", _event => {
             filter.page += 1
-            aeView__renderItemList(uuid, undefined)
+            renderItemList(uuid, undefined, aeview)
         })
 
         aeview.querySelector(".ae__view-cpu-list-more-button")!.addEventListener("click", _event => {
             filters.find((ae: any) => ae.uuid == uuid).cpusShowMore = true;
             (aeview.querySelector(".ae__view-cpu-list-more-button")! as HTMLElement).style["display"] = "none";
             (aeview.querySelector(".ae__view-cpu-list-less-button")! as HTMLElement).style["display"] = "block"
-            aeView__renderCpusList(uuid, undefined)
+            renderCpusList(uuid, undefined, aeview)
         })
 
         aeview.querySelector(".ae__view-cpu-list-less-button")!.addEventListener("click", _event => {
             filters.find((ae: any) => ae.uuid == uuid).cpusShowMore = false;
             (aeview.querySelector(".ae__view-cpu-list-more-button")! as HTMLElement).style["display"] = "block";
             (aeview.querySelector(".ae__view-cpu-list-less-button")! as HTMLElement).style["display"] = "none"
-            aeView__renderCpusList(uuid, undefined)
+            renderCpusList(uuid, undefined, aeview)
         })
 
+        eventEmitter.addEventListener("message", async (event: any) => {
+            const { type, data } = event.data
+            if (type == "data/ae/set" && data.uuid === uuid) {
+                renderStatusText(uuid, data, aeview)
+                renderCpusList(uuid, data, aeview)
+                renderItemList(uuid, data, aeview)
+            }
+        })
+
+        const ae = global.ae.find((ae: any) => ae.uuid === uuid)
+
+        renderStatusText(uuid, ae, aeview)
+        renderCpusList(uuid, ae, aeview)
+        renderItemList(uuid, ae, aeview)
 
     })
 
-    eventEmitter.addEventListener("message", async (event: any) => {
-        const { type, data } = event.data
-        if (type == "data/ae/set") {
-            aeView__renderStatusText(data.uuid, data)
-            aeView__renderCpusList(data.uuid, data)
-            aeView__renderItemList(data.uuid, data)
-        }
-    })
+
 
     setInterval(() => {
         global.ae.forEach((ae: any) => {
@@ -264,47 +269,33 @@ export function init() {
         })
     }, 1000)
 
-    function aeView__renderStatusText(target: string, ae?: any) {
-
-        if (!ae) {
-            ae = global.ae.find((ae: any) => ae.uuid === target)
-        }
-
-        const aeview = Array.from(document.querySelectorAll(".ae__view")).find(element => element.querySelector("data")!.getAttribute("uuid") === target)!
-
-        aeview.querySelector(".ae__view-time-updated")!.innerHTML = `数据更新 - ${timePassedDisplayConvert(ae.timeUpdated)}`
-        aeview.querySelector(".ae__view-time-created")!.innerHTML = `创建于 ${timeDisplayConvert(ae.timeCreated)}`
-        aeview.querySelector(".ae__view-cpu-status")!.innerHTML = `${ae.cpus.length - ae.cpus.filter((cpu: any) => cpu.busy).length} / ${ae.cpus.length} 核心空闲`
-
-    }
-
     function tick(target: any, ae: any) {
         const aeview = Array.from(document.querySelectorAll(".ae__view")).find(element => element.querySelector("data")!.getAttribute("uuid") === target)!
         aeview.querySelector(".ae__view-time-updated")!.innerHTML = `数据更新 - ${timePassedDisplayConvert(ae.timeUpdated)}`
     }
 
-    function aeView__renderCpusList(target: any, ae: any) {
+    function renderStatusText(target: string, ae: any, tab: any) {
+
+        if (!ae) {
+            ae = global.ae.find((ae: any) => ae.uuid === target)
+        }
+
+        tab.querySelector(".ae__view-time-updated")!.innerHTML = `数据更新 - ${timePassedDisplayConvert(ae.timeUpdated)}`
+        tab.querySelector(".ae__view-time-created")!.innerHTML = `创建于 ${timeDisplayConvert(ae.timeCreated)}`
+        tab.querySelector(".ae__view-cpu-status")!.innerHTML = `${ae.cpus.length - ae.cpus.filter((cpu: any) => cpu.busy).length} / ${ae.cpus.length} 核心空闲`
+
+    }
+
+    function renderCpusList(target: any, ae: any, tab: any) {
         let _ = ""
 
-        let targetElement = Array.from(
-            document.querySelectorAll(".ae__view"))!
-            .find(element => element.querySelector("data")!.getAttribute("uuid") === target)!
-            .querySelector(".ae__view-cpu-list")
+        let targetElement = tab.querySelector(".ae__view-cpu-list")
 
-        let targetElementNothing = Array.from(
-            document.querySelectorAll(".ae__view"))!
-            .find(element => element.querySelector("data")!.getAttribute("uuid") === target)!
-            .querySelector(".ae__view-cpu-list-nothing")
+        let targetElementNothing = tab.querySelector(".ae__view-cpu-list-nothing")
 
-        let targetElementShowMore = Array.from(
-            document.querySelectorAll(".ae__view"))!
-            .find(element => element.querySelector("data")!.getAttribute("uuid") === target)!
-            .querySelector(".ae__view-cpu-list-more-button")
+        let targetElementShowMore = tab.querySelector(".ae__view-cpu-list-more-button")
 
-        let targetElementShowLess = Array.from(
-            document.querySelectorAll(".ae__view"))!
-            .find(element => element.querySelector("data")!.getAttribute("uuid") === target)!
-            .querySelector(".ae__view-cpu-list-less-button")
+        let targetElementShowLess = tab.querySelector(".ae__view-cpu-list-less-button")
 
         if (!ae) {
             ae = global.ae.find((ae: any) => ae.uuid === target)
@@ -351,13 +342,13 @@ export function init() {
                 const statusStr = cpu.busy ? `合成中 · ${timeLengthDisplayConvert(cpu.timeStarted)}` : `空闲 · ${cpu.storage / 1024}K`
                 const finalOutput = cpu.busy ? `<div style="margin-top: .5rem;margin-bottom: .5rem;"><b>${cpu.finalOutput.display}</b> - ${finalOutputTotal - finalOutputAmount} / ${finalOutputTotal}</div>` : ""
                 const percentage = ((finalOutputTotal - finalOutputAmount) / finalOutputTotal * 100).toFixed(0)
-                const progressBar = cpu.busy ? `
+                const progressBar = cpu.busy ? /*html*/`
                 <div style="display: flex;align-items: center;margin-bottom: 0.25rem;">
                     <div style="opacity: 0.5;">${percentage}%&nbsp;&nbsp;</div>
                     <mdui-linear-progress value="${percentage}"min="0" max="100"></mdui-linear-progress>
                 </div>` : ""
 
-                _ += `
+                _ += /*html*/`
                 <mdui-card style="padding: 1rem;padding-left: 1.25rem;padding-right: 1.25rem">
                   <div style="display: flex;align-items: center;">
                     <mdui-icon name="${iconBig}" style="position: absolute;top: 1rem;right: 1rem;opacity: 0.1;font-size: 3rem;"></mdui-icon>
@@ -383,24 +374,12 @@ export function init() {
 
     // target: 目标 ae uuid
     // ae: 目标 ae 数据，留空则从全局 ae 列表中获取
-    function aeView__renderItemList(target: any, ae: any) {
+    function renderItemList(target: any, ae: any, tab: any) {
         let _ = ""
 
-        let targetElement = Array.from(
-            document.querySelectorAll(".ae__view"))!
-            .find(element => element.querySelector("data")!.getAttribute("uuid") === target)!
-            .querySelector(".ae__view-item-list")
-
-        let targetElementNothing = Array.from(
-            document.querySelectorAll(".ae__view"))!
-            .find(element => element.querySelector("data")!.getAttribute("uuid") === target)!
-            .querySelector(".ae__view-item-list-nothing")
-
-        let targetElementShowMore = Array.from(
-            document.querySelectorAll(".ae__view"))!
-            .find(element => element.querySelector("data")!.getAttribute("uuid") === target)!
-            .querySelector(".ae__view-item-list-more-button")
-
+        const targetElement = tab.querySelector(".ae__view-item-list")
+        const targetElementNothing = tab.querySelector(".ae__view-item-list-nothing")
+        const targetElementShowMore = tab.querySelector(".ae__view-item-list-more-button")
 
         if (!ae) {
             ae = global.ae.find((ae: any) => ae.uuid === target)
@@ -478,10 +457,14 @@ export function init() {
 
         const itemListFilteredSliced = itemListFiltered.slice(0, filter.page * itemsPerPage)
 
+        let unrenderedItemsAmount
+
         if (itemListFiltered.length > filter.page * itemsPerPage) {
             (targetElementShowMore as HTMLElement).style["display"] = "block"
+            unrenderedItemsAmount = itemListFiltered.length - (filter.page * itemsPerPage)
         } else {
             (targetElementShowMore as HTMLElement).style["display"] = "none"
+            unrenderedItemsAmount = 0
         }
 
         if (itemListFilteredSliced.length === 0) {
@@ -514,7 +497,6 @@ export function init() {
                 }
 
                 // const picSource = "./resources/itempanel"
-                const picSource = "https://akyuu.cn/oni/itempanel"
 
                 _ += `
                 <div class="hover-highlight ae__view-item-list-item" style="position: relative;cursor: pointer;" id="${item.id}" damage="${item.damage ? item.damage : 0}" type="${type}" display="${item.display}" name="${item.name}" craftable="${item.craftable ? 1 : 0}" amount="${item.amount}">
@@ -526,9 +508,19 @@ export function init() {
             })
         }
 
+        if (unrenderedItemsAmount > 0) {
+            _ += /*html*/`
+            <div style="position: relative;display: flex;align-items: center;justify-content: center;">   
+              <div style="font-size: large;opacity: 0.75;">...</div>
+            </div>
+            `
+        }
+
+        targetElementShowMore.innerHTML = `显示更多... （还有 ${unrenderedItemsAmount} 项）`
+
         targetElement!.innerHTML = _
 
-        document.querySelectorAll(".ae__view-item-list-item").forEach((item: any) => {
+        tab.querySelectorAll(".ae__view-item-list-item").forEach((item: any) => {
             item.addEventListener("click", (_event: any) => {
                 const id = item.getAttribute("id")
                 const damage = item.getAttribute("damage")

@@ -1,6 +1,8 @@
 import type { Button, Dialog } from "mdui"
 import { ae } from "../global"
 import { numberDisplayConvert } from "../utils"
+import { showOrderDialog } from "./ae-order"
+import { picSource } from "../settings"
 
 export const html = /*html*/`
 <mdui-dialog close-on-overlay-click id="ae__item-info-dialog" style="padding: 0 !important;">
@@ -37,13 +39,13 @@ export function init() {
 
 export function showItemInfo(aeuuid: string, id: string, damage: string, type: string) {
 
-  let item
+  let item: any
 
   if (type == "item") {
     item = ae.find((ae: any) => ae.uuid == aeuuid).itemList.find((item: any) => item.type == "item" && item.id == id && item.damage == damage)
-  } else if(type == "fluid") {
+  } else if (type == "fluid") {
     item = ae.find((ae: any) => ae.uuid == aeuuid).itemList.find((item: any) => item.type == "fluid" && item.id == id)
-  }else if(type == "vis") {
+  } else if (type == "vis") {
     // TODO: vis
   }
 
@@ -57,14 +59,14 @@ export function showItemInfo(aeuuid: string, id: string, damage: string, type: s
     link = `vis/${item.id}.png`
   }
 
-  const picSource = "https://akyuu.cn/oni/itempanel"
-
   console.log(item)
 
   document.getElementById("ae__item-info-dialog-display")!.innerHTML = item.display
   document.getElementById("ae__item-info-dialog-amount")!.innerHTML = numberDisplayConvert(item.amount)
-  document.getElementById("ae__item-info-dialog-icon")!.setAttribute("src", `${picSource}/${link}`);
-  (document.getElementById("ae__item-info-dialog-request-button") as Button).disabled = !item.craftable;
+  document.getElementById("ae__item-info-dialog-icon")!.setAttribute("src", `${picSource}/${link}`)
+  const btn = document.getElementById("ae__item-info-dialog-request-button") as Button
+  btn.disabled = !item.craftable
+  btn.onclick = () => { showOrderDialog(aeuuid, item) }
 
   (document.getElementById("ae__item-info-dialog") as Dialog).open = true
 

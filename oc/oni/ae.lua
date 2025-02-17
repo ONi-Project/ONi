@@ -127,8 +127,9 @@ function ae.request(ws, taskUuid, uuid, name, damage, amount)
     craftTasks[carftTaskQueue[queuePointer]] = status
 
     local message = {
-        type = "update/ae/craftRequest",
+        type = "ae/order/result",
         data = {
+            success = false,
             taskUuid = taskUuid,
             craftUuid = carftTaskQueue[queuePointer]
         }
@@ -143,7 +144,7 @@ function ae.request(ws, taskUuid, uuid, name, damage, amount)
     local timeout = 60
 
     for _ = 1, timeout do
-        os.sleep(0.5)
+        os.sleep(1)
         if status.hasFailed() or status.isCanceled() then
             local reason = ""
             if status.hasFailed() then
@@ -152,16 +153,19 @@ function ae.request(ws, taskUuid, uuid, name, damage, amount)
                 reason = "crafting canceled"
             end
 
+            ws:send(json.encode(message))
             oc_info.warn(ws, "craft failed due to " .. reason, file, "request", taskUuid)
             return
         end
 
         if ~status.isComputing() then
+            message.data.success = true
             ws:send(json.encode(message))
             return
         end
     end
 
+    ws:send(json.encode(message))
     oc_info.error(ws, "request time out", file, "request", taskUuid)
     
 end

@@ -122,7 +122,9 @@ function ae.request(ws, taskUuid, uuid, name, damage, amount)
     end
     carftTaskQueue[queuePointer] = ocUuid.next()
 
-    craftTasks[carftTaskQueue[queuePointer]] = craftable[1].request(amount)
+    local status = craftable[1].request(amount)
+
+    craftTasks[carftTaskQueue[queuePointer]] = status
 
     local message = {
         type = "update/ae/craftRequest",
@@ -138,7 +140,30 @@ function ae.request(ws, taskUuid, uuid, name, damage, amount)
         queuePointer = 1
     end
 
-    ws:send(json.encode(message))
+    local timeout = 60
+
+    for _ = 1, timeout do
+        os.sleep(0.5)
+        if status.hasFailed() or status.isCanceled() then
+            local reason = ""
+            if status.hasFailed() then
+                reason = "crafting failed"
+            else
+                reason = "crafting canceled"
+            end
+
+            oc_info.warn(ws, "craft failed due to " .. reason, file, "request", taskUuid)
+            return
+        end
+
+        if ~status.isComputing() then
+            ws:send(json.encode(message))
+            return
+        end
+    end
+
+    oc_info.error(ws, "request time out", file, "request", taskUuid)
+    
 end
 
 -- 使用 craft uuid 查询合成状态

@@ -39,6 +39,11 @@ export function openLoginDialog() {
     initSettingsContent()
 }
 
+export function closeLoginDialog() {
+    (document.getElementById("dialog-login")! as Dialog).open = false
+    initSettingsContent()
+}
+
 export function initSettingsContent() {
     const endpointElement = document.getElementById("dialog-login-input-endpoint")! as TextField
     endpointElement.value = endpoint

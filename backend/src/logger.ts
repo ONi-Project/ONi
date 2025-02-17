@@ -26,4 +26,4 @@ export const loggerHandler = log4js.getLogger("handler")
 
 export const loggerPerformance = log4js.getLogger("performance")
 
-export const loggerOcOverWs = log4js.getLogger("oc-over-ws")
+export const loggerOcOverWs = log4js.getLogger("ocWsLog")

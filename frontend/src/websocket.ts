@@ -1,7 +1,7 @@
 import { randomUUID } from "./utils"
 import { Snackbar, snackbar } from "mdui"
 import { endpoint, token } from "./settings"
-import { openLoginDialog, setText } from "./dialog/login"
+import { closeLoginDialog, openLoginDialog, setText } from "./dialog/login"
 import { initSlogan } from "./layout/topbar"
 
 // 定义事件推送器
@@ -29,8 +29,10 @@ export let ws: WebSocket
 
 export function init() {
 
-    let disconectInfo: Snackbar
+    let disconectInfo: Snackbar | undefined
+    let errorInfo: Snackbar | undefined
     let connectedOnce = false // 是否曾经连接成功过
+
 
     if (endpoint == "" && token == "") {
         setText("欢迎来到 ONi！请输入后端地址和令牌来登录。")
@@ -46,18 +48,23 @@ export function init() {
         ws.onopen = () => {
             connectDeco()
             if (disconectInfo) { disconectInfo.open = false }
+            if (errorInfo) { errorInfo.open = false }
             connectedOnce = true
             console.log("ws 连接成功")
+            disconectInfo = undefined
+            errorInfo = undefined
             ws.send(JSON.stringify({ type: "auth/request", uuid: randomUUID(), data: { "token": token } }))
         }
 
         ws.onclose = () => {
-            if(connectedOnce){
-                disconectInfo = snackbar({
-                    message: "WebSocket 连接已断开，正在尝试重新连接...",
-                    autoCloseDelay: 60000,
-                    closeable: false
-                })
+            if (connectedOnce) {
+                if (!disconectInfo) {
+                    disconectInfo = snackbar({
+                        message: "WebSocket 连接已断开，正在尝试重新连接...",
+                        autoCloseDelay: 60000,
+                        closeable: false
+                    })
+                }
                 disconectDeco()
                 setTimeout(() => {
                     tryConnect()
@@ -68,11 +75,13 @@ export function init() {
 
         ws.onerror = (event) => {
             console.log("ws 连接失败：", event)
-            snackbar({
-                message: "WebSocket 连接错误。",
-                autoCloseDelay: 0,
-                closeable: true
-            })
+            if (!errorInfo) {
+                errorInfo = snackbar({
+                    message: "WebSocket 连接失败。",
+                    autoCloseDelay: 60000,
+                    closeable: false
+                })
+            }
             setText("WebSocket 连接失败，请检查后端地址是否正确。")
             openLoginDialog()
             ws.close()
@@ -94,6 +103,7 @@ export function init() {
                         })
                     }, 300)
                     initSlogan()
+                    closeLoginDialog()
                 } else {
                     if (token === "") {
                         setText("欢迎来到 ONi！请输入后端地址和令牌来登录。")

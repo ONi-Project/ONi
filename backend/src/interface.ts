@@ -60,6 +60,7 @@ export interface Ae {
             total: number
         }
     }]
+
     itemList: [{
         name: string
         type: string
@@ -69,6 +70,16 @@ export interface Ae {
         id: number
         display: string
     }]
+
+    levelMaintain: {
+        enabled: boolean
+        list: [{
+            name: string
+            damage: number
+            request: number
+            amount: number
+        }]
+    }
 }
 
 export interface Common {

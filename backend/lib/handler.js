@@ -94,6 +94,9 @@ var handler = {
             else if (json.type == "data/ae/cpus") {
                 processor.data.ae.cpus(json, ws);
             }
+            else if (json.type == "log") {
+                processor.oc.log(json, ws);
+            }
             else {
                 logger.warn(`Unknown message type ${json.type}`);
             }
@@ -225,6 +228,11 @@ var processor = {
             if (!ok) {
                 logger.warn(`Trying to forward debug message to oc but bot ${json.target} not found or offline`);
             }
+        }
+    },
+    oc: {
+        log(json, ws) {
+            fs.writeFileSync(`./logs/oc.log`, `[${new Date().toLocaleString()}] [${json.data.level}/${json.data.file}:${json.data.location}] (${json.data.taskUuid}) ${json.data.message}\n`, { flag: "a+" });
         }
     },
     webAuth(json, ws) {

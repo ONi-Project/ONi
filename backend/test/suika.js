@@ -78,9 +78,53 @@ ws.onopen = () => {
         type: "log",
         data: {
             level: "info",
-            message: "This is a test log message from Suika.js",
+            message: "This is a test info message from Suika.js",
             file: "suika.js",
-            location: "d:\\Github\\ONi\\backend\\test\\suika.js",
+            location: "test/suika.js",
+            taskUuid: "00000000-0000-000000000000",
+        }
+    }))
+
+    ws.send(JSON.stringify({
+        type: "log",
+        data: {
+            level: "warn",
+            message: "This is a test warn message from Suika.js",
+            file: "suika.js",
+            location: "test/suika.js",
+            taskUuid: "00000000-0000-000000000000",
+        }
+    }))
+
+    ws.send(JSON.stringify({
+        type: "log",
+        data: {
+            level: "trace",
+            message: "This is a test trace message from Suika.js",
+            file: "suika.js",
+            location: "test/suika.js",
+            taskUuid: "00000000-0000-000000000000",
+        }
+    }))
+
+    ws.send(JSON.stringify({
+        type: "log",
+        data: {
+            level: "error",
+            message: "This is a test error message from Suika.js",
+            file: "suika.js",
+            location: "test/suika.js",
+            taskUuid: "00000000-0000-000000000000",
+        }
+    }))
+
+    ws.send(JSON.stringify({
+        type: "log",
+        data: {
+            level: "debug",
+            message: "This is a test debug message from Suika.js",
+            file: "suika.js",
+            location: "test/suika.js",
             taskUuid: "00000000-0000-000000000000",
         }
     }))

@@ -4,7 +4,7 @@
 import fs from "fs"
 import Global from "./global/index.js"
 import { Bot, Common, SessionOc, SessionWeb } from "./interface.js"
-import { loggerHandler as logger } from "./logger.js"
+import { loggerHandler as logger, loggerOcOverWs } from "./logger.js"
 import { wssOc } from "./websocket.js"
 
 var handler = {
@@ -67,7 +67,9 @@ var handler = {
             return
         }
 
-        logger.trace("OC RECEIVED", json)
+        if (json.type != "log") {
+            logger.trace("OC RECEIVED", json)
+        }
 
         if (json.type == "auth/request") {
             // 登录请求
@@ -213,6 +215,8 @@ var processor = {
     oc: {
         log(json: any, ws: SessionOc) {
             fs.writeFileSync(`./logs/oc.log`, `[${new Date().toLocaleString()}] [${json.data.level}/${json.data.file}:${json.data.location}] (${json.data.taskUuid}) ${json.data.message}\n`, { flag: "a+" })
+            const { level, file, location, taskUuid, message } = json.data
+            loggerOcOverWs.log(level, `[${level}/${file}:${location}] (${taskUuid}) ${message}`)
         }
     },
     webAuth(json: any, ws: SessionWeb) {

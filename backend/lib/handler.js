@@ -1,6 +1,6 @@
 import fs from "fs";
 import Global from "./global/index.js";
-import { loggerHandler as logger } from "./logger.js";
+import { loggerHandler as logger, loggerOcOverWs } from "./logger.js";
 import { wssOc } from "./websocket.js";
 var handler = {
     webMessage(msg, ws) {
@@ -65,7 +65,9 @@ var handler = {
             logger.error(e);
             return;
         }
-        logger.trace("OC RECEIVED", json);
+        if (json.type != "log") {
+            logger.trace("OC RECEIVED", json);
+        }
         if (json.type == "auth/request") {
             // 登录请求
             processor.ocAuth(json, ws);
@@ -93,6 +95,9 @@ var handler = {
             }
             else if (json.type == "data/ae/cpus") {
                 processor.data.ae.cpus(json, ws);
+            }
+            else if (json.type == "log") {
+                processor.oc.log(json, ws);
             }
             else {
                 logger.warn(`Unknown message type ${json.type}`);
@@ -225,6 +230,13 @@ var processor = {
             if (!ok) {
                 logger.warn(`Trying to forward debug message to oc but bot ${json.target} not found or offline`);
             }
+        }
+    },
+    oc: {
+        log(json, ws) {
+            fs.writeFileSync(`./logs/oc.log`, `[${new Date().toLocaleString()}] [${json.data.level}/${json.data.file}:${json.data.location}] (${json.data.taskUuid}) ${json.data.message}\n`, { flag: "a+" });
+            const { level, file, location, taskUuid, message } = json.data;
+            loggerOcOverWs.log(level, `[${level}/${file}:${location}] (${taskUuid}) ${message}`);
         }
     },
     webAuth(json, ws) {

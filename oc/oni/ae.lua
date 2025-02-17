@@ -264,6 +264,130 @@ function ae.getItems(ws, taskUuid, uuid, targetAeUuid)
     -- ws:send(json.encode(message))
 end
 
+-- taskUuid -> name .. ":" .. damage -> {status: ..., cpuName: ...}
+local levelMaintainList = {}
+
+-- 维持 AE 网络中物品的数量
+-- TODO: 合成出现问题时的处理
+-- enabled 为 false 时，忽略 list 参数，并取消当前正在进行的合成
+-- enabledCpuList 为字符串数组，表示维持物品数量时允许使用的 CPU 列表，为空或 nil 时，会使用全部的 CPU
+-- 其中的字符串表示 CPU 的名称，故使用此参数时需要 CPU 已命名
+-- list 是包含需要维持数量的物品的数组，每个物品的格式如下：
+-- {
+--     "name": <string>,
+--     "damage": <number>,
+--     "request": <number>,
+--     "amount": <number>
+-- }
+-- 其中 request 表示单次合成的物品数量
+-- amount 表示库存维持的目标数量
+function ae.levelMaintain(ws, taskUuid, uuid, enabled, list, enabledCpuList)
+    local comp = aeComponents[uuid]
+
+    local maintainList = levelMaintainList[taskUuid]
+    local aeCpuList = comp.getCpus()
+    
+    local cpuNameMap = {}
+    
+    for _, cpu in pairs(aeCpuList) do
+        cpuNameMap[cpu.name] = cpu.cpu
+    end
+    
+    local enabledCpuNameMap = {}
+
+    for _, cpuName in pairs(enabledCpuList) do
+        enabledCpuNameMap[cpuName] = cpuNameMap[cpuName]
+    end
+
+    -- enable 为 true 时，取消该 taskUuid 对应的合成任务
+    if not enabled then
+        if maintainList == nil or #maintainList == 0 then
+            return
+        end
+        for _, info in pairs(maintainList) do
+            local status = info.status
+            if not status.isCanceled() and not status.hasFailed() and not status.isDone() then
+                cpuNameMap[info.cpuName].cancel()
+            end
+        end
+
+        return
+    end
+
+    -- 过滤正在合成的物品
+    local filteredList = {}
+
+    for _, item in list do
+        local maintainListKey = item.name .. ":" .. item.damage
+
+        local info = levelMaintainList[taskUuid][maintainListKey]
+        local status = info.status
+        if status.isCanceled() or status.hasFailed() or status.isDone() then
+            filteredList[#filteredList + 1] = item
+        end
+    end
+
+    -- enable 为 true，执行库存维持
+    levelMaintainList[taskUuid] = {}
+    local cpuIteratePointer = 1
+    for _, item in filteredList do
+        local name = item.name
+        local damage = item.damage
+        local filter = {
+            name = name,
+            damage = damage
+        }
+
+        local storage = comp.getItemsInNetwork(filter)
+
+        if #storage > 1 then
+            ws_log.error(ws,
+                "Craft same items with different nbt is not supported now. name = " .. name .. ", damage = " .. damage,
+                file, "levelMaintain", taskUuid)
+        end
+
+        -- 若库存充足，则跳过合成
+        if #storage == 1 and storage[1].size >= item.amount then
+            goto item_craft_loop_continue
+        end
+
+        local maintainListKey = name .. ":" .. damage
+
+        local craftable = comp.getCraftables(filter)
+
+        if #craftable == 0 then
+            ws_log.error(ws, "no item with name = " .. name .. ", damage = " .. damage, file, "levelMaintain", taskUuid)
+            goto item_craft_loop_continue
+        end
+    
+        if #craftable > 1 then
+            ws_log.error(ws,
+                "Craft same items with different nbt is not supported now. name = " .. name .. ", damage = " .. damage,
+                file, "levelMaintain", taskUuid)
+            goto item_craft_loop_continue
+        end
+
+        while cpuIteratePointer + 1 <= #enabledCpuNameMap and enabledCpuNameMap[cpuIteratePointer].busy == true do
+            cpuIteratePointer = cpuIteratePointer + 1
+        end
+
+        -- 所有 CPU 均已被占用则直接跳过
+        if enabledCpuNameMap[cpuIteratePointer].busy == true then
+            return
+        end
+
+        local cpuName = enabledCpuNameMap[cpuIteratePointer].name
+        local status = craftable[1].request(item.request, true, cpuName)
+
+        levelMaintainList[taskUuid][maintainListKey] = {
+            status = status,
+            cpuName = cpuName
+        }
+
+        ::item_craft_loop_continue::
+    end
+end
+
 -- 返回与 config 内容对应的处理任务的函数
 -- config 中 mode 参数可以为："getCpus", "request", "check", "getItems"
 -- config 参数请查看对应函数的描述
@@ -314,6 +438,11 @@ function ae.newTask(ws, taskUuid, config)
         return (function()
             config.uuid = checkUuid(config.uuid)
             ae.getItems(ws, taskUuid, config.uuid, config.targetAeUuid)
+        end)
+    elseif config.mode == "levelMaintain" then
+        return (function()
+            config.uuid = checkUuid(config.uuid)
+            ae.levelMaintain(ws, taskUuid, config.uuid, config.enabled, config.list)
         end)
     end
 end

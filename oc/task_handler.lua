@@ -2,7 +2,7 @@ local webSocket = require("ws")
 local event = require("event")
 local json = require("dkjson")
 
-local oc_info = require("oni/oc_info")
+local ws_log = require("oni/ws_log")
 local component = require("oni/component")
 local redstone = require("oni/redstone")
 local ae = require("oni/ae")
@@ -141,7 +141,7 @@ end
 
 function cancel(taskUuid)
     if taskList[taskUuid] == nil then
-        oc_info.warn(
+        ws_log.warn(
             "task with uuid: " .. taskUuid .. " dosen't exist",
             file,
             "cancel",

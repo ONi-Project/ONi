@@ -1,6 +1,6 @@
 local ocComponent = require("component")
 local json = require("dkjson")
-local oc_info = require("oni/oc_info")
+local ws_log = require("oni/ws_log")
 
 local file = "oni/gt_machine.lua"
 
@@ -24,7 +24,7 @@ local function extractNumber(ws, taskUuid, str, ord)
         i = i + 1
     end
 
-    oc_info.warn(
+    ws_log.warn(
         ws,
         "number extract failed: number of nums in string less than " .. ord,
         file,
@@ -97,7 +97,7 @@ function gt_machine.getEUInfo(ws, taskUuid, uuid)
     gt_machine.updateMachine()
 
     if machineList[uuid] == nil then
-        oc_info.warn(
+        ws_log.warn(
             ws,
             "gt machine with uuid: " .. uuid " not found",
             file,
@@ -155,7 +155,7 @@ function gt_machine.getFluidInfo(ws, taskUuid, uuid)
     local name = machineList[uuid].name
 
     if comp == nil then
-        oc_info.warn(
+        ws_log.warn(
             ws,
             "gt machine with uuid: " .. uuid .. " not found",
             file,
@@ -198,7 +198,7 @@ function gt_machine.getFluidInfo(ws, taskUuid, uuid)
             storage = extractNumber(ws, taskUuid, sensor[4], 1)
         }
     else
-        oc_info.warn(
+        ws_log.warn(
             ws,
             "unsupported machine: " .. name,
             file,
@@ -224,7 +224,7 @@ function gt_machine.newTask(ws, taskUuid, config)
             gt_machine.getFluidInfo(ws, taskUuid, config.uuid)
         end)
     else
-        oc_info.warn(
+        ws_log.warn(
             ws,
             "unknown task mode: " .. config.mode,
             file,

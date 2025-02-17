@@ -1,6 +1,6 @@
 local component = require("oni/component")
 local ocComponent = require("component")
-local oc_info = require("oni/oc_info")
+local ws_log = require("oni/ws_log")
 local sides = require("sides")
 local json = require("dkjson")
 
@@ -264,7 +264,7 @@ function redstone.newTask(ws, taskUuid, config)
         redstone.updateComponent()
 
         if redstoneComponents[config.uuid] == nil then
-            oc_info.error(ws,
+            ws_log.error(ws,
                 "redstone I/O with uuid = " .. config.uuid .. " dosen't exist",
                 file,
                 "newTask",
@@ -274,7 +274,7 @@ function redstone.newTask(ws, taskUuid, config)
         end
 
         if config.strength ~= nil and (config.strength < 0 or config.strength > 255) then
-            oc_info.error(
+            ws_log.error(
                 "redstone strength: " .. tostring(config.strength) .. " out of bound (0 ~ 255)",
                 file,
                 "newTask",

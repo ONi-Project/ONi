@@ -21,7 +21,7 @@ export function commaNumberDisplayConvert(num: number): string {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 
-// 将时间戳转换成 xxx 秒前、xxx 分钟前、xxx 小时前 的显示风格
+// 将时间戳转换成 xxx 分钟前、xxx 小时前 的显示风格
 export function timePassedDisplayConvert(timestamp: number) {
     const now = new Date().getTime()
     const passed = now - timestamp
@@ -33,10 +33,8 @@ export function timePassedDisplayConvert(timestamp: number) {
 
     if (timestamp == 0) {
         return "无数据"
-    } else if (passed < 10 * 1000) {
+    } else if (passed < 60 * 1000) {
         return "刚刚"
-    } else if (passed < minute) {
-        return Math.floor(passed / 1000) + " 秒前"
     } else if (passed < hour) {
         return Math.floor(passed / minute) + " 分钟前"
     } else if (passed < day) {
@@ -50,7 +48,7 @@ export function timePassedDisplayConvert(timestamp: number) {
     }
 }
 
-// 将时间长度转换成 xxx 秒、xxx 分钟、xxx 小时、xxx 天、xxx 月、xxx 年 的显示风格
+// 将时间长度转换成 xxx 分钟、xxx 小时、xxx 天、xxx 月、xxx 年 的显示风格
 export function timeLengthDisplayConvert(timestamp: number) {
     const now = new Date().getTime()
     const passed = now - timestamp
@@ -62,10 +60,8 @@ export function timeLengthDisplayConvert(timestamp: number) {
 
     if (timestamp == 0) {
         return "无数据"
-    } else if (passed < 10 * 1000) {
+    } else if (passed < 60 * 1000) {
         return "刚刚"
-    } else if (passed < minute) {
-        return Math.floor(passed / 1000) + " 秒"
     } else if (passed < hour) {
         return Math.floor(passed / minute) + " 分钟"
     } else if (passed < day) {

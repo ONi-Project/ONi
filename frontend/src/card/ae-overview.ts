@@ -1,6 +1,6 @@
 export function html(config: any) {
   return /*html*/`
-<mdui-card class="card" variant="filled">
+<mdui-card class="card ae__list-item" variant="filled">
   <div style="display: flex;align-items: center;gap: 0.5rem;">
     <mdui-icon name="grid_on--outlined" style="font-size: 2rem;"></mdui-icon>
 
@@ -11,7 +11,7 @@ export function html(config: any) {
     <mdui-divider vertical style="margin-left: 0.5rem;margin-right: 0.5rem;"></mdui-divider>
 
     <div>
-      <div style="opacity: 1;">数据更新 - 刚刚</div>
+      <div class="ae__view-time-updated" style="opacity: 1;">...</div>
       <div style="opacity: 0.25;font-size: smaller;">${config.uuid}</div>
     </div>
 
@@ -20,12 +20,12 @@ export function html(config: any) {
   <div style="display: flex;flex-direction: column;gap: 0.25rem;margin-top: 0.25rem;">
     <div style="display: flex;opacity: 0.75;gap: 0.5rem;">
       <mdui-icon name="schedule"></mdui-icon>
-      <div>创建于 2021-08-15 12:00:00</div>
+      <div class="ae__view-time-created">...</div>
     </div>
 
     <div style="display: flex;opacity: 0.75;gap: 0.5rem;">
       <mdui-icon name="memory"></mdui-icon>
-      <div>16/16 核心空闲</div>
+      <div class="ae__view-cpu-status">...</div>
     </div>
 
     <div style="display: flex;opacity: 0.75;gap: 0.5rem;">

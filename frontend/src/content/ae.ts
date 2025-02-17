@@ -12,7 +12,6 @@ export const html = /*html*/`
   </div>
 
   <div id="ae__list">
-
   </div>
 
   <div id="ae__view" class="animate__animated animate__fadeInRight animate__faster" hidden>

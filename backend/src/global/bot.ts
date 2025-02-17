@@ -93,7 +93,7 @@ var bot = {
                     }
                 })
                 if (!ok) {
-                    logger.warn("bot.tasks.runSingleTask", `Trying to send task to oc but bot ${uuid} not found or offline`)
+                    logger.error("bot.tasks.runSingleTask", `Trying to send task to oc but bot ${uuid} not found or offline`)
                 }
             } else {
                 logger.error("bot.tasks.runSingleTask", "Bot not found.")
@@ -141,7 +141,7 @@ var bot = {
                 wsWebBroadcast("data/bot/set", targetBot)
             }
             if (!ok) {
-                logger.warn("bot.tasks.updateTasks", `Trying to send task to oc but bot ${uuid} not found or offline`)
+                logger.error("bot.tasks.updateTasks", `Trying to send task to oc but bot ${uuid} not found or offline`)
             }
         }
     },

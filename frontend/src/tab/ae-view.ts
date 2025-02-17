@@ -1,7 +1,7 @@
 import { throttle } from "mdui"
 import * as pinyinPro from "pinyin-pro"
 import * as global from "../global"
-import { commaNumberDisplayConvert, isMobileDevice, numberDisplayConvert, timeDisplayConvert, timeLengthDisplayConvert, timePassedDisplayConvert } from "../utils"
+import * as utils from "../utils"
 import { eventEmitter } from "../websocket"
 import { showItemInfo } from "../dialog/ae-item-info"
 import { picSource } from "../settings"
@@ -15,7 +15,8 @@ export function html(config: any) {
     </div>
   
     <div class="grid-full">
-      <mdui-card class="card ae__view-cpus" variant="filled">
+      <mdui-card class="card" variant="filled">
+      
         <div style="display: flex;align-items: center;gap: 0.5rem;">
   
           <mdui-icon name="grid_on--outlined" style="font-size: 2rem;"></mdui-icon>
@@ -113,31 +114,6 @@ export function init() {
     let itemsPerPage = 40
     let cpusPerPage = 8
 
-    let lastMousePosition = { x: 0, y: 0 }
-    let tooltip = document.getElementById("tooltip-ae")!
-
-    document.querySelectorAll(".ae__view-item-list").forEach((element: Element) => {
-        const HTMLElement = element as HTMLElement
-        HTMLElement.addEventListener("mousemove", (e: MouseEvent) => {
-            lastMousePosition.x = e.pageX + 10
-            lastMousePosition.y = e.pageY + 10
-            requestAnimationFrame(updateTooltipPosition)
-        })
-    })
-
-    function updateTooltipPosition() {
-        tooltip.style.left = lastMousePosition.x + "px"
-        tooltip.style.top = lastMousePosition.y + "px"
-    }
-
-    document.querySelectorAll(".ae__view-back").forEach(element => {
-        element.addEventListener("click", _event => {
-            document.getElementById("ae__view")!.hidden = true
-            document.getElementById("ae__list")!.hidden = false
-            document.getElementById("ae__topbar")!.hidden = false
-        })
-    })
-
     global.ae.forEach((ae: any) => {
         filters.push({
             uuid: ae.uuid,
@@ -151,6 +127,36 @@ export function init() {
             cpusShowMore: false
         })
     })
+
+    let tooltip = document.getElementById("tooltip-ae")!;
+
+    // 初始化 tooltip
+    (()=>{
+        let lastMousePosition = { x: 0, y: 0 }
+        
+        document.querySelectorAll(".ae__view-item-list").forEach((element: Element) => {
+            const HTMLElement = element as HTMLElement
+            HTMLElement.addEventListener("mousemove", (e: MouseEvent) => {
+                lastMousePosition.x = e.pageX + 10
+                lastMousePosition.y = e.pageY + 10
+                requestAnimationFrame(updateTooltipPosition)
+            })
+        })
+    
+        function updateTooltipPosition() {
+            tooltip.style.left = lastMousePosition.x + "px"
+            tooltip.style.top = lastMousePosition.y + "px"
+        }
+    
+        document.querySelectorAll(".ae__view-back").forEach(element => {
+            element.addEventListener("click", _event => {
+                document.getElementById("ae__view")!.hidden = true
+                document.getElementById("ae__list")!.hidden = false
+                document.getElementById("ae__topbar")!.hidden = false
+            })
+        })
+    
+    })()
 
 
     document.querySelectorAll(".ae__view").forEach(aeview => {
@@ -259,43 +265,52 @@ export function init() {
         renderCpusList(uuid, ae, aeview)
         renderItemList(uuid, ae, aeview)
 
+        setInterval(() => {
+            renderStatusText(uuid, ae, aeview)
+        }, 10000)
+
     })
 
 
+    document.querySelectorAll(".ae__list-item").forEach(aeListItem => {
 
-    setInterval(() => {
-        global.ae.forEach((ae: any) => {
-            tick(ae.uuid, ae)
+        const uuid = aeListItem.querySelector("data")!.getAttribute("uuid")!
+
+        eventEmitter.addEventListener("message", async (event: any) => {
+            const { type, data } = event.data
+            if (type == "data/ae/set" && data.uuid === uuid) {
+                renderStatusText(uuid, data, aeListItem)
+            }
         })
-    }, 1000)
 
-    function tick(target: any, ae: any) {
-        const aeview = Array.from(document.querySelectorAll(".ae__view")).find(element => element.querySelector("data")!.getAttribute("uuid") === target)!
-        aeview.querySelector(".ae__view-time-updated")!.innerHTML = `数据更新 - ${timePassedDisplayConvert(ae.timeUpdated)}`
-    }
+        const ae = global.ae.find((ae: any) => ae.uuid === uuid)
 
-    function renderStatusText(target: string, ae: any, tab: any) {
+        renderStatusText(uuid, ae, aeListItem)
+    })
+
+
+    function renderStatusText(target: string, ae: any, card: any) {
 
         if (!ae) {
             ae = global.ae.find((ae: any) => ae.uuid === target)
         }
 
-        tab.querySelector(".ae__view-time-updated")!.innerHTML = `数据更新 - ${timePassedDisplayConvert(ae.timeUpdated)}`
-        tab.querySelector(".ae__view-time-created")!.innerHTML = `创建于 ${timeDisplayConvert(ae.timeCreated)}`
-        tab.querySelector(".ae__view-cpu-status")!.innerHTML = `${ae.cpus.length - ae.cpus.filter((cpu: any) => cpu.busy).length} / ${ae.cpus.length} 核心空闲`
+        card.querySelector(".ae__view-time-updated")!.innerHTML = `数据更新 - ${utils.timePassedDisplayConvert(ae.timeUpdated)}`
+        card.querySelector(".ae__view-time-created")!.innerHTML = `创建于 ${utils.timeDisplayConvert(ae.timeCreated)}`
+        card.querySelector(".ae__view-cpu-status")!.innerHTML = `${ae.cpus.length - ae.cpus.filter((cpu: any) => cpu.busy).length} / ${ae.cpus.length} 核心空闲`
 
     }
 
-    function renderCpusList(target: any, ae: any, tab: any) {
+    function renderCpusList(target: any, ae: any, card: any) {
         let _ = ""
 
-        let targetElement = tab.querySelector(".ae__view-cpu-list")
+        let targetElement = card.querySelector(".ae__view-cpu-list") as HTMLElement
 
-        let targetElementNothing = tab.querySelector(".ae__view-cpu-list-nothing")
+        let targetElementNothing = card.querySelector(".ae__view-cpu-list-nothing") as HTMLElement
 
-        let targetElementShowMore = tab.querySelector(".ae__view-cpu-list-more-button")
+        let targetElementShowMore = card.querySelector(".ae__view-cpu-list-more-button") as HTMLElement
 
-        let targetElementShowLess = tab.querySelector(".ae__view-cpu-list-less-button")
+        let targetElementShowLess = card.querySelector(".ae__view-cpu-list-less-button") as HTMLElement
 
         if (!ae) {
             ae = global.ae.find((ae: any) => ae.uuid === target)
@@ -310,15 +325,15 @@ export function init() {
         })
 
         if (aeCpus.length <= cpusPerPage) {
-            (targetElementShowMore as HTMLElement).style["display"] = "none";
-            (targetElementShowLess as HTMLElement).style["display"] = "none"
+            targetElementShowMore.style["display"] = "none"
+            targetElementShowLess.style["display"] = "none"
         } else {
             if (filters.find((ae: any) => ae.uuid === target).cpusShowMore) {
-                (targetElementShowMore as HTMLElement).style["display"] = "none";
-                (targetElementShowLess as HTMLElement).style["display"] = "block"
+                targetElementShowMore.style["display"] = "none"
+                targetElementShowLess.style["display"] = "block"
             } else {
-                (targetElementShowMore as HTMLElement).style["display"] = "block";
-                (targetElementShowLess as HTMLElement).style["display"] = "none"
+                targetElementShowMore.style["display"] = "block"
+                targetElementShowLess.style["display"] = "none"
             }
         }
 
@@ -339,7 +354,7 @@ export function init() {
                 const icon = cpu.busy ? "settings_suggest" : "download_done"
                 const iconBig = cpu.busy ? "hourglass_bottom" : "schedule"
                 const nameStr = cpu.name ? `- "${cpu.name}"` : ""
-                const statusStr = cpu.busy ? `合成中 · ${timeLengthDisplayConvert(cpu.timeStarted)}` : `空闲 · ${cpu.storage / 1024}K`
+                const statusStr = cpu.busy ? `合成中 · ${utils.timeLengthDisplayConvert(cpu.timeStarted)}` : `空闲 · ${cpu.storage / 1024}K`
                 const finalOutput = cpu.busy ? `<div style="margin-top: .5rem;margin-bottom: .5rem;"><b>${cpu.finalOutput.display}</b> - ${finalOutputTotal - finalOutputAmount} / ${finalOutputTotal}</div>` : ""
                 const percentage = ((finalOutputTotal - finalOutputAmount) / finalOutputTotal * 100).toFixed(0)
                 const progressBar = cpu.busy ? /*html*/`
@@ -374,12 +389,12 @@ export function init() {
 
     // target: 目标 ae uuid
     // ae: 目标 ae 数据，留空则从全局 ae 列表中获取
-    function renderItemList(target: any, ae: any, tab: any) {
+    function renderItemList(target: any, ae: any, card: any) {
         let _ = ""
 
-        const targetElement = tab.querySelector(".ae__view-item-list")
-        const targetElementNothing = tab.querySelector(".ae__view-item-list-nothing")
-        const targetElementShowMore = tab.querySelector(".ae__view-item-list-more-button")
+        const targetElement = card.querySelector(".ae__view-item-list")
+        const targetElementNothing = card.querySelector(".ae__view-item-list-nothing")
+        const targetElementShowMore = card.querySelector(".ae__view-item-list-more-button")
 
         if (!ae) {
             ae = global.ae.find((ae: any) => ae.uuid === target)
@@ -478,7 +493,7 @@ export function init() {
 
                 let link = ""
                 let type = ""
-                let amount = numberDisplayConvert(item.amount)
+                let amount = utils.numberDisplayConvert(item.amount)
                 let craftable = ""
 
                 if (item.type == "item") {
@@ -520,14 +535,14 @@ export function init() {
 
         targetElement!.innerHTML = _
 
-        tab.querySelectorAll(".ae__view-item-list-item").forEach((item: any) => {
+        card.querySelectorAll(".ae__view-item-list-item").forEach((item: any) => {
             item.addEventListener("click", (_event: any) => {
                 const id = item.getAttribute("id")
                 const damage = item.getAttribute("damage")
                 const type = item.getAttribute("type")
                 showItemInfo(target, id, damage, type)
             })
-            if (!isMobileDevice()) {
+            if (!utils.isMobileDevice()) {
                 item.addEventListener("mouseover", (_event: any) => {
                     const name = item.getAttribute("name")
                     const display = item.getAttribute("display")
@@ -551,7 +566,7 @@ export function init() {
                     <div>${display}</div>
                     ${modBar}
                     ${craftableBar}
-                    <div style="font-size: smaller; color: #888;">数量：${commaNumberDisplayConvert(amount)}</div>
+                    <div style="font-size: smaller; color: #888;">数量：${utils.commaNumberDisplayConvert(amount)}</div>
                     `
                 })
                 item.addEventListener("mouseout", (_event: any) => {

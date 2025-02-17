@@ -279,9 +279,9 @@ export function init() {
       if (type == "string") {
         value = element.querySelector("mdui-text-field")!.value
       } else if (type == "number") {
-        value = element.querySelector("mdui-text-field")!.value
+        value = Number(element.querySelector("mdui-text-field")!.value)
       } else if (type == "boolean") {
-        value = element.querySelector("mdui-switch")!.checked
+        value = Boolean(element.querySelector("mdui-switch")!.checked)
       }
 
       if (!value && required == "true") {
@@ -307,7 +307,7 @@ export function init() {
       botTaskOutput = {
         task: botTaskSelectedTask.split(".")[0],
         ...globalConfig,
-        taskUuid: undefined,
+        taskUuid: "(随机)",
         config: { mode: botTaskSelectedTask.split(".")[1], ...config }
       }
       document.getElementById("bot__task-dialog-step3-preview")!.innerHTML = JSON.stringify(botTaskOutput, null, 4)

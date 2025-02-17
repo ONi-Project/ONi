@@ -1,7 +1,7 @@
-import { Dialog } from "mdui"
+import { Dialog, snackbar } from "mdui"
 import { picSource } from "../settings"
 import { Parser } from "expr-eval"
-import { send } from "../websocket"
+import { eventEmitter, send } from "../websocket"
 import { randomUUID } from "../utils"
 
 export const html = /*html*/`
@@ -105,17 +105,57 @@ export function init() {
   })
 
   document.getElementById("ae__order-submit")!.addEventListener("click", () => {
+    const taskUuid = randomUUID()
     send({
       "type": "ae/order",
       "data": {
         "uuid": aeUuid,
-        "taskUuid": randomUUID(),
+        "taskUuid": taskUuid,
         "name": item.name,
         "damage": item.damage,
         "amount": parseInt(input.value)
       }
     })
-    dialog.open = false
+    const submitBtn = document.getElementById("ae__order-submit")!
+    let processed: boolean
+    submitBtn.setAttribute("disabled", "true")
+    submitBtn.setAttribute("loading", "true")
+    function waitingForMessage(event: any) {
+      const { type, data } = event.data
+      if (type === "ae/order/result" && data.taskUuid === taskUuid) {
+        submitBtn.removeAttribute("loading")
+        submitBtn.removeAttribute("disabled")
+        if (data.success) {
+          dialog.open = false
+          processed = true
+          snackbar({
+            message: "订单提交成功。",
+            autoCloseDelay: 5000,
+            closeable: true
+          })
+        } else {
+          processed = true
+          snackbar({
+            message: "订单提交失败，可能是原料不足或没有可用的 CPU。",
+            autoCloseDelay: 0,
+            closeable: true
+          })
+        }
+      }
+    }
+    eventEmitter.addEventListener("message", waitingForMessage)
+    setTimeout(() => {
+      eventEmitter.removeEventListener("message", waitingForMessage)
+      submitBtn.removeAttribute("loading")
+      submitBtn.removeAttribute("disabled")
+      if (!processed) {
+        snackbar({
+          message: "请求超时。",
+          autoCloseDelay: 0,
+          closeable: true
+        })
+      }
+    }, 60000)
   })
 
   input.addEventListener("blur", () => {
@@ -141,10 +181,13 @@ export function init() {
 export function showOrderDialog(uuid: string, itm: any) {
   const dialog = document.getElementById("ae__order-dialog") as Dialog
   const elemImg = document.getElementById("ae__order-item-img") as HTMLImageElement
-  const elemDisplay = document.getElementById("ae__order-item-display")!
-  const elemAmount = document.getElementById("ae__order-item-amount")!
+  const elemDisplay = document.getElementById("ae__order-item-display") as HTMLElement
+  const elemAmount = document.getElementById("ae__order-item-amount") as HTMLElement
+  const input = document.getElementById("ae__order-amount-input") as HTMLInputElement
 
   let link = ""
+
+  input.value = "1"
 
   if (itm.type == "item") {
     link = `item/${itm.id}_${itm.damage}.png`

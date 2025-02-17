@@ -158,7 +158,7 @@ function ae.request(ws, taskUuid, uuid, name, damage, amount)
             return
         end
 
-        if ~status.isComputing() then
+        if not status.isComputing() then
             message.data.success = true
             ws:send(json.encode(message))
             return

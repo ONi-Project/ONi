@@ -5,7 +5,16 @@
         "timeCreated": 1732782114000,
         "timeUpdated": 0,
         "cpus": [],
-        "itemList": []
+        "itemList": [],
+        "levelMaintain":{
+            "enabled": true,
+            "list":[{
+                "name":"minecraft:planks",
+                "damage":"0",
+                "request":25,
+                "amount":100
+            }]
+        }
     },
     {
         "uuid": "d5c6c273-cb03-41df-89ca-716523de723a",
@@ -13,7 +22,11 @@
         "timeCreated": 1732782114000,
         "timeUpdated": 0,
         "cpus": [],
-        "itemList": []
+        "itemList": [],
+        "levelMaintain":{
+            "enabled": true,
+            "list":[]
+        }
     },
     {
         "uuid": "30a7623c-54b7-4c22-b8ed-55892a524dbf",
@@ -21,6 +34,10 @@
         "timeCreated": 1732782114000,
         "timeUpdated": 0,
         "cpus": [],
-        "itemList": []
+        "itemList": [],
+        "levelMaintain":{
+            "enabled": true,
+            "list":[]
+        }
     }
 ]

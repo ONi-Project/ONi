@@ -1,7 +1,7 @@
 import fs from "fs";
 import Global from "./global/index.js";
 import { loggerHandler as logger, loggerOcOverWs } from "./logger.js";
-import { wssOc } from "./websocket.js";
+import { wssOc, wsWebBroadcast } from "./websocket.js";
 var handler = {
     webMessage(msg, ws) {
         // 解析 JSON
@@ -17,7 +17,7 @@ var handler = {
         logger.trace("WEB RECEIVED", json);
         if (json.type == "auth/request") {
             // 登录请求
-            processor.webAuth(json, ws);
+            processor.auth.web(json, ws);
         }
         else if (!ws.authenticated) {
             // 如果未登录
@@ -70,7 +70,7 @@ var handler = {
         }
         if (json.type == "auth/request") {
             // 登录请求
-            processor.ocAuth(json, ws);
+            processor.auth.oc(json, ws);
         }
         else if (!ws.authenticated) {
             // 如果未登录
@@ -95,6 +95,9 @@ var handler = {
             }
             else if (json.type == "data/ae/cpus") {
                 processor.data.ae.cpus(json, ws);
+            }
+            else if (json.type == "ae/order/result") {
+                processor.ae.orderResult(json, ws);
             }
             else if (json.type == "log") {
                 processor.oc.log(json, ws);
@@ -142,7 +145,7 @@ var processor = {
                     if (ae) {
                         const cpuPrev = ae.cpus.find(c => c.name === cpu.name);
                         if (cpuPrev) {
-                            if (cpuPrev.busy && cpu.busy && cpuPrev.timeStarted && ((_a = cpuPrev.finalOutput) === null || _a === void 0 ? void 0 : _a.total)) {
+                            if (cpuPrev.busy && cpu.busy && cpuPrev.timeStarted && ((_a = cpuPrev.finalOutput) === null || _a === void 0 ? void 0 : _a.total) && cpu.finalOutput) {
                                 cpu.timeStarted = cpuPrev.timeStarted;
                                 cpu.finalOutput.total = cpuPrev.finalOutput.total;
                             }
@@ -206,6 +209,9 @@ var processor = {
                     "amount": json.data.amount
                 }
             });
+        },
+        orderResult(json, ws) {
+            wsWebBroadcast("ae/order/result", json.data);
         }
     },
     web2oc: {
@@ -239,59 +245,61 @@ var processor = {
             loggerOcOverWs.log(level, `[${level}/${file}:${location}] (${taskUuid}) ${message}`);
         }
     },
-    webAuth(json, ws) {
-        const user = Global.user.list.find(user => user.token === json.data.token);
-        if (user) {
-            ws.authenticated = true;
-            ws.user = user;
-            // 返回用户信息
-            ws.send(JSON.stringify({ type: "auth/response", data: ws.user }));
-            // 发送 overview 布局文件
-            ws.send(JSON.stringify({ type: "layout/overview", data: JSON.parse(fs.readFileSync('./data/layout/overview.json', 'utf8')) }));
-            // 发送 control 布局文件
-            ws.send(JSON.stringify({ type: "layout/control", data: Global.redstone.getLayout() }));
-            // 发送 data 数据
-            ws.send(JSON.stringify({ type: "global/common", data: Global.data.list }));
-            // 发送 mcServerStatus 数据
-            ws.send(JSON.stringify({ type: "global/mcServerStatus", data: Global.mcServerStatus.status }));
-            // 发送 events 布局
-            ws.send(JSON.stringify({ type: "layout/event", data: Global.event.getLayout() }));
-            // 发送 bot 数据
-            ws.send(JSON.stringify({ type: "global/bot", data: Global.bot.list }));
-            // 发送 bot list 布局
-            ws.send(JSON.stringify({ type: "layout/botList", data: Global.bot.getListLayout() }));
-            // 发送 bot task 列表
-            ws.send(JSON.stringify({ type: "global/botTask", data: Global.staticResources.botTask }));
-            // 发送 bot 编辑布局
-            ws.send(JSON.stringify({ type: "layout/botEdit", data: Global.bot.getEditLayout() }));
-            // 发送 ae 数据
-            ws.send(JSON.stringify({ type: "global/ae", data: Global.ae.list }));
-            // 发送 ae list 布局
-            ws.send(JSON.stringify({ type: "layout/aeList", data: Global.ae.getListLayout() }));
-            // 发送 ae 查看布局
-            ws.send(JSON.stringify({ type: "layout/aeView", data: Global.ae.getViewLayout() }));
-            // 发送 ae 编辑布局
-            ws.send(JSON.stringify({ type: "layout/aeEdit", data: Global.ae.getEditLayout() }));
-        }
-        else {
-            logger.warn(`Invalid token ${json.data.token} for user ${ws.sessionId.substring(0, 8)}`);
-            ws.send(JSON.stringify({ type: "auth/response", data: { user: undefined } }));
-        }
-    },
-    ocAuth(json, ws) {
-        // 登录请求
-        const bot = Global.bot.list.find(bot => bot.token === json.data.token);
-        if (bot) {
-            ws.authenticated = true;
-            ws.bot = bot;
-            // 返回用户信息
-            ws.send(JSON.stringify({ type: "auth/response", data: bot }));
-            // 发送 tasks 数据
-            ws.send(JSON.stringify({ type: "task", data: bot.tasks }));
-        }
-        else {
-            logger.warn(`Invalid token ${json.data.token} for bot ${ws.sessionId.substring(0, 8)}`);
-            ws.send(JSON.stringify({ type: "auth/response", data: undefined }));
-        }
-    },
+    auth: {
+        web(json, ws) {
+            const user = Global.user.list.find(user => user.token === json.data.token);
+            if (user) {
+                ws.authenticated = true;
+                ws.user = user;
+                // 返回用户信息
+                ws.send(JSON.stringify({ type: "auth/response", data: ws.user }));
+                // 发送 overview 布局文件
+                ws.send(JSON.stringify({ type: "layout/overview", data: JSON.parse(fs.readFileSync('./data/layout/overview.json', 'utf8')) }));
+                // 发送 control 布局文件
+                ws.send(JSON.stringify({ type: "layout/control", data: Global.redstone.getLayout() }));
+                // 发送 data 数据
+                ws.send(JSON.stringify({ type: "global/common", data: Global.data.list }));
+                // 发送 mcServerStatus 数据
+                ws.send(JSON.stringify({ type: "global/mcServerStatus", data: Global.mcServerStatus.status }));
+                // 发送 events 布局
+                ws.send(JSON.stringify({ type: "layout/event", data: Global.event.getLayout() }));
+                // 发送 bot 数据
+                ws.send(JSON.stringify({ type: "global/bot", data: Global.bot.list }));
+                // 发送 bot list 布局
+                ws.send(JSON.stringify({ type: "layout/botList", data: Global.bot.getListLayout() }));
+                // 发送 bot task 列表
+                ws.send(JSON.stringify({ type: "global/botTask", data: Global.staticResources.botTask }));
+                // 发送 bot 编辑布局
+                ws.send(JSON.stringify({ type: "layout/botEdit", data: Global.bot.getEditLayout() }));
+                // 发送 ae 数据
+                ws.send(JSON.stringify({ type: "global/ae", data: Global.ae.list }));
+                // 发送 ae list 布局
+                ws.send(JSON.stringify({ type: "layout/aeList", data: Global.ae.getListLayout() }));
+                // 发送 ae 查看布局
+                ws.send(JSON.stringify({ type: "layout/aeView", data: Global.ae.getViewLayout() }));
+                // 发送 ae 编辑布局
+                ws.send(JSON.stringify({ type: "layout/aeEdit", data: Global.ae.getEditLayout() }));
+            }
+            else {
+                logger.warn(`Invalid token ${json.data.token} for user ${ws.sessionId.substring(0, 8)}`);
+                ws.send(JSON.stringify({ type: "auth/response", data: { user: undefined } }));
+            }
+        },
+        oc(json, ws) {
+            // 登录请求
+            const bot = Global.bot.list.find(bot => bot.token === json.data.token);
+            if (bot) {
+                ws.authenticated = true;
+                ws.bot = bot;
+                // 返回用户信息
+                ws.send(JSON.stringify({ type: "auth/response", data: bot }));
+                // 发送 tasks 数据
+                ws.send(JSON.stringify({ type: "task", data: bot.tasks }));
+            }
+            else {
+                logger.warn(`Invalid token ${json.data.token} for bot ${ws.sessionId.substring(0, 8)}`);
+                ws.send(JSON.stringify({ type: "auth/response", data: undefined }));
+            }
+        },
+    }
 };

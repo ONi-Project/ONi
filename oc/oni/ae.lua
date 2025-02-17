@@ -1,5 +1,5 @@
 local ocComponent = require("component")
-local oc_info = require("oni/oc_info")
+local ws_log = require("oni/ws_log")
 local json = require("dkjson")
 local ocUuid = require("uuid")
 local internet = require("internet")
@@ -96,7 +96,7 @@ function ae.request(ws, taskUuid, uuid, name, damage, amount)
     local comp = aeComponents[uuid]
 
     if name == nil or damage == nil or amount == nil then
-        oc_info.error(ws, "missing necessary argument", file, "request", taskUuid)
+        ws_log.error(ws, "missing necessary argument", file, "request", taskUuid)
         return
     end
 
@@ -106,12 +106,12 @@ function ae.request(ws, taskUuid, uuid, name, damage, amount)
     })
 
     if #craftable == 0 then
-        oc_info.error(ws, "no item with name = " .. name .. ", damage = " .. damage, file, "request", taskUuid)
+        ws_log.error(ws, "no item with name = " .. name .. ", damage = " .. damage, file, "request", taskUuid)
         return
     end
 
     if #craftable > 1 then
-        oc_info.error(ws,
+        ws_log.error(ws,
             "Craft same items with different nbt is not supported now. name = " .. name .. ", damage = " .. damage,
             file, "request", taskUuid)
         return
@@ -154,7 +154,7 @@ function ae.request(ws, taskUuid, uuid, name, damage, amount)
             end
 
             ws:send(json.encode(message))
-            oc_info.warn(ws, "craft failed due to " .. reason, file, "request", taskUuid)
+            ws_log.warn(ws, "craft failed due to " .. reason, file, "request", taskUuid)
             return
         end
 
@@ -166,7 +166,7 @@ function ae.request(ws, taskUuid, uuid, name, damage, amount)
     end
 
     ws:send(json.encode(message))
-    oc_info.error(ws, "request time out", file, "request", taskUuid)
+    ws_log.error(ws, "request time out", file, "request", taskUuid)
     
 end
 
@@ -180,7 +180,7 @@ function ae.check(ws, taskUuid, craftUuid)
     local status = craftTasks[craftUuid]
 
     if status == nil then
-        oc_info.error(ws, "invalid craft uuid or uuid expired", file, "check", taskUuid)
+        ws_log.error(ws, "invalid craft uuid or uuid expired", file, "check", taskUuid)
         return
     end
 
@@ -280,12 +280,12 @@ function ae.newTask(ws, taskUuid, config)
         end
 
         if uuid == nil then
-            oc_info.error(ws, "no AE component attached", file, "newTask", taskUuid)
+            ws_log.error(ws, "no AE component attached", file, "newTask", taskUuid)
             return nil
         end
 
         if aeComponents[uuid] == nil then
-            oc_info.error(ws, "AE component with uuid = " .. uuid .. " dosen't exist", file, "newTask", taskUuid)
+            ws_log.error(ws, "AE component with uuid = " .. uuid .. " dosen't exist", file, "newTask", taskUuid)
             return nil
         end
 

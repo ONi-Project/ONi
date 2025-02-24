@@ -71,15 +71,19 @@ export interface Ae {
         display: string
     }]
 
-    levelMaintain: {
+    levelMaintain: [{
+        uuid: string
         enabled: boolean
         list: [{
             name: string
+            type: string
             damage: number
             request: number
             amount: number
+            id: number
+            display: string
         }]
-    }
+    }]
 }
 
 export interface Common {

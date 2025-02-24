@@ -27,16 +27,48 @@
             {
                 "task": "ae",
                 "interval": 10,
-                "taskUuid": "00000000-0000-000000000002",
+                "taskUuid": "00000000-0001-000000000000",
                 "config": {
                     "mode": "levelMaintain",
                     "enabled": true,
                     "list": [
                         {
                             "name": "minecraft:planks",
+                            "type": "item",
                             "damage": 0,
-                            "request": 5,
-                            "amount": 100
+                            "request": 25,
+                            "amount": 100,
+                            "id": 5,
+                            "display": "橡木木板"
+                        },
+                        {
+                            "name": "minecraft:planks",
+                            "type": "item",
+                            "damage": 1,
+                            "request": 50,
+                            "amount": 200,
+                            "id": 5,
+                            "display": "云杉木板"
+                        }
+                    ]
+                }
+            },
+            {
+                "task": "ae",
+                "interval": 10,
+                "taskUuid": "00000000-0001-000000000001",
+                "config": {
+                    "mode": "levelMaintain",
+                    "enabled": false,
+                    "list": [
+                        {
+                            "name": "minecraft:chest",
+                            "type": "item",
+                            "damage": 0,
+                            "request": 4,
+                            "amount": 25,
+                            "id": 54,
+                            "display": "箱子"
                         }
                     ]
                 }

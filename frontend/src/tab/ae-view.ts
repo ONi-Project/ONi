@@ -18,34 +18,37 @@ export function html(config: any) {
       <mdui-card class="card" variant="filled">
       
         <div style="display: flex;align-items: center;gap: 0.5rem;">
-  
-          <mdui-icon name="grid_on--outlined" style="font-size: 2rem;"></mdui-icon>
-  
-          <div>
+        <mdui-icon name="grid_on--outlined" style="font-size: 2rem;"></mdui-icon>
+    
+        <div>
             <div style="font-size: larger;white-space: nowrap;"><b>${config.name}</b></div>
-          </div>
-  
-          <mdui-divider vertical style="margin-left: 0.5rem;margin-right: 0.5rem;"></mdui-divider>
-  
-          <div>
-            <div class="ae__view-time-updated" style="opacity: 1;">...</div>
+        </div>
+    
+        <mdui-divider vertical style="margin-left: 0.5rem;margin-right: 0.5rem;"></mdui-divider>
+    
+        <div>
+            <div class="ae__overview-time-updated" style="opacity: 1;">...</div>
             <div style="opacity: 0.25;font-size: smaller;">${config.uuid}</div>
-          </div>
-  
         </div>
-  
+    
+        </div>
+    
         <div style="display: flex;flex-direction: column;gap: 0.25rem;margin-top: 0.25rem;">
-          <div style="display: flex;opacity: 0.75;gap: 0.5rem;">
+        <div style="display: flex;opacity: 0.75;gap: 0.5rem;">
             <mdui-icon name="schedule"></mdui-icon>
-            <div class="ae__view-time-created">...</div>
-          </div>
-  
-          <div style="display: flex;opacity: 0.75;gap: 0.5rem;">
-            <mdui-icon name="memory"></mdui-icon>
-            <div class="ae__view-cpu-status"></div>
-          </div>
+            <div class="ae__overview-time-created">...</div>
         </div>
-  
+    
+        <div style="display: flex;opacity: 0.75;gap: 0.5rem;">
+            <mdui-icon name="memory"></mdui-icon>
+            <div class="ae__overview-cpu-status">...</div>
+        </div>
+    
+        <div style="display: flex;opacity: 0.75;gap: 0.5rem;">
+            <mdui-icon name="category"></mdui-icon>
+            <div class="ae__overview-maintain">...</div>
+        </div>
+        </div>
   
       </mdui-card>
     </div>
@@ -288,6 +291,22 @@ export function init() {
         renderStatusText(uuid, ae, aeListItem)
     })
 
+    document.querySelectorAll(".ae__edit").forEach(aeEdit => {
+
+        const uuid = aeEdit.querySelector("data")!.getAttribute("uuid")!
+
+        eventEmitter.addEventListener("message", async (event: any) => {
+            const { type, data } = event.data
+            if (type == "data/ae/set" && data.uuid === uuid) {
+                renderStatusText(uuid, data, aeEdit)
+            }
+        })
+
+        const ae = global.ae.find((ae: any) => ae.uuid === uuid)
+
+        renderStatusText(uuid, ae, aeEdit)
+    })
+
 
     function renderStatusText(target: string, ae: any, card: any) {
 
@@ -295,10 +314,10 @@ export function init() {
             ae = global.ae.find((ae: any) => ae.uuid === target)
         }
 
-        card.querySelector(".ae__view-time-updated")!.innerHTML = `数据更新 - ${utils.timePassedDisplayConvert(ae.timeUpdated)}`
-        card.querySelector(".ae__view-time-created")!.innerHTML = `创建于 ${utils.timeDisplayConvert(ae.timeCreated)}`
-        card.querySelector(".ae__view-cpu-status")!.innerHTML = `${ae.cpus.length - ae.cpus.filter((cpu: any) => cpu.busy).length} / ${ae.cpus.length} 核心空闲`
-
+        card.querySelector(".ae__overview-time-updated")!.innerHTML = `数据更新 - ${utils.timePassedDisplayConvert(ae.timeUpdated)}`
+        card.querySelector(".ae__overview-time-created")!.innerHTML = `创建于 ${utils.timeDisplayConvert(ae.timeCreated)}`
+        card.querySelector(".ae__overview-cpu-status")!.innerHTML = `${ae.cpus.length - ae.cpus.filter((cpu: any) => cpu.busy).length} / ${ae.cpus.length} 核心空闲`
+        card.querySelector(".ae__overview-maintain")!.innerHTML = `test`
     }
 
     function renderCpusList(target: any, ae: any, card: any) {

@@ -282,25 +282,32 @@ local levelMaintainList = {}
 -- 其中 request 表示单次合成的物品数量
 -- amount 表示库存维持的目标数量
 function ae.levelMaintain(ws, taskUuid, uuid, enabled, list, enabledCpuList)
+    -- print("maintain list", json.encode(list))
+
     local comp = aeComponents[uuid]
 
     local maintainList = levelMaintainList[taskUuid]
     local aeCpuList = comp.getCpus()
-    
+
     local cpuNameMap = {}
     
     for _, cpu in pairs(aeCpuList) do
         cpuNameMap[cpu.name] = cpu.cpu
     end
-    
+
     local enabledCpuNameMap = {}
 
-    for _, cpuName in pairs(enabledCpuList) do
-        enabledCpuNameMap[cpuName] = cpuNameMap[cpuName]
+    if enabledCpuList == nil or #enabledCpuList == 0 then
+        enabledCpuNameMap = cpuNameMap
+    else
+        for _, cpuName in pairs(enabledCpuList) do
+            enabledCpuNameMap[cpuName] = cpuNameMap[cpuName]
+        end
     end
 
-    -- enable 为 true 时，取消该 taskUuid 对应的合成任务
+    -- enable 为 false 时，取消该 taskUuid 对应的合成任务
     if not enabled then
+        -- print("cancel maintain task")
         if maintainList == nil or #maintainList == 0 then
             return
         end
@@ -317,12 +324,22 @@ function ae.levelMaintain(ws, taskUuid, uuid, enabled, list, enabledCpuList)
     -- 过滤正在合成的物品
     local filteredList = {}
 
-    for _, item in list do
+    for _, item in pairs(list) do
+
         local maintainListKey = item.name .. ":" .. item.damage
 
-        local info = levelMaintainList[taskUuid][maintainListKey]
-        local status = info.status
-        if status.isCanceled() or status.hasFailed() or status.isDone() then
+        local info = nil
+        local status = nil
+
+        if levelMaintainList[taskUuid] ~= nil then
+            info = levelMaintainList[taskUuid][maintainListKey]
+        end
+
+        if info ~= nil then
+            status = info.status
+        end
+
+        if info == nil or status == nil or status.isCanceled() or status.hasFailed() or status.isDone() then
             filteredList[#filteredList + 1] = item
         end
     end
@@ -330,7 +347,14 @@ function ae.levelMaintain(ws, taskUuid, uuid, enabled, list, enabledCpuList)
     -- enable 为 true，执行库存维持
     levelMaintainList[taskUuid] = {}
     local cpuIteratePointer = 1
-    for _, item in filteredList do
+
+    local enabledCpuNameList = {}
+
+    for name, _ in pairs(enabledCpuNameMap) do
+        enabledCpuNameList[#enabledCpuNameList + 1] = name
+    end
+
+    for _, item in pairs(filteredList) do
         local name = item.name
         local damage = item.damage
         local filter = {
@@ -340,7 +364,9 @@ function ae.levelMaintain(ws, taskUuid, uuid, enabled, list, enabledCpuList)
 
         local storage = comp.getItemsInNetwork(filter)
 
+
         if #storage > 1 then
+            -- print("more than one item found, skip")
             ws_log.error(ws,
                 "Craft same items with different nbt is not supported now. name = " .. name .. ", damage = " .. damage,
                 file, "levelMaintain", taskUuid)
@@ -348,6 +374,7 @@ function ae.levelMaintain(ws, taskUuid, uuid, enabled, list, enabledCpuList)
 
         -- 若库存充足，则跳过合成
         if #storage == 1 and storage[1].size >= item.amount then
+            -- print("item already meet the target amount, skip")
             goto item_craft_loop_continue
         end
 
@@ -356,27 +383,33 @@ function ae.levelMaintain(ws, taskUuid, uuid, enabled, list, enabledCpuList)
         local craftable = comp.getCraftables(filter)
 
         if #craftable == 0 then
+            -- print("no craftable item found, skip")
             ws_log.error(ws, "no item with name = " .. name .. ", damage = " .. damage, file, "levelMaintain", taskUuid)
             goto item_craft_loop_continue
         end
     
         if #craftable > 1 then
+            -- print("craftable item found, but more than one, skip")
             ws_log.error(ws,
                 "Craft same items with different nbt is not supported now. name = " .. name .. ", damage = " .. damage,
                 file, "levelMaintain", taskUuid)
             goto item_craft_loop_continue
         end
 
-        while cpuIteratePointer + 1 <= #enabledCpuNameMap and enabledCpuNameMap[cpuIteratePointer].busy == true do
+        local cpuName = enabledCpuNameList[cpuIteratePointer]
+
+        while cpuIteratePointer + 1 <= #enabledCpuNameMap and enabledCpuNameMap[cpuName].busy == true do
+            -- print("cpu busy, skip")
             cpuIteratePointer = cpuIteratePointer + 1
+            cpuName = enabledCpuNameList[cpuIteratePointer]
         end
 
         -- 所有 CPU 均已被占用则直接跳过
-        if enabledCpuNameMap[cpuIteratePointer].busy == true then
+        if enabledCpuNameMap[cpuName].busy == true then
             return
         end
 
-        local cpuName = enabledCpuNameMap[cpuIteratePointer].name
+        local cpuName = enabledCpuNameMap[cpuName].name
         local status = craftable[1].request(item.request, true, cpuName)
 
         levelMaintainList[taskUuid][maintainListKey] = {
@@ -442,7 +475,7 @@ function ae.newTask(ws, taskUuid, config)
     elseif config.mode == "levelMaintain" then
         return (function()
             config.uuid = checkUuid(config.uuid)
-            ae.levelMaintain(ws, taskUuid, config.uuid, config.enabled, config.list)
+            ae.levelMaintain(ws, taskUuid, config.uuid, config.enabled, config.list, config.enabledCpuList)
         end)
     end
 end

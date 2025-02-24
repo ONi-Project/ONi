@@ -26,7 +26,7 @@
     "express": "^4.21.2",
     "log4js": "^6.9.1",
     "minecraftstatuspinger": "^1.2.1",
-    "ws": "^8.18.0",
+    "ws": "^8.18.1",
     "yaml": "^2.7.0"
   }
 }

@@ -8,6 +8,8 @@ import { loggerHandler as logger, loggerOcOverWs } from "./logger.js"
 import { wssOc, wsWebBroadcast } from "./websocket.js"
 import { wsBase, wsBaseGuard, wsOcToServer, wsOcToServerGuard, wsWebToServer, wsWebToServerGuard, messageTypeMap, wsGeneral, wsGeneralGuard, aeModel } from "@oni/interface"
 import { botModel, commonModel } from "@oni/interface"
+import { createMessage } from "@oni/interface/utils/createMessage.js"
+
 const handler = {
     webMessage(msg: string, ws: SessionWeb) {
 

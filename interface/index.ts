@@ -23,4 +23,4 @@ export * as mcServerStatusModel from "./data/mcServerStatus.types"
 export * as redstoneModel from "./data/redstone.types"
 export * as userModel from "./data/user.types"
 
-export * as createMessage from "utils/createMessage"
+export { createMessage } from "utils/createMessage"

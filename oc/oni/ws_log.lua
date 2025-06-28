@@ -1,12 +1,12 @@
 local json = require("dkjson")
 
-oc_info = {}
+ws_log = {}
 
-oc_info.debugLevel = 2
+ws_log.debugLevel = 2
 
 
-function oc_info.trace(ws, message, file, location, taskUuid)
-    if oc_info.debugLevel >= 4 then
+function ws_log.trace(ws, message, file, location, taskUuid)
+    if ws_log.debugLevel >= 4 then
         return
     end
 
@@ -25,8 +25,8 @@ function oc_info.trace(ws, message, file, location, taskUuid)
 end
 
 
-function oc_info.debug(ws, message, file, location, taskUuid)
-    if oc_info.debugLevel >= 3 then
+function ws_log.debug(ws, message, file, location, taskUuid)
+    if ws_log.debugLevel >= 3 then
         return
     end
 
@@ -45,8 +45,8 @@ function oc_info.debug(ws, message, file, location, taskUuid)
 end
 
 
-function oc_info.info(ws, message, file, location, taskUuid)
-    if oc_info.debugLevel >= 2 then
+function ws_log.info(ws, message, file, location, taskUuid)
+    if ws_log.debugLevel >= 2 then
         return
     end
 
@@ -64,8 +64,8 @@ function oc_info.info(ws, message, file, location, taskUuid)
     ws:send(json.encode(message))
 end
 
-function oc_info.warn(ws, message, file, location, taskUuid)
-    if oc_info.debugLevel >= 1 then
+function ws_log.warn(ws, message, file, location, taskUuid)
+    if ws_log.debugLevel >= 1 then
         return
     end
 
@@ -83,8 +83,8 @@ function oc_info.warn(ws, message, file, location, taskUuid)
     ws:send(json.encode(message))
 end
 
-function oc_info.error(ws, message, file, location, taskUuid)
-    if oc_info.debugLevel >= 0 then
+function ws_log.error(ws, message, file, location, taskUuid)
+    if ws_log.debugLevel >= 0 then
         return
     end
 
@@ -103,4 +103,4 @@ function oc_info.error(ws, message, file, location, taskUuid)
 end
 
 
-return oc_info
+return ws_log

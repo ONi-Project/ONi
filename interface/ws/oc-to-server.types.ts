@@ -10,4 +10,4 @@ export type DataAeItemList = Message<"DataAeItemList", [AeItem]>
 export type DataAeCpuList = Message<"DataAeCpuList", [AeCpu]>
 export type DataEventAdd = Message<"DataEventAdd", Event>
 export type DataEventSet = Message<"dataEventSet", Event>
-export type DataBotComponent = Message<"DataBotComponent", [BotComponent]> //
+export type DataBotComponent = Message<"DataBotComponent", [BotComponent]>

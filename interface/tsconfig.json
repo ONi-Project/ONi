@@ -8,7 +8,10 @@
     "emitDeclarationOnly": true,
     "outDir": "dist",
     "composite": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "isolatedModules": true
   },
-  "include": ["./**/*.ts"]
+  "include": [
+    "./**/*.ts"
+  ]
 }

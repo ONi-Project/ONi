@@ -4,8 +4,8 @@ export interface Bot {
     token: string
     timeCreated: number
 
-    components: [BotComponent]
-    tasks: [BotTask]
+    components: BotComponent[]
+    tasks: BotTask[]
 }
 
 export interface BotTask {

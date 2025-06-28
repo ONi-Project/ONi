@@ -1,23 +1,60 @@
-import type * as foo from './foo'
-import type * as bar from './bar'
+import * as serverToOcGuard from "../ws/server-to-oc.types.guard"
+import * as baseGuard from "../ws/base.types.guard"
 
-import { is } from 'ts-runtime-checks'
+console.log(serverToOcGuard.isAuthResponse({
+    type: "AuthResponse",
+    data: {
+        uuid: "1234",
+        name: "bot",
+        token: "111",
+        timeCreated: 114514,
+        components: [],
+        tasks: []
+    }
+})) // true
 
-type Foo =
-    | foo.potato
-    | foo.car
-type Bar =
-    | bar.person
-    | bar.milk
+console.log(serverToOcGuard.isAuthResponse({
+    type: "AuthResponse1",
+    data: {
+        uuid: "1234",
+        name: "bot",
+        token: "111",
+        timeCreated: 114514,
+        components: [],
+        tasks: []
+    }
+})) // false
 
-type all =
-    | Foo
-    | Bar
+console.log(serverToOcGuard.isAuthResponse({
+    type: "AuthResponse",
+    data: {
+        uuid: "1234",
+        name: "bot",
+        token: "111",
+        timeCreated: 114514,
+        components: [{
+            description: "string",
+            class: "string",
+            uuid: "string",
+            aaa: 111
+        }],
+        tasks: []
+    }
+})) // true
 
-export function validate<T>(object: any) {
-    return is<T>(object)
-}
+console.log(serverToOcGuard.isAuthResponse({
+    type: "AuthResponse",
+    data: {
+        uuid: "1234",
+        name: "bot",
+        token: "111",
+        timeCreated: 114514,
+        components: [{
+            description: "string",
+            class: "string",
+            aaa: 111
+        }],
+        tasks: []
+    }
+})) // false
 
-validate<foo.potato>({ name: 'potato', color: 'brown', weight: 1.2 }) // true
-validate<foo.car>({ make: 'Toyota', model: 'Camry' }) // true
-validate<String>("hello")

@@ -6,36 +6,41 @@ import Global from "./global/index.js"
 import { Bot, Common, SessionOc, SessionWeb } from "./interface.js"
 import { loggerHandler as logger, loggerOcOverWs } from "./logger.js"
 import { wssOc, wsWebBroadcast } from "./websocket.js"
-import { WsBase } from "@oni/interface"
-
-var handler = {
+import { wsBase, wsBaseGuard, wsOcToServer, wsOcToServerGuard, wsWebToServer, wsWebToServerGuard, messageTypeMap } from "@oni/interface"
+const handler = {
     webMessage(msg: string, ws: SessionWeb) {
 
         // 解析 JSON
-        let json: WsBase.Message
+        let json
         try {
             json = JSON.parse(msg)
         } catch (e) {
-            logger.error("WEB RECEIVED INVALID", msg)
+            logger.error("WEB RECEIVED INVALID JSON", msg)
             logger.error(e)
+            return
+        }
+
+        if (!wsBaseGuard.isMessage(json)) {
+            logger.error("WEB RECEIVED INVALID MESSAGE", json)
             return
         }
 
         logger.trace("WEB RECEIVED", json)
 
 
-        if (json.type == "auth/request") {
-            // 登录请求
+        // 登录请求
+        if (wsWebToServerGuard.isAuthRequest(json)) {
             processor.auth.web(json, ws)
         } else if (!ws.authenticated) {
             // 如果未登录
             ws.send(JSON.stringify({ "type": "error", "data": "Not authenticated" }))
         } else {
             // 如果已登录，处理数据
-            if (json.type == "data/event/set") {
+            if (wsWebToServerGuard.isDataEventSet(json)) {
                 // 事件数据
                 processor.data.eventSet(json, ws)
-            } else if (json.type == "oc/task/runSingle") {
+                return
+            } else if (wsWebToServerGuard.isOcTaskRunSingle(json)) {
                 // 运行单次任务
                 processor.web2oc.taskRunSingle(json, ws)
             } else if (json.type == "oc/task/add") {
@@ -105,7 +110,7 @@ var handler = {
 
 export default handler
 
-var processor = {
+const processor = {
     data: {
         commonSet(json: any, ws: SessionOc) {
             let target = Global.data.list.find(data => data.uuid === json.data.uuid)

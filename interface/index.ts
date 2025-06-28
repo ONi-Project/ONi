@@ -1,4 +1,14 @@
-export * as WsBase from "./ws/base.types"
-export * as WsServerToClient from "./ws/server-to-web.types"
-export * as WsClientToServer from "./ws/web-to-server.types"
-export * as AllMessageType from "./ws/map"
+export * as wsBase from "./ws/base.types"
+export * as wsServerToWeb from "./ws/server-to-web.types"
+export * as wsWebToServer from "./ws/web-to-server.types"
+export * as wsServerToOc from "./ws/server-to-oc.types"
+export * as wsOcToServer from "./ws/oc-to-server.types"
+
+export * as wsBaseGuard from "./ws/base.types.guard"
+export * as wsServerToWebGuard from "./ws/server-to-web.types.guard"
+export * as wsWebToServerGuard from "./ws/web-to-server.types.guard"
+export * as wsServerToOcGuard from "./ws/server-to-oc.types.guard"
+export * as wsOcToServerGuard from "./ws/oc-to-server.types.guard"
+
+export * as allMessageType from "./ws/map"
+export * as messageTypeMap from "./utils/messageTypeMap"

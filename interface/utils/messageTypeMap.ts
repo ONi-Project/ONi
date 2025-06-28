@@ -9,3 +9,7 @@ export type TypeToObject<T> = {
 }
 
 export type MessageTypeMap = TypeToObject<allMessageType.All>
+
+export type MessageDataMap = {
+    [K in allMessageType.All as K["type"]]: K extends Message<K["type"], infer D> ? D : never
+}

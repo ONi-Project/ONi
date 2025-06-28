@@ -22,3 +22,5 @@ export * as eventModel from "./data/event.types"
 export * as mcServerStatusModel from "./data/mcServerStatus.types"
 export * as redstoneModel from "./data/redstone.types"
 export * as userModel from "./data/user.types"
+
+export * as createMessage from "utils/createMessage"

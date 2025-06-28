@@ -1,4 +1,4 @@
-import { Config } from "../interface.js"
+import { Config, PageContentElement } from "../interface.js"
 import fs from "fs"
 import { loggerGlobal as logger } from "../logger.js"
 import { wsWebBroadcast } from "../websocket.js"
@@ -11,7 +11,7 @@ let ae = {
     list: [] as aeModel.Ae[],
 
     getListLayout() {
-        let content: any = []
+        let content: PageContentElement[] = []
 
         this.list.forEach(ae => {
             content.push({
@@ -33,7 +33,7 @@ let ae = {
     },
 
     getEditLayout() {
-        let content: any = []
+        let content: PageContentElement[] = []
 
         this.list.forEach(ae => {
             content.push({
@@ -55,7 +55,7 @@ let ae = {
     },
 
     getViewLayout() {
-        let content: any = []
+        let content: PageContentElement[] = []
 
         this.list.forEach(ae => {
             content.push({
@@ -110,12 +110,12 @@ let ae = {
     },
 
     items: {
-        set(uuid: string, itemList: any) {
+        set(uuid: string, itemList: aeModel.AeItem[]) {
             let targetAe = ae.list.find(ae => ae.uuid === uuid)
             if (targetAe) {
                 performanceTimer("ae.itemList.set", () => {
-                    itemList = itemList.filter((item: any) => item.name !== "ae2fc:fluid_drop")
-                    itemList.forEach((item: any, index: number) => {
+                    itemList = itemList.filter((item: aeModel.AeItem) => item.name !== "ae2fc:fluid_drop")
+                    itemList.forEach((item: aeModel.AeItem, index: number) => {
                         if (item.type === "item" || item.type === "fluid") {
                             const resourceType = item.type === "item" ? Global.staticResources.itemPanelItemMap : Global.staticResources.itemPanelFluidMap
                             const resource = resourceType.get(item.type === "item" ? item.name + "/" + item.damage : item.name)

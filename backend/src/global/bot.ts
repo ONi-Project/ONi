@@ -1,4 +1,4 @@
-import { Config, SessionOc, SessionWeb } from "../interface.js"
+import { Config, PageContentElement, SessionOc, SessionWeb } from "../interface.js"
 import fs from "fs"
 import { loggerGlobal as logger } from "../logger.js"
 import { wssOc, wssWeb, wsWebBroadcast } from "../websocket.js"
@@ -9,7 +9,7 @@ let bot = {
     list: [] as botModel.Bot[],
 
     getListLayout() {
-        let content: any = []
+        let content: PageContentElement[] = []
 
         this.list.forEach(bot => {
             content.push({
@@ -40,7 +40,7 @@ let bot = {
     },
 
     getEditLayout() {
-        let content: any = []
+        let content: PageContentElement[] = []
 
         this.list.forEach(bot => {
             content.push({
@@ -62,7 +62,7 @@ let bot = {
     },
 
     components: {
-        set(uuid: string, components: any) {
+        set(uuid: string, components: botModel.BotComponent[]) {
             let targetBot = bot.list.find(item => item.uuid == uuid)
             if (targetBot) {
                 targetBot.components = components

@@ -20,3 +20,9 @@ export interface Config {
     mc_server_status_update_interval: number
     debug: boolean
 }
+
+export interface PageContentElement {
+    type: string
+    id: string
+    config: any
+}

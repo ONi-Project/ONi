@@ -13,3 +13,19 @@ export type MessageTypeMap = TypeToObject<allMessageType.All>
 export type MessageDataMap = {
     [K in allMessageType.All as K["type"]]: K extends Message<K["type"], infer D> ? D : never
 }
+
+export type MessageServerToWebDataMap = {
+    [K in allMessageType.ServerToWeb as K["type"]]: K extends Message<K["type"], infer D> ? D : never
+}
+
+export type MessageWebToServerDataMap = {
+    [K in allMessageType.WebToServer as K["type"]]: K extends Message<K["type"], infer D> ? D : never
+}
+
+export type MessageServerToOcDataMap = {
+    [K in allMessageType.ServerToOc as K["type"]]: K extends Message<K["type"], infer D> ? D : never
+}
+
+export type MessageOcToServerDataMap = {
+    [K in allMessageType.OcToServer as K["type"]]: K extends Message<K["type"], infer D> ? D : never
+}

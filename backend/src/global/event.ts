@@ -1,4 +1,4 @@
-import { Config } from "../interface.js"
+import { Config, PageContentElement } from "../interface.js"
 import { wsWebBroadcast } from "../websocket.js"
 import { eventModel } from "@oni/interface"
 
@@ -7,7 +7,7 @@ let event = {
     list: [] as eventModel.Event[],
 
     getLayout() {
-        let content: any = []
+        let content: PageContentElement[] = []
 
         this.list.forEach(event => {
             content.push({

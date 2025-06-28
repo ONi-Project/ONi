@@ -1,4 +1,4 @@
-import { Config } from "../interface.js"
+import { Config, PageContentElement } from "../interface.js"
 import fs from "fs"
 import { loggerGlobal as logger } from "../logger.js"
 import { redstoneModel } from "@oni/interface"
@@ -8,7 +8,7 @@ let redstone = {
     list: [] as redstoneModel.Redstone[],
 
     getLayout() {
-        let content: any = []
+        let content: PageContentElement[] = []
 
         this.list.forEach(redstone => {
             if (redstone.type == "digital") {

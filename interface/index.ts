@@ -12,7 +12,7 @@ export * as wsWebToServerGuard from "./ws/web-to-server.types.guard"
 export * as wsServerToOcGuard from "./ws/server-to-oc.types.guard"
 export * as wsOcToServerGuard from "./ws/oc-to-server.types.guard"
 
-export * as allMessageType from "./ws/map"
+export * as allMessageType from "./utils/union.types"
 export * as messageTypeMap from "./utils/messageTypeMap"
 
 export * as aeModel from "./data/ae.types"
@@ -23,4 +23,4 @@ export * as mcServerStatusModel from "./data/mcServerStatus.types"
 export * as redstoneModel from "./data/redstone.types"
 export * as userModel from "./data/user.types"
 
-export { createMessage } from "utils/createMessage"
+export { newServerToWebMessage, newWebToServerMessage, newServerToOcMessage, newOcToServerMessage } from "utils/createMessage"

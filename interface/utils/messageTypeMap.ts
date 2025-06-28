@@ -29,3 +29,7 @@ export type MessageServerToOcDataMap = {
 export type MessageOcToServerDataMap = {
     [K in allMessageType.OcToServer as K["type"]]: K extends Message<K["type"], infer D> ? D : never
 }
+
+export type MessageGeneralDataMap = {
+    [K in allMessageType.General as K["type"]]: K extends Message<K["type"], infer D> ? D : never
+}

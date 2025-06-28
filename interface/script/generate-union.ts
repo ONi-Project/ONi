@@ -11,6 +11,7 @@ import type * as serverToWeb from "../ws/server-to-web.types"
 import type * as webToServer from "../ws/web-to-server.types"
 import type * as serverToOc from "../ws/server-to-oc.types"
 import type * as ocToServer from "../ws/oc-to-server.types"
+import type * as general from "../ws/general.types"
 
 `
 
@@ -34,12 +35,19 @@ const exportedTypeAliases4 = source4.getTypeAliases().filter(typeAlias => typeAl
 const unionType4 = exportedTypeAliases4.map(t => `ocToServer.${t.getName()}`).join("\n    | ")
 output += `export type OcToServer = \n    | ${unionType4}\n\n`
 
+const source5 = project.addSourceFileAtPath("./ws/general.types.ts")
+const exportedTypeAliases5 = source5.getTypeAliases().filter(typeAlias => typeAlias.isExported())
+const unionType5 = exportedTypeAliases5.map(t => `general.${t.getName()}`).join("\n    | ")
+output += `export type General = \n    | ${unionType5}\n\n`
+
+
 output +=
     `export type All =
     | ServerToWeb
     | WebToServer
     | ServerToOc
     | OcToServer
+    | General
 `
 
 console.log(output)

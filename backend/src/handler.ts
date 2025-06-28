@@ -8,7 +8,7 @@ import { loggerHandler as logger, loggerOcOverWs } from "./logger.js"
 import { wssOc, wsWebBroadcast } from "./websocket.js"
 import { wsBase, wsBaseGuard, wsOcToServer, wsOcToServerGuard, wsWebToServer, wsWebToServerGuard, messageTypeMap, wsGeneral, wsGeneralGuard, aeModel } from "@oni/interface"
 import { botModel, commonModel } from "@oni/interface"
-import { createMessage } from "@oni/interface/utils/createMessage.js"
+import { newServerToWebMessage, newServerToOcMessage, newGeneralMessage } from "@oni/interface/utils/createMessage.js"
 
 const handler = {
     webMessage(msg: string, ws: SessionWeb) {
@@ -36,7 +36,7 @@ const handler = {
             processor.auth.web(json, ws)
         } else if (!ws.authenticated) {
             // 如果未登录
-            ws.send(JSON.stringify({ "type": "error", "data": "Not authenticated" }))
+            ws.send(JSON.stringify(newGeneralMessage("Error", { "message": "Not authenticated" })))
         } else {
             // 如果已登录，处理数据
             if (wsWebToServerGuard.isDataEventSet(json)) {

@@ -4,6 +4,7 @@ import type * as serverToWeb from "../ws/server-to-web.types"
 import type * as webToServer from "../ws/web-to-server.types"
 import type * as serverToOc from "../ws/server-to-oc.types"
 import type * as ocToServer from "../ws/oc-to-server.types"
+import type * as general from "../ws/general.types"
 
 export type ServerToWeb = 
     | serverToWeb.AuthResponse
@@ -37,8 +38,12 @@ export type OcToServer =
     | ocToServer.AeOrderResult
     | ocToServer.Log
 
+export type General = 
+    | general.Error
+
 export type All =
     | ServerToWeb
     | WebToServer
     | ServerToOc
     | OcToServer
+    | General

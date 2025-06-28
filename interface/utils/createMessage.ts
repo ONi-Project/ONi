@@ -27,3 +27,10 @@ export function newOcToServerMessage<T extends keyof messageTypeMap.MessageOcToS
 ): wsBase.Message<T, messageTypeMap.MessageOcToServerDataMap[T]> {
     return new wsBase.Message(type, data)
 }
+
+export function newGeneralMessage<T extends keyof messageTypeMap.MessageGeneralDataMap>(
+    type: T,
+    data: messageTypeMap.MessageGeneralDataMap[T]
+): wsBase.Message<T, messageTypeMap.MessageGeneralDataMap[T]> {
+    return new wsBase.Message(type, data)
+}

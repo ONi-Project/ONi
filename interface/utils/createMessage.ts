@@ -1,36 +1,27 @@
-import { messageTypeMap, wsBase } from "../index"
+import { allMessageType, messageTypeMap, wsBase } from "../index"
 
-export function newServerToWebMessage<T extends keyof messageTypeMap.MessageServerToWebDataMap>(
-    type: T,
-    data: messageTypeMap.MessageServerToWebDataMap[T]
-): wsBase.Message<T, messageTypeMap.MessageServerToWebDataMap[T]> {
-    return new wsBase.Message(type, data)
+const curriedCreateMessage = <M extends wsBase.Message<string, any>>(
+    fixedM: M
+) => {
+    return function <T extends M["type"]>(
+        type: T,
+        ...args: messageTypeMap.IsOcMessage<Extract<M, {type: T}>> extends true
+            ? [data: messageTypeMap.DataType<M>[T], target: messageTypeMap.TargetType<M>[T]]
+            : [data: messageTypeMap.DataType<M>[T]]
+    ): Extract<allMessageType.All, { type: T }> {
+        const data = args[0]
+
+        if (args.length === 2) {
+            const target = args[1]
+            return new wsBase.OcMessage(type, data, target) as any
+        }
+
+        return new wsBase.Message(type, data) as any
+    }
 }
 
-export function newWebToServerMessage<T extends keyof messageTypeMap.MessageWebToServerDataMap>(
-    type: T,
-    data: messageTypeMap.MessageWebToServerDataMap[T]
-): wsBase.Message<T, messageTypeMap.MessageWebToServerDataMap[T]> {
-    return new wsBase.Message(type, data)
-}
-
-export function newServerToOcMessage<T extends keyof messageTypeMap.MessageServerToOcDataMap>(
-    type: T,
-    data: messageTypeMap.MessageServerToOcDataMap[T]
-): wsBase.Message<T, messageTypeMap.MessageServerToOcDataMap[T]> {
-    return new wsBase.Message(type, data)
-}
-
-export function newOcToServerMessage<T extends keyof messageTypeMap.MessageOcToServerDataMap>(
-    type: T,
-    data: messageTypeMap.MessageOcToServerDataMap[T]
-): wsBase.Message<T, messageTypeMap.MessageOcToServerDataMap[T]> {
-    return new wsBase.Message(type, data)
-}
-
-export function newGeneralMessage<T extends keyof messageTypeMap.MessageGeneralDataMap>(
-    type: T,
-    data: messageTypeMap.MessageGeneralDataMap[T]
-): wsBase.Message<T, messageTypeMap.MessageGeneralDataMap[T]> {
-    return new wsBase.Message(type, data)
-}
+export let newServerToWebMessage = curriedCreateMessage({} as allMessageType.ServerToWeb)
+export let newWebToServerMessage = curriedCreateMessage({} as allMessageType.WebToServer)
+export let newServerToOcMessage = curriedCreateMessage({} as allMessageType.ServerToOc)
+export let newOcToServerMessage = curriedCreateMessage({} as allMessageType.OcToServer)
+export let newGeneralMessage = curriedCreateMessage({} as allMessageType.General)

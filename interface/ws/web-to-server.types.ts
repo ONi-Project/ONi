@@ -6,4 +6,4 @@ export type AuthRequest = Message<"AuthRequest", { token: string }>
 export type OcTaskRunSingle = OcMessage<"OcTaskRunSingle", BotTask, string> 
 export type OcTaskAdd = OcMessage<"OcTaskAdd", BotTask, string> 
 export type OcTaskRemove = OcMessage<"OcTaskRemove", BotTask, string> 
-export type dataEventSet = Message<"dataEventSet", Event> 
+export type DataEventSet = Message<"dataEventSet", Event> 

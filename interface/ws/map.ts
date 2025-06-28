@@ -20,7 +20,7 @@ export type ClientToServer =
     | webToServer.OcTaskAdd
     | webToServer.OcTaskRemove
     | webToServer.OcTaskRunSingle
-    | webToServer.dataEventSet
+    | webToServer.DataEventSet
 
 export type ServerToOc =
     | serverToOc.AuthResponse
@@ -32,7 +32,8 @@ export type OcToServer =
     | ocToServer.DataAeItemList
     | ocToServer.DataAeCpuList
     | ocToServer.DataEventAdd
-    | ocToServer.dataEventSet
+    | ocToServer.DataEventSet
+    | ocToServer.DataBotComponent
 
 export type All =
     | ServerToClient

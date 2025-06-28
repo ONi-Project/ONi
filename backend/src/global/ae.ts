@@ -1,13 +1,14 @@
-import { Ae, Config } from "../interface.js"
+import { Config } from "../interface.js"
 import fs from "fs"
 import { loggerGlobal as logger } from "../logger.js"
 import { wsWebBroadcast } from "../websocket.js"
 import { deepEqual, performanceTimer } from "../utils.js"
 import Global from "./index.js"
+import { aeModel } from "@oni/interface"
 
-var ae = {
+let ae = {
     // AE 列表
-    list: [] as Ae[],
+    list: [] as aeModel.Ae[],
 
     getListLayout() {
         let content: any = []
@@ -76,13 +77,14 @@ var ae = {
     },
 
     cpus: {
-        set(uuid: string, cpus: any) {
+        set(uuid: string, cpus: aeModel.AeCpu[]) {
             let targetAe = ae.list.find(ae => ae.uuid === uuid)
             if (targetAe) {
-                cpus.forEach((cpu: any) => {
+                cpus.forEach((cpu: aeModel.AeCpu) => {
                     if (cpu.busy && cpu.finalOutput) {
-                        const itemPanelItem = Global.staticResources.itemPanelItem.find(itemPanelItem => (itemPanelItem.name == cpu.finalOutput.name) && (itemPanelItem.damage == cpu.finalOutput.damage))
-                        const itemPanelFluid = Global.staticResources.itemPanelFluid.find(itemPanelFluid => itemPanelFluid.name == cpu.finalOutput.name)
+                        const finalOutput = cpu.finalOutput
+                        const itemPanelItem = Global.staticResources.itemPanelItem.find(itemPanelItem => (itemPanelItem.name == finalOutput.name) && (itemPanelItem.damage == finalOutput.damage))
+                        const itemPanelFluid = Global.staticResources.itemPanelFluid.find(itemPanelFluid => itemPanelFluid.name == finalOutput.name)
                         if (itemPanelItem) {
                             cpu.finalOutput.id = itemPanelItem.id
                             cpu.finalOutput.display = itemPanelItem.display
@@ -107,7 +109,7 @@ var ae = {
         }
     },
 
-    itemList: {
+    items: {
         set(uuid: string, itemList: any) {
             let targetAe = ae.list.find(ae => ae.uuid === uuid)
             if (targetAe) {
@@ -129,9 +131,9 @@ var ae = {
                             logger.error(`Unknown item type ${item.type}`)
                         }
                     })
-                    targetAe.itemList = itemList
+                    targetAe.items = itemList
                 })
-                ae.itemList.update(uuid)
+                ae.items.update(uuid)
             }
         },
         update(uuid: string) {

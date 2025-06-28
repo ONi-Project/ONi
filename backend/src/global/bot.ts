@@ -1,11 +1,12 @@
-import { Bot, Config, SessionOc, SessionWeb } from "../interface.js"
+import { Config, SessionOc, SessionWeb } from "../interface.js"
 import fs from "fs"
 import { loggerGlobal as logger } from "../logger.js"
 import { wssOc, wssWeb, wsWebBroadcast } from "../websocket.js"
+import { botModel } from "@oni/interface"
 
-var bot = {
+let bot = {
     // BOT 列表
-    list: [] as Bot[],
+    list: [] as botModel.Bot[],
 
     getListLayout() {
         let content: any = []
@@ -79,7 +80,7 @@ var bot = {
     },
 
     tasks: {
-        runSingle(uuid: string, task: any) {
+        runSingle(uuid: string, task: botModel.BotTask) {
             let targetBot = bot.list.find(item => item.uuid == uuid)
             if (targetBot) {
                 let ok = false
@@ -99,7 +100,7 @@ var bot = {
                 logger.error("bot.tasks.runSingleTask", "Bot not found.")
             }
         },
-        add(uuid: string, task: any) {
+        add(uuid: string, task: botModel.BotTask) {
             let targetBot = bot.list.find(item => item.uuid == uuid)
             if (targetBot) {
                 targetBot.tasks.push(task)

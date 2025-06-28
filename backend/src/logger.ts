@@ -1,7 +1,7 @@
 import log4js from "log4js"
 import { Config } from "./interface.js"
 
-var Logger = {
+let Logger = {
     init(config: Config) {
 
         log4js.configure({

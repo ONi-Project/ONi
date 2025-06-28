@@ -34,7 +34,7 @@ interface BotTask {
     }]
 }
 
-var staticResources = {
+let staticResources = {
 
     itemPanelItem: [] as ItemPanelItem[],
     itemPanelFluid: [] as ItemPanelLiquid[],

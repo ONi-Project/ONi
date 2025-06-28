@@ -2,7 +2,7 @@
  * Generated type guards for "server-to-web.types.ts".
  * WARNING: Do not manually change this file.
  */
-import { AuthResponse, DataCommonSet, DataBotSet, DataAeSet, DataMcServerStatusSet } from "./server-to-web.types";
+import { AuthResponse, DataCommonSet, DataBotSet, DataAeSet, DataMcServerStatusSet, AeOrderResult } from "./server-to-web.types";
 
 export function isAuthResponse(obj: unknown): obj is AuthResponse {
     const typedObj = obj as AuthResponse
@@ -106,16 +106,16 @@ export function isDataAeSet(obj: unknown): obj is DataAeSet {
         typeof typedObj["data"]["cpus"][0]["busy"] === "boolean" &&
         typeof typedObj["data"]["cpus"][0]["timeStarted"] === "number" &&
         typeof typedObj["data"]["cpus"][0]["active"] === "boolean" &&
-        (typeof typedObj["data"]["cpus"][0]["finalOutputs"] === "undefined" ||
-            (typedObj["data"]["cpus"][0]["finalOutputs"] !== null &&
-                typeof typedObj["data"]["cpus"][0]["finalOutputs"] === "object" ||
-                typeof typedObj["data"]["cpus"][0]["finalOutputs"] === "function") &&
-            typeof typedObj["data"]["cpus"][0]["finalOutputs"]["name"] === "string" &&
-            typeof typedObj["data"]["cpus"][0]["finalOutputs"]["damage"] === "number" &&
-            typeof typedObj["data"]["cpus"][0]["finalOutputs"]["amount"] === "number" &&
-            typeof typedObj["data"]["cpus"][0]["finalOutputs"]["id"] === "number" &&
-            typeof typedObj["data"]["cpus"][0]["finalOutputs"]["display"] === "string" &&
-            typeof typedObj["data"]["cpus"][0]["finalOutputs"]["total"] === "number") &&
+        (typeof typedObj["data"]["cpus"][0]["finalOutput"] === "undefined" ||
+            (typedObj["data"]["cpus"][0]["finalOutput"] !== null &&
+                typeof typedObj["data"]["cpus"][0]["finalOutput"] === "object" ||
+                typeof typedObj["data"]["cpus"][0]["finalOutput"] === "function") &&
+            typeof typedObj["data"]["cpus"][0]["finalOutput"]["name"] === "string" &&
+            typeof typedObj["data"]["cpus"][0]["finalOutput"]["damage"] === "number" &&
+            typeof typedObj["data"]["cpus"][0]["finalOutput"]["amount"] === "number" &&
+            typeof typedObj["data"]["cpus"][0]["finalOutput"]["id"] === "number" &&
+            typeof typedObj["data"]["cpus"][0]["finalOutput"]["display"] === "string" &&
+            typeof typedObj["data"]["cpus"][0]["finalOutput"]["total"] === "number") &&
         Array.isArray(typedObj["data"]["items"]) &&
         (typedObj["data"]["items"][0] !== null &&
             typeof typedObj["data"]["items"][0] === "object" ||
@@ -170,5 +170,21 @@ export function isDataMcServerStatusSet(obj: unknown): obj is DataMcServerStatus
         typedObj["data"]["players"]["list"].every((e: any) =>
             typeof e === "string"
         )
+    )
+}
+
+export function isAeOrderResult(obj: unknown): obj is AeOrderResult {
+    const typedObj = obj as AeOrderResult
+    return (
+        (typedObj !== null &&
+            typeof typedObj === "object" ||
+            typeof typedObj === "function") &&
+        typedObj["type"] === "AeOrderResult" &&
+        (typedObj["data"] !== null &&
+            typeof typedObj["data"] === "object" ||
+            typeof typedObj["data"] === "function") &&
+        typeof typedObj["data"]["success"] === "boolean" &&
+        typeof typedObj["data"]["taskUuid"] === "string" &&
+        typeof typedObj["data"]["craftUuid"] === "string"
     )
 }

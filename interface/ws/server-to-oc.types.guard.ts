@@ -47,11 +47,13 @@ export function isTask(obj: unknown): obj is Task {
             typeof typedObj === "function") &&
         typedObj["type"] === "Task" &&
         Array.isArray(typedObj["data"]) &&
-        (typedObj["data"][0] !== null &&
-            typeof typedObj["data"][0] === "object" ||
-            typeof typedObj["data"][0] === "function") &&
-        typeof typedObj["data"][0]["task"] === "string" &&
-        typeof typedObj["data"][0]["interval"] === "number" &&
-        typeof typedObj["data"][0]["taskUuid"] === "string"
+        typedObj["data"].every((e: any) =>
+            (e !== null &&
+                typeof e === "object" ||
+                typeof e === "function") &&
+            typeof e["task"] === "string" &&
+            typeof e["interval"] === "number" &&
+            typeof e["taskUuid"] === "string"
+        )
     )
 }

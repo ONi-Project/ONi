@@ -6,7 +6,7 @@ import { wssWeb, wssOc } from "./websocket.js"
 import { loggerServer as logger } from "./logger.js"
 import { Config } from "./interface.js"
 
-var Server = {
+let Server = {
     init(config: Config) {
 
         const app = express()

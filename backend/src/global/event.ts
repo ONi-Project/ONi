@@ -1,9 +1,10 @@
-import { Config, Event } from "../interface.js"
+import { Config } from "../interface.js"
 import { wsWebBroadcast } from "../websocket.js"
+import { eventModel } from "@oni/interface"
 
-var event = {
+let event = {
     // 事件
-    list: [] as Event[],
+    list: [] as eventModel.Event[],
 
     getLayout() {
         let content: any = []
@@ -43,7 +44,7 @@ var event = {
         return _
     },
 
-    set(event: Event) {
+    set(event: eventModel.Event) {
         this.list.forEach((item, index) => {
             if (item.uuid == event.uuid) {
                 this.list[index] = event
@@ -53,7 +54,7 @@ var event = {
         })
     },
 
-    add(event: Event) {
+    add(event: eventModel.Event) {
         this.list.push(event)
         wsWebBroadcast("layout/event", this.getLayout())
     },

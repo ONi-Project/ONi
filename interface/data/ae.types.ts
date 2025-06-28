@@ -4,11 +4,11 @@ export interface Ae {
     timeCreated: number
     timeUpdated: number
 
-    cpus: [AeCpu]
+    cpus: AeCpu[]
 
-    items: [AeItem]
+    items: AeItem[]
 
-    levelMaintains: [AeLevelMaintain]
+    levelMaintains: AeLevelMaintain[]
 }
 
 export interface AeCpu {
@@ -18,7 +18,7 @@ export interface AeCpu {
     busy: boolean
     timeStarted: number
     active: boolean
-    finalOutputs?: AeCpuFinalOutput
+    finalOutput?: AeCpuFinalOutput
 }
 
 export interface AeCpuFinalOutput {
@@ -52,4 +52,18 @@ export interface AeLevelMaintain {
         id: number
         display: string
     }]
+}
+
+export interface AeOrder {
+    uuid: string
+    taskUuid: string
+    name: string
+    damage: number
+    amount: number
+}
+
+export interface AeOrderResult {
+    success: boolean
+    taskUuid: string
+    craftUuid: string
 }

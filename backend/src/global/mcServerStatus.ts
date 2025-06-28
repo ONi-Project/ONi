@@ -1,8 +1,9 @@
-import { Config, McServerStatus } from "../interface.js"
+import { Config } from "../interface.js"
 import { loggerGlobal as logger } from "../logger.js"
 import { wsWebBroadcast } from "../websocket.js"
+import { mcServerStatusModel } from "@oni/interface"
 
-var mcServerStatus = {
+let mcServerStatus = {
     // MC 服务器状态
     status: {
         ip: "",
@@ -13,22 +14,22 @@ var mcServerStatus = {
             online: 0,
             list: []
         }
-    } as McServerStatus,
+    } as mcServerStatusModel.McServerStatus,
 
-    set(status: McServerStatus) {
+    set(status: mcServerStatusModel.McServerStatus) {
         this.status = status
         wsWebBroadcast("data/mcServerStatus/set", this.status)
     },
 
     init(config: Config) {
-        if(!config.mc_server_ip) {
+        if (!config.mc_server_ip) {
             logger.warn("mcServerStatus", "mc_server_ip is not set in config.")
         } else {
             this.status.ip = config.mc_server_ip
             logger.debug("mcServerStatus", "mc_server_ip is set to " + config.mc_server_ip)
             logger.trace("mcServerStatus", mcServerStatus)
         }
-        
+
     }
 }
 

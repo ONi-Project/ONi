@@ -3,10 +3,11 @@
 
 import fs from "fs"
 import Global from "./global/index.js"
-import { Bot, Common, SessionOc, SessionWeb } from "./interface.js"
+import { SessionOc, SessionWeb } from "./interface.js"
 import { loggerHandler as logger, loggerOcOverWs } from "./logger.js"
 import { wssOc, wsWebBroadcast } from "./websocket.js"
-import { wsBase, wsBaseGuard, wsOcToServer, wsOcToServerGuard, wsWebToServer, wsWebToServerGuard, messageTypeMap } from "@oni/interface"
+import { wsBase, wsBaseGuard, wsOcToServer, wsOcToServerGuard, wsWebToServer, wsWebToServerGuard, messageTypeMap, wsGeneral, wsGeneralGuard, aeModel } from "@oni/interface"
+import { botModel, commonModel } from "@oni/interface"
 const handler = {
     webMessage(msg: string, ws: SessionWeb) {
 
@@ -40,23 +41,35 @@ const handler = {
                 // 事件数据
                 processor.data.eventSet(json, ws)
                 return
+
             } else if (wsWebToServerGuard.isOcTaskRunSingle(json)) {
                 // 运行单次任务
                 processor.web2oc.taskRunSingle(json, ws)
-            } else if (json.type == "oc/task/add") {
+                return
+
+            } else if (wsWebToServerGuard.isOcTaskAdd(json)) {
                 // 添加任务
                 processor.web2oc.taskAdd(json, ws)
-            } else if (json.type == "oc/task/remove") {
+                return
+
+            } else if (wsWebToServerGuard.isOcTaskRemove(json)) {
                 // 移除任务
                 processor.web2oc.taskRemove(json, ws)
-            } else if (json.type == "oc/forward") {
+                return
+
+            } else if (wsWebToServerGuard.isOcForward(json)) {
                 // debug 转发
                 processor.web2oc.forward(json, ws)
-            } else if (json.type == "ae/order") {
+                return
+
+            } else if (wsWebToServerGuard.isAeOrder(json)) {
                 // AE 订单
                 processor.ae.order(json, ws)
+                return
+
             } else {
-                logger.warn(`Unknown message type ${json.type}`)
+                logger.error("WEB RECEIVED INVALID TYPE", json)
+                return
             }
         }
 
@@ -64,12 +77,17 @@ const handler = {
     ocMessage(msg: string, ws: SessionOc) {
 
         // 解析 JSON
-        let json: any
+        let json
         try {
             json = JSON.parse(msg)
         } catch (e) {
-            logger.error("OC RECEIVED INVALID", msg)
+            logger.error("OC RECEIVED INVALID JSON", msg)
             logger.error(e)
+            return
+        }
+
+        if (!wsBaseGuard.isMessage(json)) {
+            logger.error("OC RECEIVED INVALID MESSAGE", json)
             return
         }
 
@@ -77,7 +95,7 @@ const handler = {
             logger.trace("OC RECEIVED", json)
         }
 
-        if (json.type == "auth/request") {
+        if (wsOcToServerGuard.isAuthRequest(json)) {
             // 登录请求
             processor.auth.oc(json, ws)
         } else if (!ws.authenticated) {
@@ -85,24 +103,40 @@ const handler = {
             ws.send(JSON.stringify({ "type": "error", "data": "Not authenticated" }))
         } else {
             // 如果已登录，处理数据
-            if (json.type == "data/common/set") {
+            if (wsOcToServerGuard.isDataCommonSet(json)) {
                 processor.data.commonSet(json, ws)
-            } else if (json.type == "data/event/set") {
+                return
+
+            } else if (wsOcToServerGuard.isDataEventSet(json)) {
                 processor.data.eventSet(json, ws)
-            } else if (json.type == "data/event/add") {
+                return
+
+            } else if (wsOcToServerGuard.isDataEventAdd(json)) {
                 processor.data.eventAdd(json, ws)
-            } else if (json.type == "data/bot/component") {
+                return
+
+            } else if (wsOcToServerGuard.isDataBotComponent(json)) {
                 processor.data.bot.component(json, ws)
-            } else if (json.type == "data/ae/itemList") {
+                return
+
+            } else if (wsOcToServerGuard.isDataAeItemList(json)) {
                 processor.data.ae.itemList(json, ws)
-            } else if (json.type == "data/ae/cpus") {
+                return
+
+            } else if (wsOcToServerGuard.isDataAeCpuList(json)) {
                 processor.data.ae.cpus(json, ws)
-            } else if (json.type == "ae/order/result") {
+                return
+
+            } else if (wsOcToServerGuard.isAeOrderResult(json)) {
                 processor.ae.orderResult(json, ws)
-            } else if (json.type == "log") {
+                return
+
+            } else if (wsOcToServerGuard.isLog(json)) {
                 processor.oc.log(json, ws)
+                return
+
             } else {
-                logger.warn(`Unknown message type ${json.type}`)
+                logger.warn("OC RECEIVED INVALID TYPE", json)
             }
         }
     }
@@ -112,16 +146,16 @@ export default handler
 
 const processor = {
     data: {
-        commonSet(json: any, ws: SessionOc) {
+        commonSet(json: wsOcToServer.DataCommonSet, ws: SessionOc) {
             let target = Global.data.list.find(data => data.uuid === json.data.uuid)
             if (target) {
-                const data: Common = Object.assign({}, target, json.data)
+                const data: commonModel.Common = Object.assign({}, target, json.data)
                 Global.data.set(data)
             } else {
                 ws.send(JSON.stringify({ "type": "error", "data": "Data not found" }))
             }
         },
-        eventSet(json: any, ws: SessionWeb | SessionOc) {
+        eventSet(json: wsWebToServer.DataEventSet | wsOcToServer.DataEventSet, ws: SessionWeb | SessionOc) {
             let target = Global.event.list.find(event => event.uuid === json.data.uuid)
             if (target) {
                 const event = Object.assign({}, target, json.data)
@@ -130,15 +164,15 @@ const processor = {
                 ws.send(JSON.stringify({ "type": "error", "data": "Event not found" }))
             }
         },
-        eventAdd(json: any, ws: SessionWeb | SessionOc) {
+        eventAdd(json: wsOcToServer.DataEventAdd, ws: SessionOc) {
             Global.event.add(json.data)
         },
         ae: {
-            itemList(json: any, ws: SessionOc) {
-                Global.ae.itemList.set(json.data.uuid, json.data.itemList)
+            itemList(json: wsOcToServer.DataAeItemList, ws: SessionOc) {
+                Global.ae.items.set(json.data.uuid, json.data.items)
             },
-            cpus(json: any, ws: SessionOc) {
-                json.data.cpus.forEach((cpu: any) => {
+            cpus(json: wsOcToServer.DataAeCpuList, ws: SessionOc) {
+                json.data.cpus.forEach((cpu: aeModel.AeCpu) => {
                     const ae = Global.ae.list.find(ae => ae.uuid === json.data.uuid)
                     if (ae) {
                         const cpuPrev = ae.cpus.find(c => c.name === cpu.name)
@@ -161,16 +195,16 @@ const processor = {
             }
         },
         bot: {
-            component(json: any, ws: SessionOc) {
-                Global.bot.components.set(ws.bot.uuid, json.data.components)
+            component(json: wsOcToServer.DataBotComponent, ws: SessionOc) {
+                Global.bot.components.set(json.data.uuid, json.data.components)
             },
         }
     },
     ae: {
-        order(json: any, ws: SessionWeb) {
+        order(json: wsWebToServer.AeOrder, ws: SessionWeb) {
             const ae = Global.ae.list.find(ae => ae.uuid === json.data.uuid)
             if (!ae) { logger.error(`processor.ae.order: AE ${json.data.uuid} not found`); return }
-            let targetBot: Bot[] = []
+            let targetBot: botModel.Bot[] = []
             Global.bot.list.forEach(bot => {
                 let flag = false
                 bot.tasks.forEach(task => {
@@ -195,21 +229,21 @@ const processor = {
                 }
             })
         },
-        orderResult(json: any, ws: SessionOc) {
+        orderResult(json: wsOcToServer.AeOrderResult, ws: SessionOc) {
             wsWebBroadcast("ae/order/result", json.data)
         }
     },
     web2oc: {
-        taskRunSingle(json: any, ws: SessionWeb) {
+        taskRunSingle(json: wsWebToServer.OcTaskRunSingle, ws: SessionWeb) {
             Global.bot.tasks.runSingle(json.target, json.data)
         },
-        taskAdd(json: any, ws: SessionWeb) {
+        taskAdd(json: wsWebToServer.OcTaskAdd, ws: SessionWeb) {
             Global.bot.tasks.add(json.target, json.data)
         },
-        taskRemove(json: any, ws: SessionWeb) {
+        taskRemove(json: wsWebToServer.OcTaskRemove, ws: SessionWeb) {
             Global.bot.tasks.remove(json.target, json.data.taskUuid)
         },
-        forward(json: any, ws: SessionWeb) {
+        forward(json: wsWebToServer.OcForward, ws: SessionWeb) {
             let ok = false
             wssOc.clients.forEach(ws => {
                 if ((ws as SessionOc).authenticated && (ws as SessionOc).bot?.uuid == json.target) {
@@ -224,14 +258,14 @@ const processor = {
         }
     },
     oc: {
-        log(json: any, ws: SessionOc) {
+        log(json: wsOcToServer.Log, ws: SessionOc) {
             fs.writeFileSync(`./logs/oc.log`, `[${new Date().toLocaleString()}] [${json.data.level}/${json.data.file}:${json.data.location}] (${json.data.taskUuid}) ${json.data.message}\n`, { flag: "a+" })
             const { level, file, location, taskUuid, message } = json.data
             loggerOcOverWs.log(level, `[${level}/${file}:${location}] (${taskUuid}) ${message}`)
         }
     },
     auth: {
-        web(json: any, ws: SessionWeb) {
+        web(json: wsWebToServer.AuthRequest, ws: SessionWeb) {
             const user = Global.user.list.find(user => user.token === json.data.token)
             if (user) {
                 ws.authenticated = true
@@ -285,7 +319,7 @@ const processor = {
             }
 
         },
-        oc(json: any, ws: SessionOc) {
+        oc(json: wsOcToServer.AuthRequest, ws: SessionOc) {
             // 登录请求
             const bot = Global.bot.list.find(bot => bot.token === json.data.token)
             if (bot) {

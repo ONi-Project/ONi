@@ -9,7 +9,7 @@ import staticResources from "./staticResources.js"
 
 import { Config } from "../interface.js"
 
-var Global = {
+let Global = {
     user: user,
     bot: bot,
     ae: ae,

@@ -7,7 +7,7 @@ import handler from "./handler.js"
 export const wssWeb = new WebSocketServer({ noServer: true })
 export const wssOc = new WebSocketServer({ noServer: true })
 
-var Websocket = {
+let Websocket = {
     init(config: Config) {
 
         wssWeb.on('connection', (ws: SessionWeb, socket: http.IncomingMessage, request: http.IncomingMessage) => {

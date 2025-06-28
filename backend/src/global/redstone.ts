@@ -1,10 +1,11 @@
-import { Config, Redstone } from "../interface.js"
+import { Config } from "../interface.js"
 import fs from "fs"
 import { loggerGlobal as logger } from "../logger.js"
+import { redstoneModel } from "@oni/interface"
 
-var redstone = {
+let redstone = {
     // 红石控制组件
-    list: [] as Redstone[],
+    list: [] as redstoneModel.Redstone[],
 
     getLayout() {
         let content: any = []

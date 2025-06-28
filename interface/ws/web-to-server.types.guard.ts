@@ -2,7 +2,7 @@
  * Generated type guards for "web-to-server.types.ts".
  * WARNING: Do not manually change this file.
  */
-import { AuthRequest, OcTaskRunSingle, OcTaskAdd, OcTaskRemove, DataEventSet } from "./web-to-server.types";
+import { AuthRequest, OcTaskRunSingle, OcTaskAdd, OcTaskRemove, DataEventSet, OcForward, AeOrder } from "./web-to-server.types";
 
 export function isAuthRequest(obj: unknown): obj is AuthRequest {
     const typedObj = obj as AuthRequest
@@ -86,5 +86,35 @@ export function isDataEventSet(obj: unknown): obj is DataEventSet {
         typeof typedObj["data"]["priority"] === "number" &&
         typeof typedObj["data"]["status"] === "number" &&
         typeof typedObj["data"]["timestamp"] === "number"
+    )
+}
+
+export function isOcForward(obj: unknown): obj is OcForward {
+    const typedObj = obj as OcForward
+    return (
+        (typedObj !== null &&
+            typeof typedObj === "object" ||
+            typeof typedObj === "function") &&
+        typeof typedObj["target"] === "string" &&
+        typedObj["type"] === "OcForward"
+    )
+}
+
+export function isAeOrder(obj: unknown): obj is AeOrder {
+    const typedObj = obj as AeOrder
+    return (
+        (typedObj !== null &&
+            typeof typedObj === "object" ||
+            typeof typedObj === "function") &&
+        typeof typedObj["target"] === "string" &&
+        typedObj["type"] === "AeOrder" &&
+        (typedObj["data"] !== null &&
+            typeof typedObj["data"] === "object" ||
+            typeof typedObj["data"] === "function") &&
+        typeof typedObj["data"]["uuid"] === "string" &&
+        typeof typedObj["data"]["taskUuid"] === "string" &&
+        typeof typedObj["data"]["name"] === "string" &&
+        typeof typedObj["data"]["damage"] === "number" &&
+        typeof typedObj["data"]["amount"] === "number"
     )
 }

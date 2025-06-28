@@ -1,13 +1,12 @@
 import type { Message } from "./base.types"
-import type { BotComponent } from "data/bot.types"
-import type { Common } from "data/common.types"
-import type { AeItem, AeCpu } from "data/ae.types"
-import type { Event } from "data/event.types"
+import { aeModel, botModel, commonModel, eventModel } from "index"
 
 export type AuthRequest = Message<"AuthRequest", { token: string }>
-export type DataCommonSet = Message<"DataCommonSet", Common>
-export type DataAeItemList = Message<"DataAeItemList", [AeItem]>
-export type DataAeCpuList = Message<"DataAeCpuList", [AeCpu]>
-export type DataEventAdd = Message<"DataEventAdd", Event>
-export type DataEventSet = Message<"dataEventSet", Event>
-export type DataBotComponent = Message<"DataBotComponent", [BotComponent]>
+export type DataCommonSet = Message<"DataCommonSet", commonModel.Common>
+export type DataAeItemList = Message<"DataAeItemList", aeModel.Ae>
+export type DataAeCpuList = Message<"DataAeCpuList", aeModel.Ae>
+export type DataEventAdd = Message<"DataEventAdd", eventModel.Event>
+export type DataEventSet = Message<"dataEventSet", eventModel.Event>
+export type DataBotComponent = Message<"DataBotComponent", botModel.BotComponent>
+export type AeOrderResult = Message<"AeOrderResult", aeModel.AeOrderResult>
+export type Log = Message<"Log", { level: string, message: string, file: string, location: string, taskUuid: string }>

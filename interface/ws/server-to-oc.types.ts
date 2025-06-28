@@ -1,5 +1,5 @@
 import type { Message } from "./base.types"
-import type { Bot, BotTask } from "data/bot.types"
+import { botModel } from "index"
 
-export type AuthResponse = Message<"AuthResponse", Bot>
-export type Task = Message<"Task", [BotTask]>
+export type AuthResponse = Message<"AuthResponse", botModel.Bot>
+export type Task = Message<"Task", botModel.BotTask[]>

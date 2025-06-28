@@ -1,13 +1,14 @@
-import { Config, Common } from "../interface.js"
+import { Config } from "../interface.js"
 import fs from "fs"
 import { loggerGlobal as logger } from "../logger.js"
 import { wsWebBroadcast } from "../websocket.js"
+import { commonModel } from "@oni/interface"
 
-var common = {
+let common = {
     // 通用数据
-    list: [] as Common[],
+    list: [] as commonModel.Common[],
 
-    set(data: Common) {
+    set(data: commonModel.Common) {
         this.list.forEach((item, index) => {
             if (item.uuid == data.uuid) {
                 this.list[index] = data

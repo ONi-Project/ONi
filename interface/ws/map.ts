@@ -35,7 +35,6 @@ export type OcToServer =
     | ocToServer.dataEventSet
 
 export type All =
-    | Base
     | ServerToClient
     | ClientToServer
     | ServerToOc

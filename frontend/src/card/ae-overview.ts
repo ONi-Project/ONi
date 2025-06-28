@@ -11,7 +11,7 @@ export function html(config: any) {
     <mdui-divider vertical style="margin-left: 0.5rem;margin-right: 0.5rem;"></mdui-divider>
 
     <div>
-      <div class="ae__view-time-updated" style="opacity: 1;">...</div>
+      <div class="ae__overview-time-updated" style="opacity: 1;">...</div>
       <div style="opacity: 0.25;font-size: smaller;">${config.uuid}</div>
     </div>
 
@@ -20,17 +20,17 @@ export function html(config: any) {
   <div style="display: flex;flex-direction: column;gap: 0.25rem;margin-top: 0.25rem;">
     <div style="display: flex;opacity: 0.75;gap: 0.5rem;">
       <mdui-icon name="schedule"></mdui-icon>
-      <div class="ae__view-time-created">...</div>
+      <div class="ae__overview-time-created">...</div>
     </div>
 
     <div style="display: flex;opacity: 0.75;gap: 0.5rem;">
       <mdui-icon name="memory"></mdui-icon>
-      <div class="ae__view-cpu-status">...</div>
+      <div class="ae__overview-cpu-status">...</div>
     </div>
 
     <div style="display: flex;opacity: 0.75;gap: 0.5rem;">
       <mdui-icon name="category"></mdui-icon>
-      <div>1/3 库存维持已达标</div>
+      <div class="ae__overview-maintain">...</div>
     </div>
   </div>
 

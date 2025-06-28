@@ -51,9 +51,9 @@ export function init() {
 
   let debugMode = "false"
 
-  let railItems = ["overview", "event", "control", "ae", "bot", "stat", "debug"]
-  let railItemsDisplay = ["总览", "事件", "控制", "AE", "BOT", "统计", "调试"]
-  let railItemsIcon = ["home--outlined", "crisis_alert", "tune--outlined", "grid_on--outlined", "adb--outlined", "insert_chart--outlined", "terminal--outlined"]
+  let railItems = ["overview", "event", "control", "ae", "bot", "stat", "tool", "debug"]
+  let railItemsDisplay = ["总览", "事件", "控制", "AE", "BOT", "统计", "工具", "调试"]
+  let railItemsIcon = ["home--outlined", "crisis_alert", "tune--outlined", "grid_on--outlined", "adb--outlined", "insert_chart--outlined", "build--outlined", "terminal--outlined"]
 
   if (debugMode == "true") {
     railItems.push("debug")

@@ -6,15 +6,47 @@
         "timeUpdated": 0,
         "cpus": [],
         "itemList": [],
-        "levelMaintain":{
-            "enabled": true,
-            "list":[{
-                "name":"minecraft:planks",
-                "damage":"0",
-                "request":25,
-                "amount":100
-            }]
-        }
+        "levelMaintain": [
+            {
+                "uuid": "00000000-0001-000000000000",
+                "enabled": true,
+                "list": [
+                    {
+                        "name": "minecraft:planks",
+                        "type": "item",
+                        "damage": 0,
+                        "request": 25,
+                        "amount": 100,
+                        "id": 5,
+                        "display": "橡木木板"
+                    },
+                    {
+                        "name": "minecraft:planks",
+                        "type": "item",
+                        "damage": 1,
+                        "request": 50,
+                        "amount": 200,
+                        "id": 5,
+                        "display": "云杉木板"
+                    }
+                ]
+            },
+            {
+                "uuid": "00000000-0001-000000000001",
+                "enabled": false,
+                "list": [
+                    {
+                        "name": "minecraft:chest",
+                        "type": "item",
+                        "damage": 0,
+                        "request": 4,
+                        "amount": 25,
+                        "id": 54,
+                        "display": "箱子"
+                    }
+                ]
+            }
+        ]
     },
     {
         "uuid": "d5c6c273-cb03-41df-89ca-716523de723a",
@@ -23,10 +55,7 @@
         "timeUpdated": 0,
         "cpus": [],
         "itemList": [],
-        "levelMaintain":{
-            "enabled": true,
-            "list":[]
-        }
+        "levelMaintain": []
     },
     {
         "uuid": "30a7623c-54b7-4c22-b8ed-55892a524dbf",
@@ -35,9 +64,6 @@
         "timeUpdated": 0,
         "cpus": [],
         "itemList": [],
-        "levelMaintain":{
-            "enabled": true,
-            "list":[]
-        }
+        "levelMaintain": []
     }
 ]

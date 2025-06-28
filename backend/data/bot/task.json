@@ -92,6 +92,43 @@
                         "required": true
                     }
                 ]
+            },
+            {
+                "id": "levelMaintain",
+                "description": "库存维持",
+                "hidden": false,
+                "config": [
+                    {
+                        "id": "uuid",
+                        "type": "string",
+                        "description": "目标 AE 组件的 UUID",
+                        "required": false
+                    },
+                    {
+                        "id": "targetAeUuid",
+                        "type": "aeUuid",
+                        "description": "目标 AE 的 UUID",
+                        "required": true
+                    },
+                    {
+                        "id": "enabled",
+                        "type": "boolean",
+                        "description": "是否启用",
+                        "required": true
+                    },
+                    {
+                        "id": "enabledCpuList",
+                        "type": "string[]",
+                        "description": "允许使用的 CPU 列表，留空即所有 CPU",
+                        "required": false
+                    },
+                    {
+                        "id": "list",
+                        "type": "item[]",
+                        "description": "维持物品列表",
+                        "required": true
+                    }
+                ]
             }
         ]
     },

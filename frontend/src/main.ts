@@ -8,6 +8,7 @@ import * as contentControl from "./content/control"
 import * as contentAe from "./content/ae"
 import * as contentBot from "./content/bot"
 import * as contentStat from "./content/stat"
+import * as contentTool from "./content/tool"
 import * as contentDebug from "./content/debug"
 
 import * as dialogAeOrder from "./dialog/ae-order"
@@ -43,6 +44,7 @@ const html = /*html*/`
   ${contentAe.html}
   ${contentBot.html}
   ${contentStat.html}
+  ${contentTool.html}
   ${debugMode ? contentDebug.html : ""}
 
 </div>
@@ -73,6 +75,7 @@ contentControl.init()
 contentAe.init()
 contentBot.init()
 contentStat.init()
+contentTool.init()
 contentDebug.init()
 
 dialogAeOrder.init()

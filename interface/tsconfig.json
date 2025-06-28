@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "Node16",
+    "moduleResolution": "node16",
+    "strict": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist",
+    "composite": true,
+    "baseUrl": "."
+  },
+  "include": ["./**/*.ts"]
+}

@@ -6,12 +6,13 @@ import Global from "./global/index.js"
 import { Bot, Common, SessionOc, SessionWeb } from "./interface.js"
 import { loggerHandler as logger, loggerOcOverWs } from "./logger.js"
 import { wssOc, wsWebBroadcast } from "./websocket.js"
+import { WsBase } from "@oni/interface"
 
 var handler = {
     webMessage(msg: string, ws: SessionWeb) {
 
         // 解析 JSON
-        let json: any
+        let json: WsBase.Message
         try {
             json = JSON.parse(msg)
         } catch (e) {

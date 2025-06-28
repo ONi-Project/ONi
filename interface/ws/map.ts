@@ -4,9 +4,9 @@ import type * as webToServer from "./web-to-server.types"
 import type * as serverToOc from "./server-to-oc.types"
 import type * as ocToServer from "./oc-to-server.types"
 
-export type Base =
-    | base.Message
-    | base.OcMessage
+// export type Base =
+//     | base.Message
+//     | base.OcMessage
 
 export type ServerToClient =
     | serverToWeb.AuthResponse

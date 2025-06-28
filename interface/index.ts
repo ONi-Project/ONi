@@ -12,3 +12,4 @@ export * as wsOcToServerGuard from "./ws/oc-to-server.types.guard"
 
 export * as allMessageType from "./ws/map"
 export * as messageTypeMap from "./utils/messageTypeMap"
+export * as createMessage from "utils/createMessage"

@@ -6,7 +6,7 @@ import Global from "./global/index.js"
 import { Bot, Common, SessionOc, SessionWeb } from "./interface.js"
 import { loggerHandler as logger, loggerOcOverWs } from "./logger.js"
 import { wssOc, wsWebBroadcast } from "./websocket.js"
-import { wsBase, wsBaseGuard, wsOcToServer, wsOcToServerGuard, wsWebToServer, wsWebToServerGuard, messageTypeMap } from "@oni/interface"
+import { wsBase, wsBaseGuard, wsOcToServer, wsOcToServerGuard, wsWebToServer, wsWebToServerGuard, messageTypeMap, createMessage } from "@oni/interface"
 const handler = {
     webMessage(msg: string, ws: SessionWeb) {
 

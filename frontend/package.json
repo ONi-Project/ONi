@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@oni/interface": "file:../interface",
     "@types/ejs": "^3.1.5",
     "@types/progressbar.js": "^1.1.7",
     "ejs": "^3.1.10",

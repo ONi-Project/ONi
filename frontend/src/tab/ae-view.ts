@@ -253,7 +253,7 @@ export function init() {
             renderCpusList(uuid, undefined, aeview)
         })
 
-        eventEmitter.addEventListener("message", async (event: any) => {
+        eventEmitter.on("message", async (event: any) => {
             const { type, data } = event.data
             if (type == "data/ae/set" && data.uuid === uuid) {
                 renderStatusText(uuid, data, aeview)
@@ -279,7 +279,7 @@ export function init() {
 
         const uuid = aeListItem.querySelector("data")!.getAttribute("uuid")!
 
-        eventEmitter.addEventListener("message", async (event: any) => {
+        eventEmitter.on("message", async (event: any) => {
             const { type, data } = event.data
             if (type == "data/ae/set" && data.uuid === uuid) {
                 renderStatusText(uuid, data, aeListItem)
@@ -295,7 +295,7 @@ export function init() {
 
         const uuid = aeEdit.querySelector("data")!.getAttribute("uuid")!
 
-        eventEmitter.addEventListener("message", async (event: any) => {
+        eventEmitter.on("message", async (event: any) => {
             const { type, data } = event.data
             if (type == "data/ae/set" && data.uuid === uuid) {
                 renderStatusText(uuid, data, aeEdit)

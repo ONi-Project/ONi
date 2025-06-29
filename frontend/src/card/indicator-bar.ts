@@ -15,7 +15,7 @@ export function html(config: any) {
 `}
 
 export function init() {
-    eventEmitter.addEventListener("message", async (event: any) => {
+    eventEmitter.on("message", async (event: any) => {
         const { type, data } = event.data
         if (type == "data/common/set") {
             document.querySelectorAll(".card-indicator-bar__card").forEach(element => {

@@ -35,7 +35,7 @@ export function html(_config: any) {
 
 export function init() {
     // 卡片更新监听事件
-    eventEmitter.addEventListener("message", async (event: any) => {
+    eventEmitter.on("message", async (event: any) => {
         const { type, data } = event.data
         if (type == "update/mcServerStatus") {
             document.querySelectorAll(".card-server-status__card").forEach(element => {

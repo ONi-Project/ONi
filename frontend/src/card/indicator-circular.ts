@@ -23,7 +23,7 @@ export function init() {
     let cardIndicatorCircular__list: any = []
 
     // 卡片更新监听事件
-    eventEmitter.addEventListener("message", async (event: any) => {
+    eventEmitter.on("message", async (event: any) => {
         const { type, data } = event.data
         if (type == "data/common/set") {
             document.querySelectorAll(".card-indicator-circular__card").forEach(element => {

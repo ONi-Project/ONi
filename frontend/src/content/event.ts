@@ -8,7 +8,7 @@ export const html = /*html*/`
 `
 
 export function init() {
-    eventEmitter.addEventListener("message", (event: any) => {
+    eventEmitter.on("message", (event: any) => {
         const { type, data } = event.data
         if (type == "layout/event") {
             renderLayout(data, document.getElementById("event__content"))

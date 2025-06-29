@@ -143,7 +143,7 @@ export function init() {
         }
       }
     }
-    eventEmitter.addEventListener("message", waitingForMessage)
+    eventEmitter.on("message", waitingForMessage)
     setTimeout(() => {
       eventEmitter.removeEventListener("message", waitingForMessage)
       submitBtn.removeAttribute("loading")

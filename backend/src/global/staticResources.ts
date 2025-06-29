@@ -27,7 +27,7 @@ let staticResources = {
                 })
             })
             logger.debug("staticResourcesItemPanelItem", "initialized successfully.")
-            logger.trace("staticResourcesItemPanelItem", this.itemPanelItem)
+            // logger.trace("staticResourcesItemPanelItem", this.itemPanelItem)
         } catch (e) {
             logger.error("staticResourcesItemPanelItem", "initialization failed.")
             logger.error("staticResourcesItemPanelItem", e)
@@ -38,7 +38,7 @@ let staticResources = {
             const itemPanelFluidRaw = fs.readFileSync('./data/itempanel/liquid.json', 'utf8')
             this.itemPanelFluid = JSON.parse(itemPanelFluidRaw)
             logger.debug("staticResourcesItemPanelFluid", "initialized successfully.")
-            logger.trace("staticResourcesItemPanelFluid", this.itemPanelFluid)
+            // logger.trace("staticResourcesItemPanelFluid", this.itemPanelFluid)
         } catch (e) {
             logger.error("staticResourcesItemPanelFluid", "initialization failed.")
             logger.error("staticResourcesItemPanelFluid", e)
@@ -56,7 +56,7 @@ let staticResources = {
             const botTaskRaw = fs.readFileSync('./data/bot/task.json', 'utf8')
             this.botTask = JSON.parse(botTaskRaw)
             logger.debug("staticResourcesBotTask", "initialized successfully.")
-            logger.trace("staticResourcesBotTask", this.botTask)
+            // logger.trace("staticResourcesBotTask", this.botTask)
         } catch (e) {
             logger.error("staticResourcesBotTask", "initialization failed.")
             logger.error("staticResourcesBotTask", e)

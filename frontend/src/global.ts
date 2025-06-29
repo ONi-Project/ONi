@@ -1,58 +1,94 @@
+import { aeModel, botModel, commonModel, eventModel, mcServerStatusModel, redstoneModel, staticModel } from "@oni/interface"
 import { botTaskUpdate } from "./dialog/bot-task"
 import { eventEmitter } from "./websocket"
+import { wsServerToWebGuard as toWebGuard } from "@oni/interface"
 
-export let common: any = []
-export let mcServerStatus: any = {}
-export let bot: any = []
-export let botTask: any = []
-export let ae: any = []
+export let common: commonModel.CommonArray = []
+export let mcServerStatus: mcServerStatusModel.McServerStatus
+export let bot: botModel.BotArray = []
+export let botTask: staticModel.BotTask[] = []
+export let ae: aeModel.AeArray = []
+export let event: eventModel.EventArray = []
+export let redstone: redstoneModel.RedstoneArray = []
 
 export function init() {
-    eventEmitter.addEventListener("message", (event: any) => {
-        const { type, data } = event.data
 
-        if (type == "global/common") {
-            common = data
-        } else if (type == "data/common/set") {
-            let target = data.find((data: any) => data.uuid === data.uuid)
+    eventEmitter.on("message", (m) => {
+        if (toWebGuard.isDataCommonInit(m)) {
+            common = m.data
+        } else if (toWebGuard.isDataMcServerStatusSet(m)) {
+            mcServerStatus = m.data
+        } else if (toWebGuard.isDataBotInit(m)) {
+            bot = m.data
+        } else if (toWebGuard.isStaticBotTask(m)) {
+            botTask = m.data
+        } else if (toWebGuard.isDataAeInit(m)) {
+            ae = m.data
+        } else if (toWebGuard.isDataEventInit(m)) {
+            event = m.data
+        } else if (toWebGuard.isDataAeAdd(m)) {
+            ae.push(m.data)
+        } else if (toWebGuard.isDataAeRemove(m)) {
+            ae = ae.filter((ae) => ae.uuid !== m.data)
+        } else if (toWebGuard.isDataAeItemsSet(m)) {
+            let target = ae.find((ae) => ae.uuid === m.data.uuid)
             if (target) {
-                Object.assign(target, data)
+                target.items = m.data.items
             }
-
-        } else if (type == "global/bot") {
-            bot = data
-        } else if (type == "data/bot/set") {
-            let target = bot.find((bot: any) => bot.uuid === data.uuid)
+        } else if (toWebGuard.isDataAeCpusSet(m)) {
+            let target = ae.find((ae) => ae.uuid === m.data.uuid)
             if (target) {
-                Object.assign(target, data)
+                target.cpus = m.data.cpus
             }
-        } else if (type == "global/botTask") {
-            botTask = data
-            botTaskUpdate(null)
-        }
-
-        else if (type == "global/ae") {
-            ae = data
-        } else if (type == "data/ae/set") {
-            let target = ae.find((ae: any) => ae.uuid === data.uuid)
+        } else if (toWebGuard.isDataBotAdd(m)) {
+            bot.push(m.data)
+        } else if (toWebGuard.isDataBotRemove(m)) {
+            bot = bot.filter((bot) => bot.uuid !== m.data)
+        } else if (toWebGuard.isDataBotComponentsSet(m)) {
+            let target = bot.find((bot) => bot.uuid === m.data.uuid)
             if (target) {
-                Object.assign(target, data)
+                target.components = m.data.components
+            }
+        } else if (toWebGuard.isDataBotTasksSet(m)) {
+            let target = bot.find((bot) => bot.uuid === m.data.uuid)
+            if (target) {
+                target.tasks = m.data.tasks
+            }
+        } else if (toWebGuard.isDataCommonAdd(m)) {
+            common.push(m.data)
+        } else if (toWebGuard.isDataCommonRemove(m)) {
+            common = common.filter((common) => common.uuid !== m.data)
+        } else if (toWebGuard.isDataCommonSet(m)) {
+            let target = common.find((common) => common.uuid === m.data.uuid)
+            if (target) {
+                target = m.data
+            }
+        } else if (toWebGuard.isDataEventAdd(m)) {
+            event.push(m.data)
+        } else if (toWebGuard.isDataEventRemove(m)) {
+            event = event.filter((event) => event.uuid !== m.data)
+        } else if (toWebGuard.isDataEventSet(m)) {
+            let target = event.find((event) => event.uuid === m.data.uuid)
+            if (target) {
+                target = m.data
+            }
+        } else if (toWebGuard.isDataRedstoneAdd(m)) {
+            redstone.push(m.data)
+        } else if (toWebGuard.isDataRedstoneRemove(m)) {
+            redstone = redstone.filter((redstone) => redstone.uuid !== m.data)
+        } else if (toWebGuard.isDataRedstoneSet(m)) {
+            let target = redstone.find((redstone) => redstone.uuid === m.data.uuid)
+            if (target) {
+                target = m.data
             }
         }
-
-        else if (type == "global/mcServerStatus") {
-            mcServerStatus = data
-        } else if (type == "data/mcServerStatus/set") {
-            mcServerStatus = data
-        }
-
     })
 
-    // setTimeout(() => {
-    //     console.log(common)
-    //     console.log(bot)
-    //     console.log(botTask)
-    //     console.log(ae)
-    //     console.log(mcServerStatus)
-    // }, 1000)
+    setTimeout(() => {
+        // console.log(common)
+        // console.log(bot)
+        // console.log(botTask)
+        // console.log(ae)
+        console.log(mcServerStatus)
+    }, 1000)
 }

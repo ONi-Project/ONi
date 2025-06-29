@@ -169,7 +169,7 @@ export function init() {
     })
   })
 
-  eventEmitter.addEventListener("message", async (event: any) => {
+  eventEmitter.on("message", async (event: any) => {
     const { type, data: bot } = event.data
     if (type == "data/bot/set") {
       let target = Array.from(document.querySelectorAll(".bot__edit")).find(element => element.querySelector("data")!.getAttribute("uuid") === bot.uuid)

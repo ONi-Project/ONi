@@ -24,7 +24,7 @@ export const html = /*html*/`
 `
 
 export function init() {
-    eventEmitter.addEventListener("message", (event: any) => {
+    eventEmitter.on("message", (event: any) => {
         const { type, data } = event.data
         if (type == "layout/aeList") {
             renderLayout(data, document.getElementById("ae__list"))

@@ -1,36 +1,58 @@
-import { randomUUID } from "./utils"
 import { Snackbar, snackbar } from "mdui"
 import { endpoint, token } from "./settings"
 import { closeLoginDialog, openLoginDialog, setText } from "./dialog/login"
 import { initSlogan } from "./layout/topbar"
 
+import { allMessageType, newWebToServerMessage as toServer, userModel, wsBaseGuard, wsServerToWebGuard } from "@oni/interface"
+
 // 定义事件推送器
 
-class EventEmitter extends EventTarget {
-    constructor() {
-        super()
+type Listener<T = any> = (data: T) => void
+
+class EventEmitter<Events extends Record<string, any>> {
+    private listeners: {
+        [K in keyof Events]?: Listener<Events[K]>[]
+    } = {}
+
+    // 添加事件监听器
+    on<K extends keyof Events>(event: K, listener: Listener<Events[K]>) {
+        if (!this.listeners[event]) {
+            this.listeners[event] = []
+        }
+        this.listeners[event]!.push(listener)
     }
 
-    // 推送事件的方法
-    message(data: any) {
-        const event: any = new Event("message")
-        event.data = data
-        this.dispatchEvent(event)
+    // 移除事件监听器
+    off<K extends keyof Events>(event: K, listener: Listener<Events[K]>) {
+        const eventListeners = this.listeners[event]
+        if (!eventListeners) return
+        this.listeners[event] = eventListeners.filter(l => l !== listener)
+    }
+
+    // 触发事件
+    emit<K extends keyof Events>(event: K, data: Events[K]) {
+        const eventListeners = this.listeners[event]
+        if (!eventListeners) return
+        for (const listener of eventListeners) {
+            listener(data)
+        }
     }
 }
 
-export const eventEmitter = new EventEmitter()
+export const eventEmitter = new EventEmitter<{
+    message: allMessageType.ServerToWeb
+}>()
 
 // 建立ws连接
 
-export let user: any = {}
+export let user: userModel.User
 
-export let ws: WebSocket
+export let session: WebSocket
 
 export function init() {
 
-    let disconectInfo: Snackbar | undefined
-    let errorInfo: Snackbar | undefined
+    let disconectInfo: Snackbar | null
+    let errorInfo: Snackbar | null
     let connectedOnce = false // 是否曾经连接成功过
 
 
@@ -43,20 +65,20 @@ export function init() {
     tryConnect()
 
     function tryConnect() {
-        ws = new WebSocket("ws://" + endpoint + "/ws/web")
+        session = new WebSocket("ws://" + endpoint + "/ws/web")
 
-        ws.onopen = () => {
+        session.onopen = () => {
             connectDeco()
             if (disconectInfo) { disconectInfo.open = false }
             if (errorInfo) { errorInfo.open = false }
             connectedOnce = true
             console.log("ws 连接成功")
-            disconectInfo = undefined
-            errorInfo = undefined
-            ws.send(JSON.stringify({ type: "auth/request", uuid: randomUUID(), data: { "token": token } }))
+            disconectInfo = null
+            errorInfo = null
+            send(session, toServer("AuthRequest", { token: token }))
         }
 
-        ws.onclose = () => {
+        session.onclose = () => {
             if (connectedOnce) {
                 if (!disconectInfo) {
                     disconectInfo = snackbar({
@@ -73,7 +95,7 @@ export function init() {
             console.log("ws 连接断开")
         }
 
-        ws.onerror = (event) => {
+        session.onerror = (event) => {
             console.log("ws 连接失败：", event)
             if (!errorInfo) {
                 errorInfo = snackbar({
@@ -84,15 +106,20 @@ export function init() {
             }
             setText("WebSocket 连接失败，请检查后端地址是否正确。")
             openLoginDialog()
-            ws.close()
+            session.close()
         }
 
-        ws.onmessage = (event) => {
+        session.onmessage = (event) => {
 
             const json = JSON.parse(event.data)
 
-            if (json.type == "auth/response") {
-                if (Object.keys(json.data).length !== 0) {
+            if (!wsBaseGuard.isMessage(json)) {
+                console.warn("非法 ws 消息：", json)
+                return
+            }
+
+            if (wsServerToWebGuard.isAuthResponse(json)) {
+                if (json.data !== null) {
                     user = json.data
                     console.log("用户认证成功：", user)
                     setTimeout(() => {
@@ -112,8 +139,9 @@ export function init() {
                     }
                     openLoginDialog()
                 }
+
             } else {
-                eventEmitter.message(json)
+                eventEmitter.emit("message", json as allMessageType.ServerToWeb)
             }
 
         }
@@ -132,6 +160,6 @@ export function init() {
     }
 }
 
-export function send(data: any) {
-    ws.send(JSON.stringify(data))
+export function send(session: WebSocket, message: allMessageType.WebToServer) {
+    session.send(JSON.stringify(message))
 }

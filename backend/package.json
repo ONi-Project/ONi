@@ -22,7 +22,7 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "axios": "^1.9.0",
+    "axios": "^1.10.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "log4js": "^6.9.1",

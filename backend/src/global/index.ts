@@ -13,7 +13,7 @@ let Global = {
     user: user,
     bot: bot,
     ae: ae,
-    data: common,
+    common: common,
     redstone: redstone,
     event: event,
     mcServerStatus: mcServerStatus,

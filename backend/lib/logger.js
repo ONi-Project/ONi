@@ -1,5 +1,5 @@
 import log4js from "log4js";
-var Logger = {
+let Logger = {
     init(config) {
         log4js.configure({
             appenders: {

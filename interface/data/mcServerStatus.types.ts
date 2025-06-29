@@ -8,3 +8,5 @@ export interface McServerStatus {
         list: string[]
     }
 }
+
+export type McServerStatusArray = McServerStatus[]

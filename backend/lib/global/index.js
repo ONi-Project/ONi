@@ -6,11 +6,11 @@ import redstone from "./redstone.js";
 import event from "./event.js";
 import mcServerStatus from "./mcServerStatus.js";
 import staticResources from "./staticResources.js";
-var Global = {
+let Global = {
     user: user,
     bot: bot,
     ae: ae,
-    data: common,
+    common: common,
     redstone: redstone,
     event: event,
     mcServerStatus: mcServerStatus,

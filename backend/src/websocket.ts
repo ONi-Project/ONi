@@ -3,6 +3,8 @@ import http from "http"
 import { Config, SessionWeb, SessionOc } from "./interface.js"
 import { loggerWebsocket as logger } from "./logger.js"
 import handler from "./handler.js"
+import { allMessageType } from "@oni/interface"
+import { send } from "./utils.js"
 
 export const wssWeb = new WebSocketServer({ noServer: true })
 export const wssOc = new WebSocketServer({ noServer: true })
@@ -50,7 +52,7 @@ let Websocket = {
             ws.on('message', (message: string) => {
                 handler.ocMessage(message, ws)
             })
-            
+
         })
 
     }
@@ -58,18 +60,29 @@ let Websocket = {
 
 export default Websocket
 
-export function wsWebBroadcast(type: string, data: any) {
-    wssWeb.clients.forEach(ws => {
-        if ((ws as SessionWeb).authenticated) {
-            ws.send(JSON.stringify({ type: type, data: data }))
+export function wsWebBroadcast(message: allMessageType.ServerToWeb) {
+    wssWeb.clients.forEach(session => {
+        if ((session as SessionWeb).authenticated) {
+            session.send(JSON.stringify(message))
         }
     })
 }
 
-export function wsOcBroadcast(type: string, data: any) {
-    wssOc.clients.forEach(ws => {
-        if ((ws as SessionOc).authenticated) {
-            ws.send(JSON.stringify({ type: type, data: data }))
+export function wsOcBroadcast(message: allMessageType.ServerToOc) {
+    wssOc.clients.forEach(session => {
+        if ((session as SessionOc).authenticated) {
+            session.send(JSON.stringify(message))
         }
     })
+}
+
+export function wsOcSendByBotUuid(uuid: string, message: allMessageType.ServerToOc) {
+    let ok = false
+    wssOc.clients.forEach(session => {
+        if ((session as SessionOc).authenticated && (session as SessionOc).bot.uuid == uuid) {
+            send((session as SessionOc), message)
+            ok = true
+        }
+    })
+    return ok
 }

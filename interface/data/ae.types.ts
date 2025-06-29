@@ -11,6 +11,8 @@ export interface Ae {
     levelMaintains: AeLevelMaintain[]
 }
 
+export type AeArray = Ae[]
+
 export interface AeCpu {
     name: string
     coprocessors: number

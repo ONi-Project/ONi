@@ -15,7 +15,7 @@ var data = {
     },
     init(config) {
         try {
-            this.list = JSON.parse(fs.readFileSync('./data/variable/common_data.json', 'utf8'));
+            this.list = JSON.parse(fs.readFileSync('./data/common/common.tson', 'utf8'));
             logger.debug("data", "Json initialized successfully.");
             logger.trace("data", this.list);
         }

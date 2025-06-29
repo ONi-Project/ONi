@@ -3,71 +3,91 @@ import { loggerGlobal as logger } from "../logger.js";
 import { wsWebBroadcast } from "../websocket.js";
 import { performanceTimer } from "../utils.js";
 import Global from "./index.js";
-var ae = {
+import { aeModelGuard, newServerToWebMessage } from "@oni/interface";
+let ae = {
     // AE 列表
     list: [],
-    getListLayout() {
-        let content = [];
-        this.list.forEach(ae => {
-            content.push({
-                type: "card",
-                id: "ae-overview",
-                config: {
-                    uuid: ae.uuid,
-                    name: ae.name,
-                }
-            });
-        });
-        let _ = [{
-                type: "grid-m",
-                content: content
-            }];
-        return _;
+    get(uuid) {
+        return this.list.find(ae => ae.uuid === uuid);
     },
-    getEditLayout() {
-        let content = [];
-        this.list.forEach(ae => {
-            content.push({
-                type: "tab",
-                id: "ae-edit",
-                config: {
-                    uuid: ae.uuid,
-                    name: ae.name,
-                }
-            });
-        });
-        let _ = [{
-                type: "raw",
-                content: content
-            }];
-        return _;
+    add(ae) {
+        this.list.push(ae);
+        wsWebBroadcast(newServerToWebMessage("DataAeAdd", ae));
     },
-    getViewLayout() {
-        let content = [];
-        this.list.forEach(ae => {
-            content.push({
-                type: "tab",
-                id: "ae-view",
-                config: {
-                    uuid: ae.uuid,
-                    name: ae.name,
-                }
-            });
-        });
-        let _ = [{
-                type: "raw",
-                content: content
-            }];
-        return _;
+    remove(uuid) {
+        let index = this.list.findIndex(ae => ae.uuid === uuid);
+        if (index >= 0) {
+            let ae = this.list[index];
+            this.list.splice(index, 1);
+            wsWebBroadcast(newServerToWebMessage("DataAeRemove", uuid));
+        }
+        else {
+            logger.warn("ae.remove", "Ae not found.");
+        }
     },
+    // getListLayout() {
+    //     let content: layoutModel.PageContentElement[] = []
+    //     this.list.forEach(ae => {
+    //         content.push({
+    //             type: "card",
+    //             id: "ae-overview",
+    //             config: {
+    //                 uuid: ae.uuid,
+    //                 name: ae.name,
+    //             }
+    //         })
+    //     })
+    //     let _ = [{
+    //         type: "grid-m",
+    //         content: content
+    //     }]
+    //     return _
+    // },
+    // getEditLayout() {
+    //     let content: layoutModel.PageContentElement[] = []
+    //     this.list.forEach(ae => {
+    //         content.push({
+    //             type: "tab",
+    //             id: "ae-edit",
+    //             config: {
+    //                 uuid: ae.uuid,
+    //                 name: ae.name,
+    //             }
+    //         })
+    //     })
+    //     let _ = [{
+    //         type: "raw",
+    //         content: content
+    //     }]
+    //     return _
+    // },
+    // getViewLayout() {
+    //     let content: layoutModel.PageContentElement[] = []
+    //     this.list.forEach(ae => {
+    //         content.push({
+    //             type: "tab",
+    //             id: "ae-view",
+    //             config: {
+    //                 uuid: ae.uuid,
+    //                 name: ae.name,
+    //             }
+    //         })
+    //     })
+    //     let _ = [{
+    //         type: "raw",
+    //         content: content
+    //     }]
+    //     return _
+    // },
     cpus: {
         set(uuid, cpus) {
             let targetAe = ae.list.find(ae => ae.uuid === uuid);
             if (targetAe) {
                 cpus.forEach((cpu) => {
                     if (cpu.busy && cpu.finalOutput) {
-                        const itemPanelItem = Global.staticResources.itemPanelItem.find(itemPanelItem => (itemPanelItem.name == cpu.finalOutput.name) && (itemPanelItem.damage == cpu.finalOutput.damage));
-                        const itemPanelFluid = Global.staticResources.itemPanelFluid.find(itemPanelFluid => itemPanelFluid.name == cpu.finalOutput.name);
+                        const finalOutput = cpu.finalOutput;
+                        const itemPanelItem = Global.staticResources.itemPanelItem.find(itemPanelItem => (itemPanelItem.name == finalOutput.name) && (itemPanelItem.damage == finalOutput.damage));
+                        const itemPanelFluid = Global.staticResources.itemPanelFluid.find(itemPanelFluid => itemPanelFluid.name == finalOutput.name);
                         if (itemPanelItem) {
                             cpu.finalOutput.id = itemPanelItem.id;
                             cpu.finalOutput.display = itemPanelItem.display;
@@ -82,18 +102,15 @@ var ae = {
                     }
                 });
                 targetAe.cpus = cpus;
-                ae.cpus.update(uuid);
+                ae.cpus.update(targetAe);
             }
         },
-        update(uuid) {
-            let targetAe = ae.list.find(ae => ae.uuid === uuid);
-            if (targetAe) {
-                targetAe.timeUpdated = new Date().getTime();
-                wsWebBroadcast("data/ae/set", targetAe);
-            }
+        update(ae) {
+            ae.timeUpdated = new Date().getTime();
+            wsWebBroadcast(newServerToWebMessage("DataAeCpusSet", ae));
         }
     },
-    itemList: {
+    items: {
         set(uuid, itemList) {
             let targetAe = ae.list.find(ae => ae.uuid === uuid);
             if (targetAe) {
@@ -118,28 +135,45 @@ var ae = {
                             logger.error(`Unknown item type ${item.type}`);
                         }
                     });
-                    targetAe.itemList = itemList;
+                    targetAe.items = itemList;
                 });
-                ae.itemList.update(uuid);
+                ae.items.update(targetAe);
             }
         },
-        update(uuid) {
-            let targetAe = ae.list.find(ae => ae.uuid === uuid);
-            if (targetAe) {
-                targetAe.timeUpdated = new Date().getTime();
-                wsWebBroadcast("data/ae/set", targetAe);
-            }
+        update(ae) {
+            ae.timeUpdated = new Date().getTime();
+            wsWebBroadcast(newServerToWebMessage("DataAeItemsSet", ae));
+        }
+    },
+    save() {
+        const MODULE_NAME = "ae.save";
+        const FILE_PATH = "./data/ae/ae.json";
+        try {
+            fs.writeFileSync(FILE_PATH, JSON.stringify(this.list), 'utf8');
+            logger.debug(MODULE_NAME, "Json saved successfully.");
+        }
+        catch (e) {
+            logger.error(MODULE_NAME, "Json save failed.");
+            logger.error(MODULE_NAME, e);
         }
     },
     init(config) {
+        const MODULE_NAME = "ae.init";
+        const FILE_PATH = "./data/ae/ae.json";
         try {
-            this.list = JSON.parse(fs.readFileSync('./data/ae/ae.json', 'utf8'));
-            logger.debug("ae", "Json initialized successfully.");
-            logger.trace("ae", this.list);
+            let json = JSON.parse(fs.readFileSync(FILE_PATH, 'utf8'));
+            if (aeModelGuard.isAeArray(json)) {
+                this.list = json;
+                logger.debug(MODULE_NAME, "Json initialized successfully.");
+                logger.trace(MODULE_NAME, this.list);
+            }
+            else {
+                logger.error(MODULE_NAME, "Json initialization failed. Invalid data format.");
+            }
         }
         catch (e) {
-            logger.error("ae", "Json initialization failed.");
-            logger.error("ae", e);
+            logger.error(MODULE_NAME, "Json initialization failed.");
+            logger.error(MODULE_NAME, e);
         }
     }
 };

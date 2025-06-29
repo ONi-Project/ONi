@@ -8,3 +8,5 @@ export interface Redstone {
     value: number
     side: "up" | "down" | "north" | "south" | "west" | "east"
 }
+
+export type RedstoneArray = Redstone[]

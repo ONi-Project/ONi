@@ -9,3 +9,5 @@ export interface Event {
     status: number
     timestamp: number
 }
+
+export type EventArray = Event[]

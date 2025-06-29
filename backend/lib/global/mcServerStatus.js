@@ -1,6 +1,7 @@
 import { loggerGlobal as logger } from "../logger.js";
 import { wsWebBroadcast } from "../websocket.js";
-var mcServerStatus = {
+import { newServerToWebMessage } from "@oni/interface";
+let mcServerStatus = {
     // MC 服务器状态
     status: {
         ip: "",
@@ -14,7 +15,7 @@ var mcServerStatus = {
     },
     set(status) {
         this.status = status;
-        wsWebBroadcast("data/mcServerStatus/set", this.status);
+        wsWebBroadcast(newServerToWebMessage("DataMcServerStatusSet", this.status));
     },
     init(config) {
         if (!config.mc_server_ip) {

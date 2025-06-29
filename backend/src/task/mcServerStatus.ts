@@ -1,6 +1,7 @@
 import Global from "../global/index.js"
-import { Config, McServerStatus } from "../interface.js"
+import { Config } from "../interface.js"
 import { loggerTask as logger } from "../logger.js"
+import { mcServerStatusModel } from "@oni/interface"
 
 var mcServerStatus = {
     init(config: Config) {
@@ -27,7 +28,7 @@ var mcServerStatus = {
                 const result = await mc.lookup({ host: address, port: parseInt(port) })
                 const data = result.status
 
-                const status: McServerStatus = {
+                const status: mcServerStatusModel.McServerStatus = {
                     ip: Global.mcServerStatus.status.ip,
                     online: data == null ? false : true,
                     motd: data == null ? "" : data.description,
@@ -43,7 +44,7 @@ var mcServerStatus = {
 
             } catch (error) {
 
-                const status: McServerStatus = {
+                const status: mcServerStatusModel.McServerStatus = {
                     ip: Global.mcServerStatus.status.ip,
                     online: false,
                     motd: "",

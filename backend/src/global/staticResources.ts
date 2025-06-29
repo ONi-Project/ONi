@@ -1,46 +1,15 @@
 import fs from 'fs'
 import { Config } from '../interface.js'
 import { loggerGlobal as logger } from '../logger.js'
-
-interface ItemPanelItem {
-    name: string
-    id: number
-    damage: number // aka. meta
-    hasNBT: boolean
-    display: string
-}
-
-interface ItemPanelLiquid {
-    name: string
-    id: number
-    display: string
-}
-
-interface BotTask {
-    id: string
-    display: string
-    description: string
-    icon: string
-    mode: [{
-        id: string
-        description: string
-        hidden: boolean
-        config: [{
-            id: string
-            type: string
-            description: string
-            required: boolean
-        }]
-    }]
-}
+import { staticModel } from '@oni/interface'
 
 let staticResources = {
 
-    itemPanelItem: [] as ItemPanelItem[],
-    itemPanelFluid: [] as ItemPanelLiquid[],
-    itemPanelItemMap: new Map() as Map<string, ItemPanelItem>,
-    itemPanelFluidMap: new Map() as Map<string, ItemPanelLiquid>,
-    botTask: [] as BotTask[],
+    itemPanelItem: [] as staticModel.ItemPanelItem[],
+    itemPanelFluid: [] as staticModel.ItemPanelLiquid[],
+    itemPanelItemMap: new Map() as Map<string, staticModel.ItemPanelItem>,
+    itemPanelFluidMap: new Map() as Map<string, staticModel.ItemPanelLiquid>,
+    botTask: [] as staticModel.BotTask[],
 
     init(config: Config) {
 
@@ -80,7 +49,7 @@ let staticResources = {
         })
 
         this.itemPanelFluid.forEach(fluid => {
-            this.itemPanelFluidMap.set(fluid.name , fluid)
+            this.itemPanelFluidMap.set(fluid.name, fluid)
         })
 
         try {

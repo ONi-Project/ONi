@@ -1,98 +1,98 @@
 import fs from "fs";
 import { loggerGlobal as logger } from "../logger.js";
-import { wssOc, wsWebBroadcast } from "../websocket.js";
-var bot = {
+import { wsOcSendByBotUuid, wsWebBroadcast } from "../websocket.js";
+import { botModelGuard, newServerToOcMessage, newServerToWebMessage } from "@oni/interface";
+let bot = {
     // BOT 列表
     list: [],
-    getListLayout() {
-        let content = [];
-        this.list.forEach(bot => {
-            content.push({
-                type: "card",
-                id: "bot-overview",
-                config: {
-                    uuid: bot.uuid,
-                    name: bot.name,
-                }
-            });
-        });
-        let _ = [{
-                type: "grid-m",
-                content: content
-            }];
-        _.push({
-            type: "raw",
-            content: [{
-                    type: "card",
-                    id: "create-bot",
-                    config: {}
-                }]
-        });
-        return _;
+    get(uuid) {
+        return this.list.find(item => item.uuid == uuid);
     },
-    getEditLayout() {
-        let content = [];
-        this.list.forEach(bot => {
-            content.push({
-                type: "tab",
-                id: "bot-edit",
-                config: {
-                    uuid: bot.uuid,
-                    name: bot.name,
-                }
-            });
-        });
-        let _ = [{
-                type: "raw",
-                content: content
-            }];
-        return _;
+    add(bot) {
+        this.list.push(bot);
+        wsWebBroadcast(newServerToWebMessage("DataBotAdd", bot));
     },
+    remove(uuid) {
+        let index = this.list.findIndex(item => item.uuid == uuid);
+        if (index >= 0) {
+            let data = this.list[index];
+            this.list.splice(index, 1);
+            wsWebBroadcast(newServerToWebMessage("DataBotRemove", uuid));
+        }
+        else {
+            logger.error("bot.remove", "Bot not found.");
+        }
+    },
+    // getListLayout() {
+    //     let content: layoutModel.PageContentElement[] = []
+    //     this.list.forEach(bot => {
+    //         content.push({
+    //             type: "card",
+    //             id: "bot-overview",
+    //             config: {
+    //                 uuid: bot.uuid,
+    //                 name: bot.name,
+    //             }
+    //         })
+    //     })
+    //     let _ = [{
+    //         type: "grid-m",
+    //         content: content
+    //     }]
+    //     _.push({
+    //         type: "raw",
+    //         content: [{
+    //             type: "card",
+    //             id: "create-bot",
+    //             config: {}
+    //         }]
+    //     })
+    //     return _
+    // },
+    // getEditLayout() {
+    //     let content: layoutModel.PageContentElement[] = []
+    //     this.list.forEach(bot => {
+    //         content.push({
+    //             type: "tab",
+    //             id: "bot-edit",
+    //             config: {
+    //                 uuid: bot.uuid,
+    //                 name: bot.name,
+    //             }
+    //         })
+    //     })
+    //     let _ = [{
+    //         type: "raw",
+    //         content: content
+    //     }]
+    //     return _
+    // },
     components: {
         set(uuid, components) {
             let targetBot = bot.list.find(item => item.uuid == uuid);
             if (targetBot) {
                 targetBot.components = components;
-                bot.components.update(uuid);
+                bot.components.update(targetBot);
             }
             else {
                 logger.error("bot.components.set", "Bot not found.");
             }
         },
-        update(uuid) {
-            let targetBot = bot.list.find(item => item.uuid == uuid);
-            if (targetBot) {
-                wsWebBroadcast("data/bot/set", targetBot);
-            }
+        update(bot) {
+            wsWebBroadcast(newServerToWebMessage("DataBotComponentsSet", bot));
         }
     },
     tasks: {
         runSingle(uuid, task) {
-            let targetBot = bot.list.find(item => item.uuid == uuid);
-            if (targetBot) {
-                let ok = false;
-                wssOc.clients.forEach(ws => {
-                    if (ws.authenticated && ws.bot.uuid == uuid) {
-                        ws.send(JSON.stringify({
-                            type: "task",
-                            data: [task]
-                        }));
-                        ok = true;
-                    }
-                });
-                if (!ok) {
-                    logger.error("bot.tasks.runSingleTask", `Trying to send task to oc but bot ${uuid} not found or offline`);
-                }
-            }
-            else {
-                logger.error("bot.tasks.runSingleTask", "Bot not found.");
+            if (!wsOcSendByBotUuid(uuid, newServerToOcMessage("Task", [task]))) {
+                logger.error("bot.tasks.runSingleTask", `Trying to send task to oc but bot ${uuid} not found or offline.`);
             }
         },
         add(uuid, task) {
             let targetBot = bot.list.find(item => item.uuid == uuid);
             if (targetBot) {
                 targetBot.tasks.push(task);
-                bot.tasks.update(uuid);
+                bot.tasks.update(targetBot);
             }
             else {
                 logger.error("bot.tasks.add", "Bot not found.");
@@ -104,7 +104,7 @@ var bot = {
                 let targetTask = targetBot.tasks.find(item => item.taskUuid == taskUuid);
                 if (targetTask) {
                     targetBot.tasks.splice(targetBot.tasks.indexOf(targetTask), 1);
-                    bot.tasks.update(uuid);
+                    bot.tasks.update(targetBot);
                 }
                 else {
                     logger.error("bot.tasks.remove", "Task not found.");
@@ -114,38 +114,42 @@ var bot = {
                 logger.error("bot.tasks.remove", "Bot not found.");
             }
         },
-        update(uuid) {
-            let ok = false;
-            wssOc.clients.forEach(ws => {
-                if (ws.authenticated && ws.bot.uuid == uuid) {
-                    let targetBot = bot.list.find(item => item.uuid == uuid);
-                    if (targetBot) {
-                        ws.send(JSON.stringify({
-                            type: "task",
-                            data: targetBot.tasks
-                        }));
-                        ok = true;
-                    }
-                }
-            });
-            let targetBot = bot.list.find(item => item.uuid == uuid);
-            if (targetBot) {
-                wsWebBroadcast("data/bot/set", targetBot);
+        update(bot) {
+            if (!wsOcSendByBotUuid(bot.uuid, newServerToOcMessage("Task", bot.tasks))) {
+                logger.error("bot.tasks.update", `Trying to send task to oc but bot ${bot.uuid} not found or offline`);
             }
-            if (!ok) {
-                logger.error("bot.tasks.updateTasks", `Trying to send task to oc but bot ${uuid} not found or offline`);
-            }
+            wsWebBroadcast(newServerToWebMessage("DataBotTasksSet", bot));
+        }
+    },
+    save() {
+        const MODULE_NAME = "bot.save";
+        const FILE_PATH = "./data/bot/bot.json";
+        try {
+            fs.writeFileSync(FILE_PATH, JSON.stringify(this.list), 'utf8');
+            logger.debug(MODULE_NAME, "Json saved successfully.");
+        }
+        catch (e) {
+            logger.error(MODULE_NAME, "Json save failed.");
+            logger.error(MODULE_NAME, e);
         }
     },
     init(config) {
+        const MODULE_NAME = "bot.init";
+        const FILE_PATH = "./data/bot/bot.json";
         try {
-            this.list = JSON.parse(fs.readFileSync('./data/bot/bot.json', 'utf8'));
-            logger.debug("bot", "Json initialized successfully.");
-            logger.trace("bot", this.list);
+            let json = JSON.parse(fs.readFileSync(FILE_PATH, 'utf8'));
+            if (botModelGuard.isBotArray(json)) {
+                this.list = json;
+                logger.debug(MODULE_NAME, "Json initialized successfully.");
+                logger.trace(MODULE_NAME, this.list);
+            }
+            else {
+                logger.error(MODULE_NAME, "Json initialization failed. Invalid data format.");
+            }
         }
         catch (e) {
-            logger.error("bot", "Json initialization failed.");
-            logger.error("bot", e);
+            logger.error(MODULE_NAME, "Json initialization failed.");
+            logger.error(MODULE_NAME, e);
         }
     }
 };

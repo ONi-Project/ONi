@@ -1,80 +1,101 @@
-import { Config, PageContentElement } from "../interface.js"
+import { Config } from "../interface.js"
 import fs from "fs"
 import { loggerGlobal as logger } from "../logger.js"
 import { wsWebBroadcast } from "../websocket.js"
 import { deepEqual, performanceTimer } from "../utils.js"
 import Global from "./index.js"
-import { aeModel } from "@oni/interface"
+import { aeModel, aeModelGuard, newServerToWebMessage } from "@oni/interface"
+import { layoutModel } from "@oni/interface"
 
 let ae = {
     // AE 列表
     list: [] as aeModel.Ae[],
 
-    getListLayout() {
-        let content: PageContentElement[] = []
-
-        this.list.forEach(ae => {
-            content.push({
-                type: "card",
-                id: "ae-overview",
-                config: {
-                    uuid: ae.uuid,
-                    name: ae.name,
-                }
-            })
-        })
-
-        let _ = [{
-            type: "grid-m",
-            content: content
-        }]
-
-        return _
+    get(uuid: string) {
+        return this.list.find(ae => ae.uuid === uuid)
     },
 
-    getEditLayout() {
-        let content: PageContentElement[] = []
-
-        this.list.forEach(ae => {
-            content.push({
-                type: "tab",
-                id: "ae-edit",
-                config: {
-                    uuid: ae.uuid,
-                    name: ae.name,
-                }
-            })
-        })
-
-        let _ = [{
-            type: "raw",
-            content: content
-        }]
-
-        return _
+    add(ae: aeModel.Ae) {
+        this.list.push(ae)
+        wsWebBroadcast(newServerToWebMessage("DataAeAdd", ae))
     },
 
-    getViewLayout() {
-        let content: PageContentElement[] = []
-
-        this.list.forEach(ae => {
-            content.push({
-                type: "tab",
-                id: "ae-view",
-                config: {
-                    uuid: ae.uuid,
-                    name: ae.name,
-                }
-            })
-        })
-
-        let _ = [{
-            type: "raw",
-            content: content
-        }]
-
-        return _
+    remove(uuid: string) {
+        let index = this.list.findIndex(ae => ae.uuid === uuid)
+        if (index >= 0) {
+            let ae = this.list[index]
+            this.list.splice(index, 1)
+            wsWebBroadcast(newServerToWebMessage("DataAeRemove", uuid))
+        } else {
+            logger.warn("ae.remove", "Ae not found.")
+        }
     },
+
+    // getListLayout() {
+    //     let content: layoutModel.PageContentElement[] = []
+
+    //     this.list.forEach(ae => {
+    //         content.push({
+    //             type: "card",
+    //             id: "ae-overview",
+    //             config: {
+    //                 uuid: ae.uuid,
+    //                 name: ae.name,
+    //             }
+    //         })
+    //     })
+
+    //     let _ = [{
+    //         type: "grid-m",
+    //         content: content
+    //     }]
+
+    //     return _
+    // },
+
+    // getEditLayout() {
+    //     let content: layoutModel.PageContentElement[] = []
+
+    //     this.list.forEach(ae => {
+    //         content.push({
+    //             type: "tab",
+    //             id: "ae-edit",
+    //             config: {
+    //                 uuid: ae.uuid,
+    //                 name: ae.name,
+    //             }
+    //         })
+    //     })
+
+    //     let _ = [{
+    //         type: "raw",
+    //         content: content
+    //     }]
+
+    //     return _
+    // },
+
+    // getViewLayout() {
+    //     let content: layoutModel.PageContentElement[] = []
+
+    //     this.list.forEach(ae => {
+    //         content.push({
+    //             type: "tab",
+    //             id: "ae-view",
+    //             config: {
+    //                 uuid: ae.uuid,
+    //                 name: ae.name,
+    //             }
+    //         })
+    //     })
+
+    //     let _ = [{
+    //         type: "raw",
+    //         content: content
+    //     }]
+
+    //     return _
+    // },
 
     cpus: {
         set(uuid: string, cpus: aeModel.AeCpu[]) {
@@ -97,15 +118,12 @@ let ae = {
                     }
                 })
                 targetAe.cpus = cpus
-                ae.cpus.update(uuid)
+                ae.cpus.update(targetAe)
             }
         },
-        update(uuid: string) {
-            let targetAe = ae.list.find(ae => ae.uuid === uuid)
-            if (targetAe) {
-                targetAe.timeUpdated = new Date().getTime()
-                wsWebBroadcast("data/ae/set", targetAe)
-            }
+        update(ae: aeModel.Ae) {
+            ae.timeUpdated = new Date().getTime()
+            wsWebBroadcast(newServerToWebMessage("DataAeCpusSet", ae))
         }
     },
 
@@ -133,26 +151,42 @@ let ae = {
                     })
                     targetAe.items = itemList
                 })
-                ae.items.update(uuid)
+                ae.items.update(targetAe)
             }
         },
-        update(uuid: string) {
-            let targetAe = ae.list.find(ae => ae.uuid === uuid)
-            if (targetAe) {
-                targetAe.timeUpdated = new Date().getTime()
-                wsWebBroadcast("data/ae/set", targetAe)
-            }
+        update(ae: aeModel.Ae) {
+            ae.timeUpdated = new Date().getTime()
+            wsWebBroadcast(newServerToWebMessage("DataAeItemsSet", ae))
+        }
+    },
+
+    save() {
+        const MODULE_NAME = "ae.save"
+        const FILE_PATH = "./data/ae/ae.json"
+        try {
+            fs.writeFileSync(FILE_PATH, JSON.stringify(this.list), 'utf8')
+            logger.debug(MODULE_NAME, "Json saved successfully.")
+        } catch (e) {
+            logger.error(MODULE_NAME, "Json save failed.")
+            logger.error(MODULE_NAME, e)
         }
     },
 
     init(config: Config) {
+        const MODULE_NAME = "ae.init"
+        const FILE_PATH = "./data/ae/ae.json"
         try {
-            this.list = JSON.parse(fs.readFileSync('./data/ae/ae.json', 'utf8'))
-            logger.debug("ae", "Json initialized successfully.")
-            logger.trace("ae", this.list)
+            let json = JSON.parse(fs.readFileSync(FILE_PATH, 'utf8'))
+            if (aeModelGuard.isAeArray(json)) {
+                this.list = json
+                logger.debug(MODULE_NAME, "Json initialized successfully.")
+                logger.trace(MODULE_NAME, this.list)
+            } else {
+                logger.error(MODULE_NAME, "Json initialization failed. Invalid data format.")
+            }
         } catch (e) {
-            logger.error("ae", "Json initialization failed.")
-            logger.error("ae", e)
+            logger.error(MODULE_NAME, "Json initialization failed.")
+            logger.error(MODULE_NAME, e)
         }
     }
 }

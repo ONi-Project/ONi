@@ -1,7 +1,7 @@
 import { Config } from "../interface.js"
 import { loggerGlobal as logger } from "../logger.js"
 import { wsWebBroadcast } from "../websocket.js"
-import { mcServerStatusModel } from "@oni/interface"
+import { mcServerStatusModel, newServerToWebMessage } from "@oni/interface"
 
 let mcServerStatus = {
     // MC 服务器状态
@@ -18,7 +18,7 @@ let mcServerStatus = {
 
     set(status: mcServerStatusModel.McServerStatus) {
         this.status = status
-        wsWebBroadcast("data/mcServerStatus/set", this.status)
+        wsWebBroadcast(newServerToWebMessage("DataMcServerStatusSet", this.status))
     },
 
     init(config: Config) {

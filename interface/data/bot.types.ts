@@ -8,6 +8,8 @@ export interface Bot {
     tasks: BotTask[]
 }
 
+export type BotArray = Bot[]
+
 export interface BotTask {
     task: string
     interval: number

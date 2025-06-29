@@ -5,6 +5,7 @@ import WebSocket from 'ws'
 import { wssWeb, wssOc } from "./websocket.js"
 import { loggerServer as logger } from "./logger.js"
 import { Config } from "./interface.js"
+import { newWebToServerMessage } from "@oni/interface"
 
 let Server = {
     init(config: Config) {
@@ -53,10 +54,7 @@ let Server = {
             } else {
                 const ws = new WebSocket(`ws://localhost:${config.port}/ws/oc`)
                 ws.on("open", () => {
-                    ws.send(JSON.stringify({
-                        type: "auth/request",
-                        data: { token: req.body.token }
-                    }))
+                    ws.send(JSON.stringify(newWebToServerMessage("AuthRequest", { token: req.body.token })))
                     ws.send(JSON.stringify(req.body.data))
                     ws.close()
                 })

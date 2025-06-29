@@ -8,11 +8,39 @@ import type * as general from "../ws/general.types"
 
 export type ServerToWeb = 
     | serverToWeb.AuthResponse
-    | serverToWeb.DataCommonSet
-    | serverToWeb.DataBotSet
-    | serverToWeb.DataAeSet
     | serverToWeb.DataMcServerStatusSet
     | serverToWeb.AeOrderResult
+    | serverToWeb.LayoutOverview
+    | serverToWeb.LayoutControl
+    | serverToWeb.LayoutEvent
+    | serverToWeb.LayoutBotList
+    | serverToWeb.LayoutBotEdit
+    | serverToWeb.LayoutAeList
+    | serverToWeb.LayoutAeView
+    | serverToWeb.LayoutAeEdit
+    | serverToWeb.DataCommonInit
+    | serverToWeb.DataCommonSet
+    | serverToWeb.DataCommonAdd
+    | serverToWeb.DataCommonRemove
+    | serverToWeb.DataBotInit
+    | serverToWeb.DataBotComponentsSet
+    | serverToWeb.DataBotTasksSet
+    | serverToWeb.DataBotAdd
+    | serverToWeb.DataBotRemove
+    | serverToWeb.DataAeInit
+    | serverToWeb.DataAeItemsSet
+    | serverToWeb.DataAeCpusSet
+    | serverToWeb.DataAeAdd
+    | serverToWeb.DataAeRemove
+    | serverToWeb.DataEventInit
+    | serverToWeb.DataEventSet
+    | serverToWeb.DataEventAdd
+    | serverToWeb.DataEventRemove
+    | serverToWeb.DataRedstoneInit
+    | serverToWeb.DataRedstoneSet
+    | serverToWeb.DataRedstoneAdd
+    | serverToWeb.DataRedstoneRemove
+    | serverToWeb.StaticBotTask
 
 export type WebToServer = 
     | webToServer.AuthRequest

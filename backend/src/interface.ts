@@ -21,8 +21,3 @@ export interface Config {
     debug: boolean
 }
 
-export interface PageContentElement {
-    type: string
-    id: string
-    config: any
-}

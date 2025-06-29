@@ -1,9 +1,10 @@
 import { WebSocketServer } from "ws";
 import { loggerWebsocket as logger } from "./logger.js";
 import handler from "./handler.js";
+import { send } from "./utils.js";
 export const wssWeb = new WebSocketServer({ noServer: true });
 export const wssOc = new WebSocketServer({ noServer: true });
-var Websocket = {
+let Websocket = {
     init(config) {
         wssWeb.on('connection', (ws, socket, request) => {
             ws.sessionId = crypto.randomUUID();
@@ -36,17 +37,27 @@ var Websocket = {
     }
 };
 export default Websocket;
-export function wsWebBroadcast(type, data) {
-    wssWeb.clients.forEach(ws => {
-        if (ws.authenticated) {
-            ws.send(JSON.stringify({ type: type, data: data }));
+export function wsWebBroadcast(message) {
+    wssWeb.clients.forEach(session => {
+        if (session.authenticated) {
+            session.send(JSON.stringify(message));
         }
     });
 }
-export function wsOcBroadcast(type, data) {
-    wssOc.clients.forEach(ws => {
-        if (ws.authenticated) {
-            ws.send(JSON.stringify({ type: type, data: data }));
+export function wsOcBroadcast(message) {
+    wssOc.clients.forEach(session => {
+        if (session.authenticated) {
+            session.send(JSON.stringify(message));
         }
     });
+}
+export function wsOcSendByBotUuid(uuid, message) {
+    let ok = false;
+    wssOc.clients.forEach(session => {
+        if (session.authenticated && session.bot.uuid == uuid) {
+            send(session, message);
+            ok = true;
+        }
+    });
+    return ok;
 }

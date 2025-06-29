@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { loggerGlobal as logger } from '../logger.js';
-var staticResources = {
+let staticResources = {
     itemPanelItem: [],
     itemPanelFluid: [],
     itemPanelItemMap: new Map(),

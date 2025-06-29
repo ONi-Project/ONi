@@ -1,4 +1,6 @@
+import { allMessageType } from "@oni/interface"
 import { loggerPerformance } from "./logger.js"
+import { SessionOc, SessionWeb } from "./interface.js"
 
 export function deepEqual(obj1: any, obj2: any) {
     if (obj1 === obj2) return true
@@ -23,4 +25,8 @@ export function performanceTimer<T>(funcName: string, func: () => T): T {
     const duration = endTime - startTime
     loggerPerformance.log(`Function ${funcName} took ${duration} milliseconds.`)
     return result
+}
+
+export function send(session: SessionWeb | SessionOc, message: allMessageType.All) {
+    session.send(JSON.stringify(message))
 }

@@ -22,3 +22,6 @@ export function performanceTimer(funcName, func) {
     loggerPerformance.log(`Function ${funcName} took ${duration} milliseconds.`);
     return result;
 }
+export function send(session, message) {
+    session.send(JSON.stringify(message));
+}

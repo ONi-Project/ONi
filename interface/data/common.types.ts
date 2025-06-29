@@ -9,3 +9,5 @@ export interface Common {
     value?: number
     avgIO?: number
 }
+
+export type CommonArray = Common[]

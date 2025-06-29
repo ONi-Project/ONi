@@ -1,15 +1,15 @@
 import { aeModel, botModel, commonModel, eventModel, mcServerStatusModel, redstoneModel, staticModel } from "@oni/interface"
-import { botTaskUpdate } from "./dialog/bot-task"
 import { eventEmitter } from "./websocket"
 import { wsServerToWebGuard as toWebGuard } from "@oni/interface"
 
 export let common: commonModel.CommonArray = []
-export let mcServerStatus: mcServerStatusModel.McServerStatus
 export let bot: botModel.BotArray = []
-export let botTask: staticModel.BotTask[] = []
 export let ae: aeModel.AeArray = []
 export let event: eventModel.EventArray = []
 export let redstone: redstoneModel.RedstoneArray = []
+
+export let botTask: staticModel.BotTask[] = []
+export let mcServerStatus: mcServerStatusModel.McServerStatus
 
 export function init() {
 
@@ -26,6 +26,8 @@ export function init() {
             ae = m.data
         } else if (toWebGuard.isDataEventInit(m)) {
             event = m.data
+        } else if (toWebGuard.isDataRedstoneInit(m)) {
+            redstone = m.data
         } else if (toWebGuard.isDataAeAdd(m)) {
             ae.push(m.data)
         } else if (toWebGuard.isDataAeRemove(m)) {
@@ -85,10 +87,12 @@ export function init() {
     })
 
     setTimeout(() => {
-        // console.log(common)
-        // console.log(bot)
-        // console.log(botTask)
-        // console.log(ae)
-        console.log(mcServerStatus)
+        console.log("global.common", common)
+        console.log("global.bot", bot)
+        console.log("global.ae", ae)
+        console.log("global.event", event)
+        console.log("global.redstone", redstone)
+        console.log("global.botTask", botTask)
+        console.log("global.mcServerStatus", mcServerStatus)
     }, 1000)
 }

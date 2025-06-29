@@ -1,9 +1,10 @@
+import { layoutModel } from "@oni/interface"
 import * as blockRenderer from "./block"
 import * as cardRenderer from "./card"
 import * as tabRenderer from "./tab"
 // 渲染布局
-export async function renderLayout(layout: any, element: any, animation = true) {
-    console.log(layout)
+export async function renderLayout(layout: layoutModel.Layout, element: HTMLElement, animation = true) {
+    console.log("renderLayout", layout)
     let result = ""
     let cardScriptList = new Set()
     let tabScriptList = new Set()

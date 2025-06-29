@@ -1,7 +1,7 @@
 export interface Common {
     uuid: string
     name: string
-    description?: string
+    description: string
     unit?: string
     min?: number
     max?: number

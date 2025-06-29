@@ -57,7 +57,7 @@ let common = {
             let json = JSON.parse(fs.readFileSync(FILE_PATH, 'utf8'))
             if (commonModelGuard.isCommonArray(json)) {
                 this.list = json
-               logger.debug(MODULE_NAME, "Json initialized successfully.")
+                logger.debug(MODULE_NAME, "Json initialized successfully.")
                 logger.trace(MODULE_NAME, this.list)
             } else {
                 logger.error(MODULE_NAME, "Json initialization failed. Invalid data format.")
@@ -65,7 +65,7 @@ let common = {
         } catch (e) {
             logger.error(MODULE_NAME, "Json initialization failed.")
             logger.error(MODULE_NAME, e)
-        } 
+        }
     }
 }
 

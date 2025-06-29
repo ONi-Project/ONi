@@ -45,7 +45,7 @@ export interface AeItem {
 export interface AeLevelMaintain {
     uuid: string
     enabled: boolean
-    list: [{
+    list: {
         name: string
         type: string
         damage: number
@@ -53,7 +53,7 @@ export interface AeLevelMaintain {
         amount: number
         id: number
         display: string
-    }]
+    }[]
 }
 
 export interface AeOrder {

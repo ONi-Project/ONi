@@ -5,8 +5,8 @@
         "timeCreated": 1732782114000,
         "timeUpdated": 0,
         "cpus": [],
-        "itemList": [],
-        "levelMaintain": [
+        "items": [],
+        "levelMaintains": [
             {
                 "uuid": "00000000-0001-000000000000",
                 "enabled": true,
@@ -54,8 +54,8 @@
         "timeCreated": 1732782114000,
         "timeUpdated": 0,
         "cpus": [],
-        "itemList": [],
-        "levelMaintain": []
+        "items": [],
+        "levelMaintains": []
     },
     {
         "uuid": "30a7623c-54b7-4c22-b8ed-55892a524dbf",
@@ -63,7 +63,7 @@
         "timeCreated": 1732782114000,
         "timeUpdated": 0,
         "cpus": [],
-        "itemList": [],
-        "levelMaintain": []
+        "items": [],
+        "levelMaintains": []
     }
 ]

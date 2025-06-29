@@ -12,8 +12,7 @@ export function isCommon(obj: unknown): obj is Common {
             typeof typedObj === "function") &&
         typeof typedObj["uuid"] === "string" &&
         typeof typedObj["name"] === "string" &&
-        (typeof typedObj["description"] === "undefined" ||
-            typeof typedObj["description"] === "string") &&
+        typeof typedObj["description"] === "string" &&
         (typeof typedObj["unit"] === "undefined" ||
             typeof typedObj["unit"] === "string") &&
         (typeof typedObj["min"] === "undefined" ||

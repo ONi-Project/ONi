@@ -10,4 +10,5 @@ npx ts-auto-guard --export-all `
     'data/event.types.ts' `
     'data/mcServerStatus.types.ts' `
     'data/redstone.types.ts' `
-    'data/user.types.ts'
+    'data/user.types.ts' `
+    'data/static.types.ts' `

@@ -1,3 +1,4 @@
+import { wsServerToWebGuard } from "@oni/interface"
 import { renderLayout } from "../renderer"
 import { eventEmitter } from "../websocket"
 
@@ -15,10 +16,9 @@ export const html = /*html*/`
 `
 
 export function init() {
-    eventEmitter.on("message", (event: any) => {
-        const { type, data } = event.data
-        if (type == "layout/overview") {
-            renderLayout(data, document.getElementById("overview__content"))
-        }
-    })
+  eventEmitter.on("message", m => {
+    if (wsServerToWebGuard.isLayoutOverview(m)) {
+      renderLayout(m.data, document.getElementById("overview__content")!)
+    }
+  })
 }

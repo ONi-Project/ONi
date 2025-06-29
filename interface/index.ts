@@ -36,5 +36,6 @@ export * as userModelGuard from "./data/user.types.guard"
 export * as layoutModel from "./layout/base.types"
 
 export * as staticModel from "./data/static.types"
+export * as staticModelGuard from "./data/static.types.guard"
 
 export { newServerToWebMessage, newWebToServerMessage, newServerToOcMessage, newOcToServerMessage } from "./utils/createMessage"

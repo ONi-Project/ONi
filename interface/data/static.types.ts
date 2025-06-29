@@ -3,18 +3,20 @@ export interface BotTask {
     display: string
     description: string
     icon: string
-    mode: [{
+    mode: {
         id: string
         description: string
         hidden: boolean
-        config: [{
+        config: {
             id: string
             type: string
             description: string
             required: boolean
-        }]
-    }]
+        }[]
+    }[]
 }
+
+export type BotTaskArray = BotTask[]
 
 export interface ItemPanelItem {
     name: string
@@ -24,8 +26,12 @@ export interface ItemPanelItem {
     display: string
 }
 
+export type ItemPanelItemArray = ItemPanelItem[]
+
 export interface ItemPanelLiquid {
     name: string
     id: number
     display: string
 }
+
+export type ItemPanelLiquidArray = ItemPanelLiquid[]

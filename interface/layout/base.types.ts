@@ -1,10 +1,12 @@
-export interface PageContentElement {
+export interface Card {
     type: string
     id: string
     config: any
 }
 
-export interface Layout {
+export interface Block {
     type: string
-    content: PageContentElement[]
-}[]
+    content: Card[]
+}
+
+export type Layout = Block[]

@@ -97,16 +97,18 @@ export function isAeLevelMaintain(obj: unknown): obj is AeLevelMaintain {
         typeof typedObj["uuid"] === "string" &&
         typeof typedObj["enabled"] === "boolean" &&
         Array.isArray(typedObj["list"]) &&
-        (typedObj["list"][0] !== null &&
-            typeof typedObj["list"][0] === "object" ||
-            typeof typedObj["list"][0] === "function") &&
-        typeof typedObj["list"][0]["name"] === "string" &&
-        typeof typedObj["list"][0]["type"] === "string" &&
-        typeof typedObj["list"][0]["damage"] === "number" &&
-        typeof typedObj["list"][0]["request"] === "number" &&
-        typeof typedObj["list"][0]["amount"] === "number" &&
-        typeof typedObj["list"][0]["id"] === "number" &&
-        typeof typedObj["list"][0]["display"] === "string"
+        typedObj["list"].every((e: any) =>
+            (e !== null &&
+                typeof e === "object" ||
+                typeof e === "function") &&
+            typeof e["name"] === "string" &&
+            typeof e["type"] === "string" &&
+            typeof e["damage"] === "number" &&
+            typeof e["request"] === "number" &&
+            typeof e["amount"] === "number" &&
+            typeof e["id"] === "number" &&
+            typeof e["display"] === "string"
+        )
     )
 }
 

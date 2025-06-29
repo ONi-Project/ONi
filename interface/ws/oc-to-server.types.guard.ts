@@ -30,8 +30,7 @@ export function isDataCommonSet(obj: unknown): obj is DataCommonSet {
             typeof typedObj["data"] === "function") &&
         typeof typedObj["data"]["uuid"] === "string" &&
         typeof typedObj["data"]["name"] === "string" &&
-        (typeof typedObj["data"]["description"] === "undefined" ||
-            typeof typedObj["data"]["description"] === "string") &&
+        typeof typedObj["data"]["description"] === "string" &&
         (typeof typedObj["data"]["unit"] === "undefined" ||
             typeof typedObj["data"]["unit"] === "string") &&
         (typeof typedObj["data"]["min"] === "undefined" ||
@@ -103,16 +102,18 @@ export function isDataAeItemList(obj: unknown): obj is DataAeItemList {
             typeof e["uuid"] === "string" &&
             typeof e["enabled"] === "boolean" &&
             Array.isArray(e["list"]) &&
-            (e["list"][0] !== null &&
-                typeof e["list"][0] === "object" ||
-                typeof e["list"][0] === "function") &&
-            typeof e["list"][0]["name"] === "string" &&
-            typeof e["list"][0]["type"] === "string" &&
-            typeof e["list"][0]["damage"] === "number" &&
-            typeof e["list"][0]["request"] === "number" &&
-            typeof e["list"][0]["amount"] === "number" &&
-            typeof e["list"][0]["id"] === "number" &&
-            typeof e["list"][0]["display"] === "string"
+            e["list"].every((e: any) =>
+                (e !== null &&
+                    typeof e === "object" ||
+                    typeof e === "function") &&
+                typeof e["name"] === "string" &&
+                typeof e["type"] === "string" &&
+                typeof e["damage"] === "number" &&
+                typeof e["request"] === "number" &&
+                typeof e["amount"] === "number" &&
+                typeof e["id"] === "number" &&
+                typeof e["display"] === "string"
+            )
         )
     )
 }
@@ -175,16 +176,18 @@ export function isDataAeCpuList(obj: unknown): obj is DataAeCpuList {
             typeof e["uuid"] === "string" &&
             typeof e["enabled"] === "boolean" &&
             Array.isArray(e["list"]) &&
-            (e["list"][0] !== null &&
-                typeof e["list"][0] === "object" ||
-                typeof e["list"][0] === "function") &&
-            typeof e["list"][0]["name"] === "string" &&
-            typeof e["list"][0]["type"] === "string" &&
-            typeof e["list"][0]["damage"] === "number" &&
-            typeof e["list"][0]["request"] === "number" &&
-            typeof e["list"][0]["amount"] === "number" &&
-            typeof e["list"][0]["id"] === "number" &&
-            typeof e["list"][0]["display"] === "string"
+            e["list"].every((e: any) =>
+                (e !== null &&
+                    typeof e === "object" ||
+                    typeof e === "function") &&
+                typeof e["name"] === "string" &&
+                typeof e["type"] === "string" &&
+                typeof e["damage"] === "number" &&
+                typeof e["request"] === "number" &&
+                typeof e["amount"] === "number" &&
+                typeof e["id"] === "number" &&
+                typeof e["display"] === "string"
+            )
         )
     )
 }

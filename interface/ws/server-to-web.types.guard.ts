@@ -69,17 +69,20 @@ export function isLayoutOverview(obj: unknown): obj is LayoutOverview {
             typeof typedObj === "object" ||
             typeof typedObj === "function") &&
         typedObj["type"] === "LayoutOverview" &&
-        (typedObj["data"] !== null &&
-            typeof typedObj["data"] === "object" ||
-            typeof typedObj["data"] === "function") &&
-        typeof typedObj["data"]["type"] === "string" &&
-        Array.isArray(typedObj["data"]["content"]) &&
-        typedObj["data"]["content"].every((e: any) =>
+        Array.isArray(typedObj["data"]) &&
+        typedObj["data"].every((e: any) =>
             (e !== null &&
                 typeof e === "object" ||
                 typeof e === "function") &&
             typeof e["type"] === "string" &&
-            typeof e["id"] === "string"
+            Array.isArray(e["content"]) &&
+            e["content"].every((e: any) =>
+                (e !== null &&
+                    typeof e === "object" ||
+                    typeof e === "function") &&
+                typeof e["type"] === "string" &&
+                typeof e["id"] === "string"
+            )
         )
     )
 }
@@ -91,17 +94,20 @@ export function isLayoutControl(obj: unknown): obj is LayoutControl {
             typeof typedObj === "object" ||
             typeof typedObj === "function") &&
         typedObj["type"] === "LayoutControl" &&
-        (typedObj["data"] !== null &&
-            typeof typedObj["data"] === "object" ||
-            typeof typedObj["data"] === "function") &&
-        typeof typedObj["data"]["type"] === "string" &&
-        Array.isArray(typedObj["data"]["content"]) &&
-        typedObj["data"]["content"].every((e: any) =>
+        Array.isArray(typedObj["data"]) &&
+        typedObj["data"].every((e: any) =>
             (e !== null &&
                 typeof e === "object" ||
                 typeof e === "function") &&
             typeof e["type"] === "string" &&
-            typeof e["id"] === "string"
+            Array.isArray(e["content"]) &&
+            e["content"].every((e: any) =>
+                (e !== null &&
+                    typeof e === "object" ||
+                    typeof e === "function") &&
+                typeof e["type"] === "string" &&
+                typeof e["id"] === "string"
+            )
         )
     )
 }
@@ -113,17 +119,20 @@ export function isLayoutEvent(obj: unknown): obj is LayoutEvent {
             typeof typedObj === "object" ||
             typeof typedObj === "function") &&
         typedObj["type"] === "LayoutEvent" &&
-        (typedObj["data"] !== null &&
-            typeof typedObj["data"] === "object" ||
-            typeof typedObj["data"] === "function") &&
-        typeof typedObj["data"]["type"] === "string" &&
-        Array.isArray(typedObj["data"]["content"]) &&
-        typedObj["data"]["content"].every((e: any) =>
+        Array.isArray(typedObj["data"]) &&
+        typedObj["data"].every((e: any) =>
             (e !== null &&
                 typeof e === "object" ||
                 typeof e === "function") &&
             typeof e["type"] === "string" &&
-            typeof e["id"] === "string"
+            Array.isArray(e["content"]) &&
+            e["content"].every((e: any) =>
+                (e !== null &&
+                    typeof e === "object" ||
+                    typeof e === "function") &&
+                typeof e["type"] === "string" &&
+                typeof e["id"] === "string"
+            )
         )
     )
 }
@@ -135,17 +144,20 @@ export function isLayoutBotList(obj: unknown): obj is LayoutBotList {
             typeof typedObj === "object" ||
             typeof typedObj === "function") &&
         typedObj["type"] === "LayoutBotList" &&
-        (typedObj["data"] !== null &&
-            typeof typedObj["data"] === "object" ||
-            typeof typedObj["data"] === "function") &&
-        typeof typedObj["data"]["type"] === "string" &&
-        Array.isArray(typedObj["data"]["content"]) &&
-        typedObj["data"]["content"].every((e: any) =>
+        Array.isArray(typedObj["data"]) &&
+        typedObj["data"].every((e: any) =>
             (e !== null &&
                 typeof e === "object" ||
                 typeof e === "function") &&
             typeof e["type"] === "string" &&
-            typeof e["id"] === "string"
+            Array.isArray(e["content"]) &&
+            e["content"].every((e: any) =>
+                (e !== null &&
+                    typeof e === "object" ||
+                    typeof e === "function") &&
+                typeof e["type"] === "string" &&
+                typeof e["id"] === "string"
+            )
         )
     )
 }
@@ -157,17 +169,20 @@ export function isLayoutBotEdit(obj: unknown): obj is LayoutBotEdit {
             typeof typedObj === "object" ||
             typeof typedObj === "function") &&
         typedObj["type"] === "LayoutBotEdit" &&
-        (typedObj["data"] !== null &&
-            typeof typedObj["data"] === "object" ||
-            typeof typedObj["data"] === "function") &&
-        typeof typedObj["data"]["type"] === "string" &&
-        Array.isArray(typedObj["data"]["content"]) &&
-        typedObj["data"]["content"].every((e: any) =>
+        Array.isArray(typedObj["data"]) &&
+        typedObj["data"].every((e: any) =>
             (e !== null &&
                 typeof e === "object" ||
                 typeof e === "function") &&
             typeof e["type"] === "string" &&
-            typeof e["id"] === "string"
+            Array.isArray(e["content"]) &&
+            e["content"].every((e: any) =>
+                (e !== null &&
+                    typeof e === "object" ||
+                    typeof e === "function") &&
+                typeof e["type"] === "string" &&
+                typeof e["id"] === "string"
+            )
         )
     )
 }
@@ -179,17 +194,20 @@ export function isLayoutAeList(obj: unknown): obj is LayoutAeList {
             typeof typedObj === "object" ||
             typeof typedObj === "function") &&
         typedObj["type"] === "LayoutAeList" &&
-        (typedObj["data"] !== null &&
-            typeof typedObj["data"] === "object" ||
-            typeof typedObj["data"] === "function") &&
-        typeof typedObj["data"]["type"] === "string" &&
-        Array.isArray(typedObj["data"]["content"]) &&
-        typedObj["data"]["content"].every((e: any) =>
+        Array.isArray(typedObj["data"]) &&
+        typedObj["data"].every((e: any) =>
             (e !== null &&
                 typeof e === "object" ||
                 typeof e === "function") &&
             typeof e["type"] === "string" &&
-            typeof e["id"] === "string"
+            Array.isArray(e["content"]) &&
+            e["content"].every((e: any) =>
+                (e !== null &&
+                    typeof e === "object" ||
+                    typeof e === "function") &&
+                typeof e["type"] === "string" &&
+                typeof e["id"] === "string"
+            )
         )
     )
 }
@@ -201,17 +219,20 @@ export function isLayoutAeView(obj: unknown): obj is LayoutAeView {
             typeof typedObj === "object" ||
             typeof typedObj === "function") &&
         typedObj["type"] === "LayoutAeView" &&
-        (typedObj["data"] !== null &&
-            typeof typedObj["data"] === "object" ||
-            typeof typedObj["data"] === "function") &&
-        typeof typedObj["data"]["type"] === "string" &&
-        Array.isArray(typedObj["data"]["content"]) &&
-        typedObj["data"]["content"].every((e: any) =>
+        Array.isArray(typedObj["data"]) &&
+        typedObj["data"].every((e: any) =>
             (e !== null &&
                 typeof e === "object" ||
                 typeof e === "function") &&
             typeof e["type"] === "string" &&
-            typeof e["id"] === "string"
+            Array.isArray(e["content"]) &&
+            e["content"].every((e: any) =>
+                (e !== null &&
+                    typeof e === "object" ||
+                    typeof e === "function") &&
+                typeof e["type"] === "string" &&
+                typeof e["id"] === "string"
+            )
         )
     )
 }
@@ -223,17 +244,20 @@ export function isLayoutAeEdit(obj: unknown): obj is LayoutAeEdit {
             typeof typedObj === "object" ||
             typeof typedObj === "function") &&
         typedObj["type"] === "LayoutAeEdit" &&
-        (typedObj["data"] !== null &&
-            typeof typedObj["data"] === "object" ||
-            typeof typedObj["data"] === "function") &&
-        typeof typedObj["data"]["type"] === "string" &&
-        Array.isArray(typedObj["data"]["content"]) &&
-        typedObj["data"]["content"].every((e: any) =>
+        Array.isArray(typedObj["data"]) &&
+        typedObj["data"].every((e: any) =>
             (e !== null &&
                 typeof e === "object" ||
                 typeof e === "function") &&
             typeof e["type"] === "string" &&
-            typeof e["id"] === "string"
+            Array.isArray(e["content"]) &&
+            e["content"].every((e: any) =>
+                (e !== null &&
+                    typeof e === "object" ||
+                    typeof e === "function") &&
+                typeof e["type"] === "string" &&
+                typeof e["id"] === "string"
+            )
         )
     )
 }
@@ -252,8 +276,7 @@ export function isDataCommonInit(obj: unknown): obj is DataCommonInit {
                 typeof e === "function") &&
             typeof e["uuid"] === "string" &&
             typeof e["name"] === "string" &&
-            (typeof e["description"] === "undefined" ||
-                typeof e["description"] === "string") &&
+            typeof e["description"] === "string" &&
             (typeof e["unit"] === "undefined" ||
                 typeof e["unit"] === "string") &&
             (typeof e["min"] === "undefined" ||
@@ -280,8 +303,7 @@ export function isDataCommonSet(obj: unknown): obj is DataCommonSet {
             typeof typedObj["data"] === "function") &&
         typeof typedObj["data"]["uuid"] === "string" &&
         typeof typedObj["data"]["name"] === "string" &&
-        (typeof typedObj["data"]["description"] === "undefined" ||
-            typeof typedObj["data"]["description"] === "string") &&
+        typeof typedObj["data"]["description"] === "string" &&
         (typeof typedObj["data"]["unit"] === "undefined" ||
             typeof typedObj["data"]["unit"] === "string") &&
         (typeof typedObj["data"]["min"] === "undefined" ||
@@ -307,8 +329,7 @@ export function isDataCommonAdd(obj: unknown): obj is DataCommonAdd {
             typeof typedObj["data"] === "function") &&
         typeof typedObj["data"]["uuid"] === "string" &&
         typeof typedObj["data"]["name"] === "string" &&
-        (typeof typedObj["data"]["description"] === "undefined" ||
-            typeof typedObj["data"]["description"] === "string") &&
+        typeof typedObj["data"]["description"] === "string" &&
         (typeof typedObj["data"]["unit"] === "undefined" ||
             typeof typedObj["data"]["unit"] === "string") &&
         (typeof typedObj["data"]["min"] === "undefined" ||
@@ -547,16 +568,18 @@ export function isDataAeInit(obj: unknown): obj is DataAeInit {
                 typeof e["uuid"] === "string" &&
                 typeof e["enabled"] === "boolean" &&
                 Array.isArray(e["list"]) &&
-                (e["list"][0] !== null &&
-                    typeof e["list"][0] === "object" ||
-                    typeof e["list"][0] === "function") &&
-                typeof e["list"][0]["name"] === "string" &&
-                typeof e["list"][0]["type"] === "string" &&
-                typeof e["list"][0]["damage"] === "number" &&
-                typeof e["list"][0]["request"] === "number" &&
-                typeof e["list"][0]["amount"] === "number" &&
-                typeof e["list"][0]["id"] === "number" &&
-                typeof e["list"][0]["display"] === "string"
+                e["list"].every((e: any) =>
+                    (e !== null &&
+                        typeof e === "object" ||
+                        typeof e === "function") &&
+                    typeof e["name"] === "string" &&
+                    typeof e["type"] === "string" &&
+                    typeof e["damage"] === "number" &&
+                    typeof e["request"] === "number" &&
+                    typeof e["amount"] === "number" &&
+                    typeof e["id"] === "number" &&
+                    typeof e["display"] === "string"
+                )
             )
         )
     )
@@ -620,16 +643,18 @@ export function isDataAeItemsSet(obj: unknown): obj is DataAeItemsSet {
             typeof e["uuid"] === "string" &&
             typeof e["enabled"] === "boolean" &&
             Array.isArray(e["list"]) &&
-            (e["list"][0] !== null &&
-                typeof e["list"][0] === "object" ||
-                typeof e["list"][0] === "function") &&
-            typeof e["list"][0]["name"] === "string" &&
-            typeof e["list"][0]["type"] === "string" &&
-            typeof e["list"][0]["damage"] === "number" &&
-            typeof e["list"][0]["request"] === "number" &&
-            typeof e["list"][0]["amount"] === "number" &&
-            typeof e["list"][0]["id"] === "number" &&
-            typeof e["list"][0]["display"] === "string"
+            e["list"].every((e: any) =>
+                (e !== null &&
+                    typeof e === "object" ||
+                    typeof e === "function") &&
+                typeof e["name"] === "string" &&
+                typeof e["type"] === "string" &&
+                typeof e["damage"] === "number" &&
+                typeof e["request"] === "number" &&
+                typeof e["amount"] === "number" &&
+                typeof e["id"] === "number" &&
+                typeof e["display"] === "string"
+            )
         )
     )
 }
@@ -692,16 +717,18 @@ export function isDataAeCpusSet(obj: unknown): obj is DataAeCpusSet {
             typeof e["uuid"] === "string" &&
             typeof e["enabled"] === "boolean" &&
             Array.isArray(e["list"]) &&
-            (e["list"][0] !== null &&
-                typeof e["list"][0] === "object" ||
-                typeof e["list"][0] === "function") &&
-            typeof e["list"][0]["name"] === "string" &&
-            typeof e["list"][0]["type"] === "string" &&
-            typeof e["list"][0]["damage"] === "number" &&
-            typeof e["list"][0]["request"] === "number" &&
-            typeof e["list"][0]["amount"] === "number" &&
-            typeof e["list"][0]["id"] === "number" &&
-            typeof e["list"][0]["display"] === "string"
+            e["list"].every((e: any) =>
+                (e !== null &&
+                    typeof e === "object" ||
+                    typeof e === "function") &&
+                typeof e["name"] === "string" &&
+                typeof e["type"] === "string" &&
+                typeof e["damage"] === "number" &&
+                typeof e["request"] === "number" &&
+                typeof e["amount"] === "number" &&
+                typeof e["id"] === "number" &&
+                typeof e["display"] === "string"
+            )
         )
     )
 }
@@ -764,16 +791,18 @@ export function isDataAeAdd(obj: unknown): obj is DataAeAdd {
             typeof e["uuid"] === "string" &&
             typeof e["enabled"] === "boolean" &&
             Array.isArray(e["list"]) &&
-            (e["list"][0] !== null &&
-                typeof e["list"][0] === "object" ||
-                typeof e["list"][0] === "function") &&
-            typeof e["list"][0]["name"] === "string" &&
-            typeof e["list"][0]["type"] === "string" &&
-            typeof e["list"][0]["damage"] === "number" &&
-            typeof e["list"][0]["request"] === "number" &&
-            typeof e["list"][0]["amount"] === "number" &&
-            typeof e["list"][0]["id"] === "number" &&
-            typeof e["list"][0]["display"] === "string"
+            e["list"].every((e: any) =>
+                (e !== null &&
+                    typeof e === "object" ||
+                    typeof e === "function") &&
+                typeof e["name"] === "string" &&
+                typeof e["type"] === "string" &&
+                typeof e["damage"] === "number" &&
+                typeof e["request"] === "number" &&
+                typeof e["amount"] === "number" &&
+                typeof e["id"] === "number" &&
+                typeof e["display"] === "string"
+            )
         )
     )
 }
@@ -975,20 +1004,24 @@ export function isStaticBotTask(obj: unknown): obj is StaticBotTask {
             typeof e["description"] === "string" &&
             typeof e["icon"] === "string" &&
             Array.isArray(e["mode"]) &&
-            (e["mode"][0] !== null &&
-                typeof e["mode"][0] === "object" ||
-                typeof e["mode"][0] === "function") &&
-            typeof e["mode"][0]["id"] === "string" &&
-            typeof e["mode"][0]["description"] === "string" &&
-            typeof e["mode"][0]["hidden"] === "boolean" &&
-            Array.isArray(e["mode"][0]["config"]) &&
-            (e["mode"][0]["config"][0] !== null &&
-                typeof e["mode"][0]["config"][0] === "object" ||
-                typeof e["mode"][0]["config"][0] === "function") &&
-            typeof e["mode"][0]["config"][0]["id"] === "string" &&
-            typeof e["mode"][0]["config"][0]["type"] === "string" &&
-            typeof e["mode"][0]["config"][0]["description"] === "string" &&
-            typeof e["mode"][0]["config"][0]["required"] === "boolean"
+            e["mode"].every((e: any) =>
+                (e !== null &&
+                    typeof e === "object" ||
+                    typeof e === "function") &&
+                typeof e["id"] === "string" &&
+                typeof e["description"] === "string" &&
+                typeof e["hidden"] === "boolean" &&
+                Array.isArray(e["config"]) &&
+                e["config"].every((e: any) =>
+                    (e !== null &&
+                        typeof e === "object" ||
+                        typeof e === "function") &&
+                    typeof e["id"] === "string" &&
+                    typeof e["type"] === "string" &&
+                    typeof e["description"] === "string" &&
+                    typeof e["required"] === "boolean"
+                )
+            )
         )
     )
 }

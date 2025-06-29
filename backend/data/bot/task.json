@@ -179,8 +179,8 @@
         "icon": "smart_toy",
         "mode": [
             {
-                "id": "",
-                "description": "",
+                "id": "_",
+                "description": "_",
                 "hidden": true,
                 "config": []
             }

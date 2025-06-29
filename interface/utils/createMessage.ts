@@ -13,10 +13,17 @@ const curriedCreateMessage = <M extends wsBase.Message<string, any>>(
 
         if (args.length === 2) {
             const target = args[1]
-            return new wsBase.OcMessage(type, data, target) as any
+            return {
+                type: type,
+                data: data,
+                target: target
+            } as any
         }
 
-        return new wsBase.Message(type, data) as any
+        return {
+            type: type,
+            data: data
+        } as any
     }
 }
 

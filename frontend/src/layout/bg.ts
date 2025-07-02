@@ -1,5 +1,5 @@
 export const html = /*html*/`
-<div id="bg-texture">
+<div id="bg-texture" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;">
   <img src="resources/texture_1.png" />
   <img hidden src="resources/texture_higan.jpg" />
 </div>

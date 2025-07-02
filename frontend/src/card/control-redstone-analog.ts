@@ -3,26 +3,24 @@ import { randomUUID } from "../utils"
 import { send } from "../websocket"
 
 export function html(config: any) {
-  return /*html*/`
-<mdui-card variant="filled" class="card control-redstone-analog__card">
+  return /*html*/`<mdui-card variant="filled" class="card control-redstone-analog__card">
   <div style="display: flex;align-items: center;">
-    <div style="font-size: x-large;"><b>${config.name}</b></div>
+    <div style="font-size: x-large;font-weight: bold;">${config.name}</div>
   </div>
 
-  <div>
+  <div style="opacity: 0.5;">
     ${config.description}
   </div>
 
-  <div style="display: flex;align-items: center;">
-    <div style="opacity: 0.5;">红石模拟信号：${config.value}
+  <div style="display: flex;align-items: center;margin-top: 0.5rem;">
+    <mdui-slider tickmarks max="15"></mdui-slider>
+    <div style="opacity: 0.25;margin-left: 0.5rem;">${config.value}
     </div>
   </div>
 
-  <mdui-slider tickmarks max="15"></mdui-slider>
 
   <data hidden uuid="${config.uuid}" botUuid="${config.botUuid}" side="${config.side}"></data>
-</mdui-card>
-`}
+</mdui-card>`}
 
 export function init() {
   document.querySelectorAll(".control-redstone-analog__card").forEach(element => {

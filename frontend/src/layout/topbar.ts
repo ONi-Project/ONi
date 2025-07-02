@@ -1,10 +1,12 @@
 import { isMobileDevice } from "../utils"
-import { toggleLeftNavi } from "./navrail"
+import { toggleFold } from "./navrail"
 import { user } from "../websocket"
 import { endpoint } from "../settings"
 
 export const html = /*html*/`
-<mdui-top-app-bar variant="medium" scroll-behavior="shrink elevate" scroll-target="#main-content-area">
+<mdui-top-app-bar scroll-behavior="shrink elevate" scroll-target="#main-content-area" style="position: relative;">
+
+  <mdui-button-icon icon="menu" id="navi-toggler" style="margin-left: 0.5rem;"></mdui-button-icon>
 
   <img src="resources/icon.png" style="height: 100%; margin-left: 0.5rem; margin-right: 0.5rem;opacity: 0.7;" />
 
@@ -22,14 +24,14 @@ export const html = /*html*/`
 
   <div style="align-self: center; opacity: 0.2;" id="slogan"></div>
 
-  <mdui-button-icon icon="menu" id="navi-toggler"></mdui-button-icon>
 
 </mdui-top-app-bar>
 `
 
 export function init() {
 
-  document.getElementById("navi-toggler")!.addEventListener("click", () => { toggleLeftNavi() })
+  document.getElementById("navi-toggler")!.addEventListener("click", () => { toggleFold() })
+
 }
 
 export function initSlogan() {

@@ -13,7 +13,7 @@ ws.onopen = () => {
         "data": "This is a test message from Suika.js"
     }))
     ws.send(JSON.stringify({
-        type: "auth/request",
+        type: "AuthRequest",
         data: { token: "CWN78VN0MB00WFYIL8AN" }
     }))
 
@@ -25,7 +25,7 @@ ws.onopen = () => {
     function sendData() {
         // 发送数据
         ws.send(JSON.stringify({
-            type: "data/common/set",
+            type: "DataCommonSet",
             data: {
                 uuid: "b6cdf1a8-39fd-49f2-b36c-5c464631097d",
                 value: i * 100,
@@ -47,7 +47,7 @@ ws.onopen = () => {
     sendData()
 
     ws.send(JSON.stringify({
-        type: "data/event/set", data: {
+        type: "DataEventAdd", data: {
             uuid: "00000000-0000-000000000000",
             name: "test0",
             description: "test0000",
@@ -58,7 +58,7 @@ ws.onopen = () => {
     }))
     setInterval(() => {
         ws.send(JSON.stringify({
-            type: "data/event/set", data: {
+            type: "DataEventAdd", data: {
                 uuid: crypto.randomUUID(),
                 name: "test0",
                 description: "test0000",
@@ -75,7 +75,7 @@ ws.onopen = () => {
     }))
 
     ws.send(JSON.stringify({
-        type: "log",
+        type: "Log",
         data: {
             level: "info",
             message: "This is a test info message from Suika.js",
@@ -86,7 +86,7 @@ ws.onopen = () => {
     }))
 
     ws.send(JSON.stringify({
-        type: "log",
+        type: "Log",
         data: {
             level: "warn",
             message: "This is a test warn message from Suika.js",
@@ -97,7 +97,7 @@ ws.onopen = () => {
     }))
 
     ws.send(JSON.stringify({
-        type: "log",
+        type: "Log",
         data: {
             level: "trace",
             message: "This is a test trace message from Suika.js",
@@ -108,7 +108,7 @@ ws.onopen = () => {
     }))
 
     ws.send(JSON.stringify({
-        type: "log",
+        type: "Log",
         data: {
             level: "error",
             message: "This is a test error message from Suika.js",
@@ -119,7 +119,7 @@ ws.onopen = () => {
     }))
 
     ws.send(JSON.stringify({
-        type: "log",
+        type: "Log",
         data: {
             level: "debug",
             message: "This is a test debug message from Suika.js",

@@ -2,7 +2,7 @@
  * Generated type guards for "server-to-web.types.ts".
  * WARNING: Do not manually change this file.
  */
-import { AuthResponse, DataMcServerStatusSet, AeOrderResult, LayoutOverview, LayoutControl, LayoutEvent, LayoutBotList, LayoutBotEdit, LayoutAeList, LayoutAeView, LayoutAeEdit, DataCommonInit, DataCommonSet, DataCommonAdd, DataCommonRemove, DataBotInit, DataBotComponentsSet, DataBotTasksSet, DataBotAdd, DataBotRemove, DataAeInit, DataAeItemsSet, DataAeCpusSet, DataAeAdd, DataAeRemove, DataEventInit, DataEventSet, DataEventAdd, DataEventRemove, DataRedstoneInit, DataRedstoneSet, DataRedstoneAdd, DataRedstoneRemove, StaticBotTask } from "./server-to-web.types";
+import { AuthResponse, DataMcServerStatusSet, AeOrderResult, LayoutOverview, DataCommonInit, DataCommonSet, DataCommonAdd, DataCommonRemove, DataBotInit, DataBotComponentsSet, DataBotTasksSet, DataBotAdd, DataBotRemove, DataAeInit, DataAeItemsSet, DataAeCpusSet, DataAeAdd, DataAeRemove, DataEventInit, DataEventSet, DataEventAdd, DataEventRemove, DataRedstoneInit, DataRedstoneSet, DataRedstoneAdd, DataRedstoneRemove, StaticBotTask } from "./server-to-web.types";
 
 export function isAuthResponse(obj: unknown): obj is AuthResponse {
     const typedObj = obj as AuthResponse
@@ -41,7 +41,11 @@ export function isDataMcServerStatusSet(obj: unknown): obj is DataMcServerStatus
         typeof typedObj["data"]["players"]["online"] === "number" &&
         Array.isArray(typedObj["data"]["players"]["list"]) &&
         typedObj["data"]["players"]["list"].every((e: any) =>
-            typeof e === "string"
+            (e !== null &&
+                typeof e === "object" ||
+                typeof e === "function") &&
+            typeof e["id"] === "string" &&
+            typeof e["name"] === "string"
         )
     )
 }
@@ -87,181 +91,6 @@ export function isLayoutOverview(obj: unknown): obj is LayoutOverview {
     )
 }
 
-export function isLayoutControl(obj: unknown): obj is LayoutControl {
-    const typedObj = obj as LayoutControl
-    return (
-        (typedObj !== null &&
-            typeof typedObj === "object" ||
-            typeof typedObj === "function") &&
-        typedObj["type"] === "LayoutControl" &&
-        Array.isArray(typedObj["data"]) &&
-        typedObj["data"].every((e: any) =>
-            (e !== null &&
-                typeof e === "object" ||
-                typeof e === "function") &&
-            typeof e["type"] === "string" &&
-            Array.isArray(e["content"]) &&
-            e["content"].every((e: any) =>
-                (e !== null &&
-                    typeof e === "object" ||
-                    typeof e === "function") &&
-                typeof e["type"] === "string" &&
-                typeof e["id"] === "string"
-            )
-        )
-    )
-}
-
-export function isLayoutEvent(obj: unknown): obj is LayoutEvent {
-    const typedObj = obj as LayoutEvent
-    return (
-        (typedObj !== null &&
-            typeof typedObj === "object" ||
-            typeof typedObj === "function") &&
-        typedObj["type"] === "LayoutEvent" &&
-        Array.isArray(typedObj["data"]) &&
-        typedObj["data"].every((e: any) =>
-            (e !== null &&
-                typeof e === "object" ||
-                typeof e === "function") &&
-            typeof e["type"] === "string" &&
-            Array.isArray(e["content"]) &&
-            e["content"].every((e: any) =>
-                (e !== null &&
-                    typeof e === "object" ||
-                    typeof e === "function") &&
-                typeof e["type"] === "string" &&
-                typeof e["id"] === "string"
-            )
-        )
-    )
-}
-
-export function isLayoutBotList(obj: unknown): obj is LayoutBotList {
-    const typedObj = obj as LayoutBotList
-    return (
-        (typedObj !== null &&
-            typeof typedObj === "object" ||
-            typeof typedObj === "function") &&
-        typedObj["type"] === "LayoutBotList" &&
-        Array.isArray(typedObj["data"]) &&
-        typedObj["data"].every((e: any) =>
-            (e !== null &&
-                typeof e === "object" ||
-                typeof e === "function") &&
-            typeof e["type"] === "string" &&
-            Array.isArray(e["content"]) &&
-            e["content"].every((e: any) =>
-                (e !== null &&
-                    typeof e === "object" ||
-                    typeof e === "function") &&
-                typeof e["type"] === "string" &&
-                typeof e["id"] === "string"
-            )
-        )
-    )
-}
-
-export function isLayoutBotEdit(obj: unknown): obj is LayoutBotEdit {
-    const typedObj = obj as LayoutBotEdit
-    return (
-        (typedObj !== null &&
-            typeof typedObj === "object" ||
-            typeof typedObj === "function") &&
-        typedObj["type"] === "LayoutBotEdit" &&
-        Array.isArray(typedObj["data"]) &&
-        typedObj["data"].every((e: any) =>
-            (e !== null &&
-                typeof e === "object" ||
-                typeof e === "function") &&
-            typeof e["type"] === "string" &&
-            Array.isArray(e["content"]) &&
-            e["content"].every((e: any) =>
-                (e !== null &&
-                    typeof e === "object" ||
-                    typeof e === "function") &&
-                typeof e["type"] === "string" &&
-                typeof e["id"] === "string"
-            )
-        )
-    )
-}
-
-export function isLayoutAeList(obj: unknown): obj is LayoutAeList {
-    const typedObj = obj as LayoutAeList
-    return (
-        (typedObj !== null &&
-            typeof typedObj === "object" ||
-            typeof typedObj === "function") &&
-        typedObj["type"] === "LayoutAeList" &&
-        Array.isArray(typedObj["data"]) &&
-        typedObj["data"].every((e: any) =>
-            (e !== null &&
-                typeof e === "object" ||
-                typeof e === "function") &&
-            typeof e["type"] === "string" &&
-            Array.isArray(e["content"]) &&
-            e["content"].every((e: any) =>
-                (e !== null &&
-                    typeof e === "object" ||
-                    typeof e === "function") &&
-                typeof e["type"] === "string" &&
-                typeof e["id"] === "string"
-            )
-        )
-    )
-}
-
-export function isLayoutAeView(obj: unknown): obj is LayoutAeView {
-    const typedObj = obj as LayoutAeView
-    return (
-        (typedObj !== null &&
-            typeof typedObj === "object" ||
-            typeof typedObj === "function") &&
-        typedObj["type"] === "LayoutAeView" &&
-        Array.isArray(typedObj["data"]) &&
-        typedObj["data"].every((e: any) =>
-            (e !== null &&
-                typeof e === "object" ||
-                typeof e === "function") &&
-            typeof e["type"] === "string" &&
-            Array.isArray(e["content"]) &&
-            e["content"].every((e: any) =>
-                (e !== null &&
-                    typeof e === "object" ||
-                    typeof e === "function") &&
-                typeof e["type"] === "string" &&
-                typeof e["id"] === "string"
-            )
-        )
-    )
-}
-
-export function isLayoutAeEdit(obj: unknown): obj is LayoutAeEdit {
-    const typedObj = obj as LayoutAeEdit
-    return (
-        (typedObj !== null &&
-            typeof typedObj === "object" ||
-            typeof typedObj === "function") &&
-        typedObj["type"] === "LayoutAeEdit" &&
-        Array.isArray(typedObj["data"]) &&
-        typedObj["data"].every((e: any) =>
-            (e !== null &&
-                typeof e === "object" ||
-                typeof e === "function") &&
-            typeof e["type"] === "string" &&
-            Array.isArray(e["content"]) &&
-            e["content"].every((e: any) =>
-                (e !== null &&
-                    typeof e === "object" ||
-                    typeof e === "function") &&
-                typeof e["type"] === "string" &&
-                typeof e["id"] === "string"
-            )
-        )
-    )
-}
-
 export function isDataCommonInit(obj: unknown): obj is DataCommonInit {
     const typedObj = obj as DataCommonInit
     return (
@@ -276,15 +105,15 @@ export function isDataCommonInit(obj: unknown): obj is DataCommonInit {
                 typeof e === "function") &&
             typeof e["uuid"] === "string" &&
             typeof e["name"] === "string" &&
-            typeof e["description"] === "string" &&
+            (typeof e["description"] === "undefined" ||
+                typeof e["description"] === "string") &&
             (typeof e["unit"] === "undefined" ||
                 typeof e["unit"] === "string") &&
             (typeof e["min"] === "undefined" ||
                 typeof e["min"] === "number") &&
             (typeof e["max"] === "undefined" ||
                 typeof e["max"] === "number") &&
-            (typeof e["value"] === "undefined" ||
-                typeof e["value"] === "number") &&
+            typeof e["value"] === "number" &&
             (typeof e["avgIO"] === "undefined" ||
                 typeof e["avgIO"] === "number")
         )
@@ -303,15 +132,15 @@ export function isDataCommonSet(obj: unknown): obj is DataCommonSet {
             typeof typedObj["data"] === "function") &&
         typeof typedObj["data"]["uuid"] === "string" &&
         typeof typedObj["data"]["name"] === "string" &&
-        typeof typedObj["data"]["description"] === "string" &&
+        (typeof typedObj["data"]["description"] === "undefined" ||
+            typeof typedObj["data"]["description"] === "string") &&
         (typeof typedObj["data"]["unit"] === "undefined" ||
             typeof typedObj["data"]["unit"] === "string") &&
         (typeof typedObj["data"]["min"] === "undefined" ||
             typeof typedObj["data"]["min"] === "number") &&
         (typeof typedObj["data"]["max"] === "undefined" ||
             typeof typedObj["data"]["max"] === "number") &&
-        (typeof typedObj["data"]["value"] === "undefined" ||
-            typeof typedObj["data"]["value"] === "number") &&
+        typeof typedObj["data"]["value"] === "number" &&
         (typeof typedObj["data"]["avgIO"] === "undefined" ||
             typeof typedObj["data"]["avgIO"] === "number")
     )
@@ -329,15 +158,15 @@ export function isDataCommonAdd(obj: unknown): obj is DataCommonAdd {
             typeof typedObj["data"] === "function") &&
         typeof typedObj["data"]["uuid"] === "string" &&
         typeof typedObj["data"]["name"] === "string" &&
-        typeof typedObj["data"]["description"] === "string" &&
+        (typeof typedObj["data"]["description"] === "undefined" ||
+            typeof typedObj["data"]["description"] === "string") &&
         (typeof typedObj["data"]["unit"] === "undefined" ||
             typeof typedObj["data"]["unit"] === "string") &&
         (typeof typedObj["data"]["min"] === "undefined" ||
             typeof typedObj["data"]["min"] === "number") &&
         (typeof typedObj["data"]["max"] === "undefined" ||
             typeof typedObj["data"]["max"] === "number") &&
-        (typeof typedObj["data"]["value"] === "undefined" ||
-            typeof typedObj["data"]["value"] === "number") &&
+        typeof typedObj["data"]["value"] === "number" &&
         (typeof typedObj["data"]["avgIO"] === "undefined" ||
             typeof typedObj["data"]["avgIO"] === "number")
     )

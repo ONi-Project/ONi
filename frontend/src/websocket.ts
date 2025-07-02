@@ -75,7 +75,7 @@ export function init() {
             console.log("ws 连接成功")
             disconectInfo = null
             errorInfo = null
-            send(session, toServer("AuthRequest", { token: token }))
+            send(toServer("AuthRequest", { token: token }))
         }
 
         session.onclose = () => {
@@ -160,6 +160,6 @@ export function init() {
     }
 }
 
-export function send(session: WebSocket, message: allMessageType.WebToServer) {
+export function send(message: allMessageType.WebToServer) {
     session.send(JSON.stringify(message))
 }

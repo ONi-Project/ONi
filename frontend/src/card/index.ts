@@ -3,7 +3,6 @@ import * as botOverview from "./bot-overview"
 import * as controlRedstoneAnalog from "./control-redstone-analog"
 import * as controlRedstoneDigital from "./control-redstone-digital"
 import * as createBot from "./create-bot"
-import * as event from "./event"
 import * as indicatorBar from "./indicator-bar"
 import * as indicatorCircular from "./indicator-circular"
 import * as noEvent from "./no-event"
@@ -17,7 +16,6 @@ export const html = {
     controlRedstoneAnalog: controlRedstoneAnalog.html,
     controlRedstoneDigital: controlRedstoneDigital.html,
     createBot: createBot.html,
-    event: event.html,
     indicatorBar: indicatorBar.html,
     indicatorCircular: indicatorCircular.html,
     noEvent: noEvent.html,
@@ -32,7 +30,6 @@ export const init = {
     controlRedstoneAnalog: controlRedstoneAnalog.init,
     controlRedstoneDigital: controlRedstoneDigital.init,
     createBot: createBot.init,
-    event: event.init,
     indicatorBar: indicatorBar.init,
     indicatorCircular: indicatorCircular.init,
     noEvent: noEvent.init,

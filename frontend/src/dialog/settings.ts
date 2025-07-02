@@ -12,18 +12,18 @@ export const html = /*html*/`
 
 export function init() {
     // 设置项
-    const dialog = document.getElementById("settings-dialog") as Dialog
+    // const dialog = document.getElementById("settings-dialog") as Dialog
 
-    document.getElementById("buttonSettings")!.addEventListener("click", () => {
-        dialog.open = true
-    })
-    document.getElementById("button-settings-discard")!.addEventListener("click", () => {
-        dialog.open = false
-    })
-    document.getElementById("button-settings-apply")!.addEventListener("click", () => {
-        dialog.open = false
-        location.reload()
-    })
+    // document.getElementById("buttonSettings")!.addEventListener("click", () => {
+    //     dialog.open = true
+    // })
+    // document.getElementById("button-settings-discard")!.addEventListener("click", () => {
+    //     dialog.open = false
+    // })
+    // document.getElementById("button-settings-apply")!.addEventListener("click", () => {
+    //     dialog.open = false
+    //     location.reload()
+    // })
 }
 
 export function initSettingsContent() {

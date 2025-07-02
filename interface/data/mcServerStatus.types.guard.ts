@@ -20,7 +20,11 @@ export function isMcServerStatus(obj: unknown): obj is McServerStatus {
         typeof typedObj["players"]["online"] === "number" &&
         Array.isArray(typedObj["players"]["list"]) &&
         typedObj["players"]["list"].every((e: any) =>
-            typeof e === "string"
+            (e !== null &&
+                typeof e === "object" ||
+                typeof e === "function") &&
+            typeof e["id"] === "string" &&
+            typeof e["name"] === "string"
         )
     )
 }

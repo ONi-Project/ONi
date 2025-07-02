@@ -5,7 +5,10 @@ export interface McServerStatus {
     players: {
         max: number
         online: number
-        list: string[]
+        list: {
+            id: string
+            name: string
+        }[]
     }
 }
 

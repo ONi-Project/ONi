@@ -1,3 +1,4 @@
+import { layoutModel, wsServerToWebGuard } from "@oni/interface"
 import { renderLayout } from "../renderer"
 import { eventEmitter } from "../websocket"
 
@@ -24,14 +25,66 @@ export const html = /*html*/`
 `
 
 export function init() {
-    eventEmitter.on("message", (event: any) => {
-        const { type, data } = event.data
-        if (type == "layout/aeList") {
-            renderLayout(data, document.getElementById("ae__list"))
-        } else if (type == "layout/aeView") {
-            renderLayout(data, document.getElementById("ae__view"), false)
-        } else if (type == "layout/aeEdit") {
-            renderLayout(data, document.getElementById("ae__edit"), false)
-        }
-    })
+  eventEmitter.on("message", m => {
+    if (wsServerToWebGuard.isDataAeInit(m)) {
+
+      let layoutList: layoutModel.Layout = [{
+        type: "grid-m",
+        content: []
+      }]
+
+      m.data.forEach(ae => {
+        layoutList[0].content.push({
+          type: "card",
+          id: "ae-overview",
+          config: {
+            uuid: ae.uuid,
+            name: ae.name,
+          }
+        })
+      })
+      renderLayout(layoutList, document.getElementById("ae__list")!)
+
+      let layoutEdit: layoutModel.Layout = [{
+        type: "raw",
+        content: []
+      }]
+
+      m.data.forEach(ae => {
+        layoutEdit[0].content.push({
+          type: "tab",
+          id: "ae-edit",
+          config: {
+            uuid: ae.uuid,
+            name: ae.name,
+          }
+        })
+      })
+
+      renderLayout(layoutEdit, document.getElementById("ae__edit")!, false)
+
+
+      let layoutView: layoutModel.Layout = [{
+        type: "raw",
+        content: []
+      }]
+
+      m.data.forEach(ae => {
+        layoutView[0].content.push({
+          type: "tab",
+          id: "ae-view",
+          config: {
+            uuid: ae.uuid,
+            name: ae.name,
+          }
+        })
+      })
+
+      renderLayout(layoutView, document.getElementById("ae__view")!, false)
+
+
+    }
+
+
+  })
 }

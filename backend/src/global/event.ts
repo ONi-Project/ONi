@@ -8,55 +8,18 @@ let event = {
     // 事件
     list: [] as eventModel.Event[],
 
-    // getLayout() {
-    //     let content: PageContentElement[] = []
-
-    //     this.list.forEach(event => {
-    //         content.push({
-    //             type: "card",
-    //             id: "event",
-    //             config: {
-    //                 uuid: event.uuid,
-    //                 title: event.name,
-    //                 description: event.description,
-    //                 priority: event.priority,
-    //                 status: event.status,
-    //                 timestamp: event.timestamp
-    //             }
-    //         })
-    //     })
-
-    //     let _
-    //     if (content.length == 0) {
-    //         _ = [{
-    //             type: "grid-full",
-    //             content: [{
-    //                 type: "card",
-    //                 id: "no-event",
-    //                 config: {}
-    //             }]
-    //         }]
-    //     } else {
-    //         _ = [{
-    //             type: "grid-m",
-    //             content: content
-    //         }]
-    //     }
-
-    //     return _
-    // },
-
     get(uuid: string) {
         return this.list.find(event => event.uuid == uuid)
     },
 
     set(event: eventModel.Event) {
-        this.list.forEach((item, index) => {
+        return this.list.some((item, index) => {
             if (item.uuid == event.uuid) {
                 this.list[index] = event
                 wsWebBroadcast(newServerToWebMessage("DataEventSet", event))
-                return
+                return true
             }
+            return false
         })
     },
 

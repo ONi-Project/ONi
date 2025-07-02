@@ -11,13 +11,6 @@ export type ServerToWeb =
     | serverToWeb.DataMcServerStatusSet
     | serverToWeb.AeOrderResult
     | serverToWeb.LayoutOverview
-    | serverToWeb.LayoutControl
-    | serverToWeb.LayoutEvent
-    | serverToWeb.LayoutBotList
-    | serverToWeb.LayoutBotEdit
-    | serverToWeb.LayoutAeList
-    | serverToWeb.LayoutAeView
-    | serverToWeb.LayoutAeEdit
     | serverToWeb.DataCommonInit
     | serverToWeb.DataCommonSet
     | serverToWeb.DataCommonAdd
@@ -60,10 +53,10 @@ export type OcToServer =
     | ocToServer.DataCommonSet
     | ocToServer.DataAeItemList
     | ocToServer.DataAeCpuList
+    | ocToServer.AeOrderResult
     | ocToServer.DataEventAdd
     | ocToServer.DataEventSet
     | ocToServer.DataBotComponent
-    | ocToServer.AeOrderResult
     | ocToServer.Log
 
 export type General = 

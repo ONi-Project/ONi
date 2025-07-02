@@ -3,18 +3,21 @@
         "uuid": "b6cdf1a8-39fd-49f2-b36c-5c464631097d",
         "name": "兰波顿电容库",
         "description": "",
-        "unit": "EU"
+        "unit": "EU",
+        "value": 0
     },
     {
         "uuid": "c1009c49-3042-4997-b683-982e14012a7f",
         "name": "苯",
         "description": "",
-        "unit": "L"
+        "unit": "L",
+        "value": 0
     },
     {
         "uuid": "b27f2cb4-9964-414c-9939-6c5ee58d4fb9",
         "name": "硝基苯",
         "description": "",
-        "unit": "L"
+        "unit": "L",
+        "value": 0
     }
 ]

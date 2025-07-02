@@ -10,6 +10,7 @@ import * as contentBot from "./content/bot"
 import * as contentStat from "./content/stat"
 import * as contentTool from "./content/tool"
 import * as contentDebug from "./content/debug"
+import * as contentSetting from "./content/setting"
 
 import * as dialogAeOrder from "./dialog/ae-order"
 import * as dialogAeItemInfo from "./dialog/ae-item-info"
@@ -24,32 +25,32 @@ import * as global from "./global"
 import "mdui/mdui.css"
 import "./style.css"
 
-const debugMode = true
-
 const html = /*html*/`
 
-<div>
-  ${layoutNavrail.html}
-</div>
+${layoutTopbar.html}
 
-<div style="overflow: hidden;position: relative; ">
+<div style="display: flex;width: 100dvw;height: calc(100dvh - 4rem);">
 
-  ${layoutTopbar.html}
+    ${layoutNavrail.html}
 
-<div id="main-content-area" style="height: calc(100dvh - 7rem);overflow: auto;">
+  <div style="overflow: hidden;width: 100%;">
 
-  ${contentOverview.html}
-  ${contentEvent.html}
-  ${contentControl.html}
-  ${contentAe.html}
-  ${contentBot.html}
-  ${contentStat.html}
-  ${contentTool.html}
-  ${debugMode ? contentDebug.html : ""}
+    <div id="main-content-area" style="width: 100%;height: 100%;overflow: auto;">
 
-</div>
+      ${contentOverview.html}
+      ${contentEvent.html}
+      ${contentControl.html}
+      ${contentAe.html}
+      ${contentBot.html}
+      ${contentStat.html}
+      ${contentTool.html}
+      ${contentSetting.html}
 
-${layoutBg.html}
+    </div>
+
+    ${layoutBg.html}
+
+  </div>
 
 </div>
 
@@ -63,7 +64,7 @@ ${dialogSettings.html}
 
 `
 
-document.body.innerHTML = html
+document.getElementById("app")!.innerHTML = html
 
 layoutNavrail.init()
 layoutTopbar.init()
@@ -76,7 +77,7 @@ contentAe.init()
 contentBot.init()
 contentStat.init()
 contentTool.init()
-contentDebug.init()
+contentSetting.init()
 
 dialogAeOrder.init()
 dialogAeItemInfo.init()

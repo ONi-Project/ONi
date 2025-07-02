@@ -6,13 +6,13 @@ export type DataMcServerStatusSet = Message<"DataMcServerStatusSet", mcServerSta
 export type AeOrderResult = Message<"AeOrderResult", aeModel.AeOrderResult>
 
 export type LayoutOverview = Message<"LayoutOverview", layoutModel.Layout>
-export type LayoutControl = Message<"LayoutControl", layoutModel.Layout>
-export type LayoutEvent = Message<"LayoutEvent", layoutModel.Layout>
-export type LayoutBotList = Message<"LayoutBotList", layoutModel.Layout>
-export type LayoutBotEdit = Message<"LayoutBotEdit", layoutModel.Layout>
-export type LayoutAeList = Message<"LayoutAeList", layoutModel.Layout>
-export type LayoutAeView = Message<"LayoutAeView", layoutModel.Layout>
-export type LayoutAeEdit = Message<"LayoutAeEdit", layoutModel.Layout>
+// export type LayoutControl = Message<"LayoutControl", layoutModel.Layout>
+// export type LayoutEvent = Message<"LayoutEvent", layoutModel.Layout>
+// export type LayoutBotList = Message<"LayoutBotList", layoutModel.Layout>
+// export type LayoutBotEdit = Message<"LayoutBotEdit", layoutModel.Layout>
+// export type LayoutAeList = Message<"LayoutAeList", layoutModel.Layout>
+// export type LayoutAeView = Message<"LayoutAeView", layoutModel.Layout>
+// export type LayoutAeEdit = Message<"LayoutAeEdit", layoutModel.Layout>
 
 export type DataCommonInit = Message<"DataCommonInit", commonModel.Common[]>
 export type DataCommonSet = Message<"DataCommonSet", commonModel.Common>

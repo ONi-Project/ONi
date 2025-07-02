@@ -5,10 +5,10 @@ const curriedCreateMessage = <M extends wsBase.Message<string, any>>(
 ) => {
     return function <T extends M["type"]>(
         type: T,
-        ...args: messageTypeMap.IsOcMessage<Extract<M, {type: T}>> extends true
+        ...args: messageTypeMap.IsOcMessage<Extract<M, { type: T }>> extends true
             ? [data: messageTypeMap.DataType<M>[T], target: messageTypeMap.TargetType<M>[T]]
             : [data: messageTypeMap.DataType<M>[T]]
-    ): Extract<allMessageType.All, { type: T }> {
+    ): Extract<M, { type: T }> {
         const data = args[0]
 
         if (args.length === 2) {

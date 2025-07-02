@@ -12,15 +12,15 @@ export function isCommon(obj: unknown): obj is Common {
             typeof typedObj === "function") &&
         typeof typedObj["uuid"] === "string" &&
         typeof typedObj["name"] === "string" &&
-        typeof typedObj["description"] === "string" &&
+        (typeof typedObj["description"] === "undefined" ||
+            typeof typedObj["description"] === "string") &&
         (typeof typedObj["unit"] === "undefined" ||
             typeof typedObj["unit"] === "string") &&
         (typeof typedObj["min"] === "undefined" ||
             typeof typedObj["min"] === "number") &&
         (typeof typedObj["max"] === "undefined" ||
             typeof typedObj["max"] === "number") &&
-        (typeof typedObj["value"] === "undefined" ||
-            typeof typedObj["value"] === "number") &&
+        typeof typedObj["value"] === "number" &&
         (typeof typedObj["avgIO"] === "undefined" ||
             typeof typedObj["avgIO"] === "number")
     )

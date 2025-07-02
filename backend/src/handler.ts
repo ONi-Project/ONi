@@ -150,21 +150,23 @@ export default handler
 const processor = {
     data: {
         commonSet(json: fromOc.DataCommonSet, session: SessionOc) {
-            let target = Global.common.list.find(data => data.uuid === json.data.uuid)
+            const target = Global.common.list.find(common => common.uuid === json.data.uuid)
             if (target) {
-                const data: commonModel.Common = Object.assign({}, target, json.data)
-                Global.common.set(data)
+                const common = Object.assign({}, target, json.data)
+                Global.common.set(common)
             } else {
-                send(session, newGeneralMessage("Error", { "message": "Data not found" }))
+                send(session, newGeneralMessage("Error", { "message": "Common not found" }))
+                logger.error(`processor.data.commonSet: Common ${json.data.uuid} not found`)
             }
         },
         eventSet(json: fromWeb.DataEventSet | fromOc.DataEventSet, session: SessionWeb | SessionOc) {
             let target = Global.event.list.find(event => event.uuid === json.data.uuid)
             if (target) {
                 const event = Object.assign({}, target, json.data)
-                send(session, newGeneralMessage("Error", { "message": "Event not found" }))
+                Global.event.set(event)
             } else {
                 send(session, newGeneralMessage("Error", { "message": "Event not found" }))
+                logger.error(`processor.data.eventSet: Event ${json.data.uuid} not found`)
             }
         },
         eventAdd(json: fromOc.DataEventAdd, session: SessionOc) {

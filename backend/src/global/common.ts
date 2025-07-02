@@ -13,12 +13,13 @@ let common = {
     },
 
     set(common: commonModel.Common) {
-        this.list.forEach((item, index) => {
+        return this.list.some((item, index) => {
             if (item.uuid == common.uuid) {
                 this.list[index] = common
                 wsWebBroadcast(newServerToWebMessage("DataCommonSet", common))
-                return
+                return true
             }
+            return false
         })
     },
 

@@ -75,17 +75,21 @@ export function isDataEventSet(obj: unknown): obj is DataEventSet {
         (typedObj !== null &&
             typeof typedObj === "object" ||
             typeof typedObj === "function") &&
-        typedObj["type"] === "dataEventSet" &&
+        typedObj["type"] === "DataEventSet" &&
         (typedObj["data"] !== null &&
             typeof typedObj["data"] === "object" ||
             typeof typedObj["data"] === "function") &&
         typeof typedObj["data"]["uuid"] === "string" &&
-        typeof typedObj["data"]["name"] === "string" &&
+        (typeof typedObj["data"]["name"] === "undefined" ||
+            typeof typedObj["data"]["name"] === "string") &&
         (typeof typedObj["data"]["description"] === "undefined" ||
             typeof typedObj["data"]["description"] === "string") &&
-        typeof typedObj["data"]["priority"] === "number" &&
-        typeof typedObj["data"]["status"] === "number" &&
-        typeof typedObj["data"]["timestamp"] === "number"
+        (typeof typedObj["data"]["priority"] === "undefined" ||
+            typeof typedObj["data"]["priority"] === "number") &&
+        (typeof typedObj["data"]["status"] === "undefined" ||
+            typeof typedObj["data"]["status"] === "number") &&
+        (typeof typedObj["data"]["timestamp"] === "undefined" ||
+            typeof typedObj["data"]["timestamp"] === "number")
     )
 }
 

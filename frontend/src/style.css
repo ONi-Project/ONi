@@ -1,5 +1,5 @@
 .panel-content {
-  margin: 0.8rem;
+  margin: 0.5rem;
 }
 
 .grid-s {
@@ -153,7 +153,40 @@ mdui-top-app-bar:not([shrink]) {
   overflow: hidden;
 }
 
-#navi-drawer::part(panel) {
-  height: 100% !important;
-  width: 5.0625rem !important;
+#navi-drawer {
+  transition: min-width 0.25s, width 0.25s;
+  height: calc(100% - 6px);
+  padding-top: 6px;
+  padding-left: 6px;
+  padding-right: 6px;
+  min-width: 56px;
+  width: 56px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  /* background-color: rgb(var(--mdui-color-surface-container-low)); */
+}
+
+
+
+/* #navrail-area mdui-list-item {
+  --shape-corner-rounded: 0.75rem;
+} */
+
+#navi-drawer-bg {
+  position: absolute;
+  bottom: -80px;
+  right: -90px;
+  width: 200px;
+  height: 200px;
+  opacity: 0.2;
+  filter: grayscale(100%);
+}
+
+#navi-bottom-bar {
+  position: absolute;
+  bottom: 0.5rem;
+  width: 100%;
+  text-align: center;
 }

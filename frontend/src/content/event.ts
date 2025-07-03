@@ -5,41 +5,56 @@ import { Chip } from "mdui"
 
 export const html = /*html*/`<div id="event__content" class="panel-content">
 
-    <div style="margin-bottom: 0.5rem;padding: 0.25rem;display: flex;gap: 0.5rem;align-items: center;" variant="filled">
-        <mdui-text-field variant="outlined" icon="search" label="搜索事件..."></mdui-text-field>
+    <div class="animate__animated animate__fadeInUp animate__faster" style="margin-bottom: 0.5rem;padding: 0.25rem;display: flex;gap: 0.5rem;align-items: center;" variant="filled">
+        <mdui-text-field variant="outlined" icon="search" label="检索事件..."></mdui-text-field>
     </div>
 
-    <div style="margin-left: 0.25rem;">
+    <div class="animate__animated animate__fadeInUp animate__faster" style="display: flex;margin-top: 0.5rem;margin-left: 0.25rem;">
 
-        <div style="margin-bottom: 0.25rem;">
-            <mdui-icon name="filter_list" style="opacity: 0.5;font-size: small"></mdui-icon>
-            <span style="font-size: small;opacity: 0.5;">状态过滤器</span>
+        <div>
+
+            <div style="margin-bottom: 0.25rem;">
+                <mdui-icon name="filter_list" style="opacity: 0.5;font-size: small"></mdui-icon>
+                <span style="font-size: small;opacity: 0.5;">状态过滤器</span>
+            </div>
+
+            <mdui-chip id="event__filter-status-all" selected selectable selected-icon="all_inclusive"
+                icon="all_inclusive">全部</mdui-chip>
+            <mdui-chip id="event__filter-status-active" selectable selected-icon="clear" icon="clear">未处理</mdui-chip>
+            <mdui-chip id="event__filter-statis-inactive" selectable selected-icon="done" icon="done">已处理</mdui-chip>
+
         </div>
 
-        <mdui-chip id="event__filter-status-all" selected selectable selected-icon="all_inclusive"
-            icon="all_inclusive">全部</mdui-chip>
-        <mdui-chip id="event__filter-status-active" selectable selected-icon="clear" icon="clear">未处理</mdui-chip>
-        <mdui-chip id="event__filter-statis-inactive" selectable selected-icon="done" icon="done">已处理</mdui-chip>
+        <div style="border-left: 1px solid rgba(128,128,128,0.5);margin-left: 1.5rem;margin-right: 1.5rem;"></div>
 
+        <div>
 
-    </div>
+            <div style="margin-bottom: 0.25rem;">
+                <mdui-icon name="filter_list" style="opacity: 0.5;font-size: small"></mdui-icon>
+                <span style="font-size: small;opacity: 0.5;">级别过滤器</span>
+            </div>
 
-    <div style="margin-left: 0.25rem;margin-top: 0.5rem;">
-        <div style="margin-bottom: 0.25rem;">
-            <mdui-icon name="filter_list" style="opacity: 0.5;font-size: small"></mdui-icon>
-            <span style="font-size: small;opacity: 0.5;">级别过滤器</span>
+            <mdui-chip id="event__filter-priority-info" selected selectable selected-icon="info"
+                icon="info">通知</mdui-chip>
+            <mdui-chip id="event__filter-priority-warning" selected selectable selected-icon="warning"
+                icon="warning">警告</mdui-chip>
+            <mdui-chip id="event__filter-priority-dangerous" selected selectable selected-icon="dangerous"
+                icon="dangerous">紧急</mdui-chip>
+
         </div>
 
-        <mdui-chip id="event__filter-priority-info" selected selectable selected-icon="info" icon="info">通知</mdui-chip>
-        <mdui-chip id="event__filter-priority-warning" selected selectable selected-icon="warning"
-            icon="warning">警告</mdui-chip>
-        <mdui-chip id="event__filter-priority-dangerous" selected selectable selected-icon="dangerous"
-            icon="dangerous">紧急</mdui-chip>
     </div>
+
+
 
 
     <div id="event__list" style="margin-top: 1rem;display: flex;flex-direction: column;gap: 0.5rem;">
+    </div>
 
+    <div id="event__list-empty" style="opacity: 0.5;text-align: center;margin-top: 2rem;">
+        <div class="animate__animated animate__fadeInUp animate__faster">
+            暂无事件
+        </div>
     </div>
 
     <style>
@@ -196,4 +211,10 @@ export function update() {
             send(newWebToServerMessage("DataEventSet", { uuid: event.uuid, status: (e.target as HTMLInputElement).checked ? 1 : 0 }))
         })
     })
+
+    if (events.length === 0) {
+        document.getElementById("event__list-empty")!.style.display = "block"
+    } else {
+        document.getElementById("event__list-empty")!.style.display = "none"
+    }
 }

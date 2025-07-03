@@ -10,7 +10,7 @@ ws.addEventListener('message', ((event) => {
 ws.onopen = () => {
     ws.send(JSON.stringify({
         "type": "debug",
-        "data": "This is a test message from Suika.js"
+        "data": "This is a test message from Suika"
     }))
     ws.send(JSON.stringify({
         type: "AuthRequest",
@@ -94,9 +94,9 @@ ws.onopen = () => {
         type: "Log",
         data: {
             level: "info",
-            message: "This is a test info message from Suika.js",
-            file: "suika.js",
-            location: "test/suika.js",
+            message: "This is a test info message from Suika",
+            file: "suika",
+            location: "test/suika",
             taskUuid: "00000000-0000-000000000000",
         }
     }))
@@ -105,9 +105,9 @@ ws.onopen = () => {
         type: "Log",
         data: {
             level: "warn",
-            message: "This is a test warn message from Suika.js",
-            file: "suika.js",
-            location: "test/suika.js",
+            message: "This is a test warn message from Suika",
+            file: "suika",
+            location: "test/suika",
             taskUuid: "00000000-0000-000000000000",
         }
     }))
@@ -116,9 +116,9 @@ ws.onopen = () => {
         type: "Log",
         data: {
             level: "trace",
-            message: "This is a test trace message from Suika.js",
-            file: "suika.js",
-            location: "test/suika.js",
+            message: "This is a test trace message from Suika",
+            file: "suika",
+            location: "test/suika",
             taskUuid: "00000000-0000-000000000000",
         }
     }))
@@ -127,9 +127,9 @@ ws.onopen = () => {
         type: "Log",
         data: {
             level: "error",
-            message: "This is a test error message from Suika.js",
-            file: "suika.js",
-            location: "test/suika.js",
+            message: "This is a test error message from Suika",
+            file: "suika",
+            location: "test/suika",
             taskUuid: "00000000-0000-000000000000",
         }
     }))
@@ -138,9 +138,9 @@ ws.onopen = () => {
         type: "Log",
         data: {
             level: "debug",
-            message: "This is a test debug message from Suika.js",
-            file: "suika.js",
-            location: "test/suika.js",
+            message: "This is a test debug message from Suika",
+            file: "suika",
+            location: "test/suika",
             taskUuid: "00000000-0000-000000000000",
         }
     }))

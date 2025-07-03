@@ -3,9 +3,8 @@ import { renderLayout } from "../renderer"
 import { eventEmitter } from "../websocket"
 
 export const html = /*html*/`<div id="control__content" class="panel-content" hidden>
-    <div
-        style="margin-bottom: 0.5rem;padding: 0.25rem;display: flex;gap: 0.5rem;align-items: center;" variant="filled">
-        <mdui-text-field variant="outlined" icon="search" label="搜索红石控制器..."></mdui-text-field>
+    <div class="animate__animated animate__fadeInUp animate__faster" style="margin-bottom: 0.5rem;padding: 0.25rem;display: flex;gap: 0.5rem;align-items: center;" variant="filled">
+        <mdui-text-field variant="outlined" icon="search" label="检索红石控制器..."></mdui-text-field>
     </div>
     <div id="control__list">
     </div>

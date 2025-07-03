@@ -1,9 +1,9 @@
-import { Config, SessionOc, SessionWeb } from "../interface.js"
+import { Config, SessionOc, SessionWeb } from "../interface"
 import fs from "fs"
-import { loggerGlobal as logger } from "../logger.js"
-import { wsOcSendByBotUuid, wssOc, wssWeb, wsWebBroadcast } from "../websocket.js"
+import { loggerGlobal as logger } from "../logger"
+import { wsOcSendByBotUuid, wssOc, wssWeb, wsWebBroadcast } from "../websocket"
 import { botModel, botModelGuard, layoutModel, newServerToOcMessage, newServerToWebMessage, newWebToServerMessage } from "@oni/interface"
-import { send } from "src/utils.js"
+import { send } from "src/utils"
 
 
 let bot = {

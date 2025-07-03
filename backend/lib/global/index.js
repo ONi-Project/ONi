@@ -1,29 +1,34 @@
-import user from "./user.js";
-import bot from "./bot.js";
-import ae from "./ae.js";
-import common from "./common.js";
-import redstone from "./redstone.js";
-import event from "./event.js";
-import mcServerStatus from "./mcServerStatus.js";
-import staticResources from "./staticResources.js";
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const user_1 = __importDefault(require("./user"));
+const bot_1 = __importDefault(require("./bot"));
+const ae_1 = __importDefault(require("./ae"));
+const common_1 = __importDefault(require("./common"));
+const redstone_1 = __importDefault(require("./redstone"));
+const event_1 = __importDefault(require("./event"));
+const mcServerStatus_1 = __importDefault(require("./mcServerStatus"));
+const staticResources_1 = __importDefault(require("./staticResources"));
 let Global = {
-    user: user,
-    bot: bot,
-    ae: ae,
-    common: common,
-    redstone: redstone,
-    event: event,
-    mcServerStatus: mcServerStatus,
-    staticResources: staticResources,
+    user: user_1.default,
+    bot: bot_1.default,
+    ae: ae_1.default,
+    common: common_1.default,
+    redstone: redstone_1.default,
+    event: event_1.default,
+    mcServerStatus: mcServerStatus_1.default,
+    staticResources: staticResources_1.default,
     init(config) {
-        user.init(config);
-        bot.init(config);
-        ae.init(config);
-        common.init(config);
-        redstone.init(config);
-        event.init(config);
-        mcServerStatus.init(config);
-        staticResources.init(config);
+        user_1.default.init(config);
+        bot_1.default.init(config);
+        ae_1.default.init(config);
+        common_1.default.init(config);
+        redstone_1.default.init(config);
+        event_1.default.init(config);
+        mcServerStatus_1.default.init(config);
+        staticResources_1.default.init(config);
     }
 };
-export default Global;
+exports.default = Global;

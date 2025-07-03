@@ -53,6 +53,7 @@ export function init() {
             })
             document.getElementById("bot__edit")!.hidden = false
             document.getElementById("bot__list")!.hidden = true
+            document.getElementById("bot__topbar")!.hidden = true
         })
     })
 }

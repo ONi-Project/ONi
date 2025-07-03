@@ -6,8 +6,8 @@ export const html = /*html*/`
 <div id="bot__content" class="panel-content" hidden>
 
   <div id="bot__topbar">
-    <div class="animate__animated animate__fadeIn animate__faster" style="margin-bottom: 0.5rem;padding: 0.25rem;display: flex;gap: 0.5rem;align-items: center;" variant="filled">
-      <mdui-text-field variant="outlined" icon="search" label="搜索 OC 设备..."></mdui-text-field>
+    <div class="animate__animated animate__fadeInUp animate__faster" style="margin-bottom: 0.5rem;padding: 0.25rem;display: flex;gap: 0.5rem;align-items: center;" variant="filled">
+      <mdui-text-field variant="outlined" icon="search" label="检索 OC 设备..."></mdui-text-field>
       <mdui-button icon="add">添加</mdui-button>
     </div>
   </div>

@@ -2,15 +2,14 @@
   "name": "oni",
   "version": "1.0.0",
   "description": "A web panel designed for GTNH | Powered by OpenComputers",
-  "main": "index.js",
+  "main": "index",
   "scripts": {
     "build": "tsc",
     "dev": "nodemon",
-    "start": "node ./lib/index.js"
+    "start": "node ./lib/index"
   },
   "author": "Ltfjx",
   "license": "MIT",
-  "type": "module",
   "devDependencies": {
     "@oni/interface": "file:../interface",
     "@types/ejs": "^3.1.5",

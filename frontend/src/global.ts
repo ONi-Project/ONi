@@ -2,6 +2,7 @@ import { aeModel, botModel, commonModel, eventModel, mcServerStatusModel, redsto
 import { eventEmitter } from "./websocket"
 import { wsServerToWebGuard as toWebGuard } from "@oni/interface"
 import * as contentEvent from "./content/event"
+import { botTaskUpdate } from "./dialog/bot-task"
 
 export let common: commonModel.CommonArray = []
 export let bot: botModel.BotArray = []
@@ -23,6 +24,7 @@ export function init() {
             bot = m.data
         } else if (toWebGuard.isStaticBotTask(m)) {
             botTask = m.data
+            botTaskUpdate()
         } else if (toWebGuard.isDataAeInit(m)) {
             ae = m.data
         } else if (toWebGuard.isDataEventInit(m)) {

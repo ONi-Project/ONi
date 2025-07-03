@@ -1,6 +1,8 @@
-import { loggerGlobal as logger } from "../logger.js";
-import { wsWebBroadcast } from "../websocket.js";
-import { newServerToWebMessage } from "@oni/interface";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const logger_1 = require("../logger");
+const websocket_1 = require("../websocket");
+const interface_1 = require("@oni/interface");
 let mcServerStatus = {
     // MC 服务器状态
     status: {
@@ -15,17 +17,17 @@ let mcServerStatus = {
     },
     set(status) {
         this.status = status;
-        wsWebBroadcast(newServerToWebMessage("DataMcServerStatusSet", this.status));
+        (0, websocket_1.wsWebBroadcast)((0, interface_1.newServerToWebMessage)("DataMcServerStatusSet", this.status));
     },
     init(config) {
         if (!config.mc_server_ip) {
-            logger.warn("mcServerStatus", "mc_server_ip is not set in config.");
+            logger_1.loggerGlobal.warn("mcServerStatus", "mc_server_ip is not set in config.");
         }
         else {
             this.status.ip = config.mc_server_ip;
-            logger.debug("mcServerStatus", "mc_server_ip is set to " + config.mc_server_ip);
-            logger.trace("mcServerStatus", mcServerStatus);
+            logger_1.loggerGlobal.debug("mcServerStatus", "mc_server_ip is set to " + config.mc_server_ip);
+            logger_1.loggerGlobal.trace("mcServerStatus", mcServerStatus);
         }
     }
 };
-export default mcServerStatus;
+exports.default = mcServerStatus;

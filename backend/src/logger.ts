@@ -1,5 +1,5 @@
 import log4js from "log4js"
-import { Config } from "./interface.js"
+import { Config } from "./interface"
 
 let Logger = {
     init(config: Config) {

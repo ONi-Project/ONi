@@ -1,6 +1,6 @@
-import { Config } from "../interface.js"
+import { Config } from "../interface"
 import fs from "fs"
-import { loggerGlobal as logger } from "../logger.js"
+import { loggerGlobal as logger } from "../logger"
 import { userModel, userModelGuard } from "@oni/interface"
 
 let user = {

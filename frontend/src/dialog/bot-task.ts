@@ -127,7 +127,7 @@ export function init() {
 
   document.getElementById("bot__task-dialog-step1-show-hidden-switch")!.addEventListener("change", event => {
     botTaskShowHidden = (event.target as Checkbox).checked
-    botTaskUpdate(null)
+    botTaskUpdate()
   })
 
   document.getElementById("bot__task-dialog-step1-next-button")!.addEventListener("click", _event => {
@@ -339,15 +339,15 @@ export function botTaskNew(c: (task: any) => void) {
   callback = c
 }
 
-export function botTaskUpdate(data: any) {
+export function botTaskUpdate() {
   let btnNext = document.getElementById("bot__task-dialog-step1-next-button") as HTMLButtonElement
   btnNext.disabled = true
   btnNext.innerHTML = "下一步"
 
   var taskListElement = document.getElementById("bot__task-dialog-step1-list")!
   var taskString = ""
-  if (!data) { data = botTask }
-  data.forEach((task: any) => {
+
+  botTask.forEach((task: any) => {
     var modeString = ""
     task.mode.filter((mode: any) => {
       if (mode.hidden == true && !botTaskShowHidden) { return false } else { return true }

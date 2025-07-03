@@ -1,6 +1,6 @@
 import { allMessageType } from "@oni/interface"
-import { loggerPerformance } from "./logger.js"
-import { SessionOc, SessionWeb } from "./interface.js"
+import { loggerPerformance } from "./logger"
+import { SessionOc, SessionWeb } from "./interface"
 
 export function deepEqual(obj1: any, obj2: any) {
     if (obj1 === obj2) return true

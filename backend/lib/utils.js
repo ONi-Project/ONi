@@ -1,5 +1,10 @@
-import { loggerPerformance } from "./logger.js";
-export function deepEqual(obj1, obj2) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deepEqual = deepEqual;
+exports.performanceTimer = performanceTimer;
+exports.send = send;
+const logger_1 = require("./logger");
+function deepEqual(obj1, obj2) {
     if (obj1 === obj2)
         return true;
     if (obj1 == null || obj2 == null || typeof obj1 !== 'object' || typeof obj2 !== 'object')
@@ -14,14 +19,14 @@ export function deepEqual(obj1, obj2) {
     }
     return true;
 }
-export function performanceTimer(funcName, func) {
+function performanceTimer(funcName, func) {
     const startTime = performance.now();
     const result = func();
     const endTime = performance.now();
     const duration = endTime - startTime;
-    loggerPerformance.log(`Function ${funcName} took ${duration} milliseconds.`);
+    logger_1.loggerPerformance.log(`Function ${funcName} took ${duration} milliseconds.`);
     return result;
 }
-export function send(session, message) {
+function send(session, message) {
     session.send(JSON.stringify(message));
 }

@@ -1,8 +1,8 @@
-import { Config } from "../interface.js"
+import { Config } from "../interface"
 import fs from "fs"
-import { wsWebBroadcast } from "../websocket.js"
+import { wsWebBroadcast } from "../websocket"
 import { eventModel, eventModelGuard, newServerToWebMessage } from "@oni/interface"
-import { loggerGlobal as logger } from "../logger.js"
+import { loggerGlobal as logger } from "../logger"
 
 let event = {
     // 事件

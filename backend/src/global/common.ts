@@ -1,7 +1,7 @@
-import { Config } from "../interface.js"
+import { Config } from "../interface"
 import fs from "fs"
-import { loggerGlobal as logger } from "../logger.js"
-import { wsWebBroadcast } from "../websocket.js"
+import { loggerGlobal as logger } from "../logger"
+import { wsWebBroadcast } from "../websocket"
 import { commonModel, commonModelGuard, newServerToWebMessage } from "@oni/interface"
 
 let common = {

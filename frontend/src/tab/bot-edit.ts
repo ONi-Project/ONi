@@ -160,6 +160,7 @@ export function init() {
     element.addEventListener("click", _event => {
       document.getElementById("bot__edit")!.hidden = true
       document.getElementById("bot__list")!.hidden = false
+      document.getElementById("bot__topbar")!.hidden = false
     })
     global.bot.forEach(bot => {
       let target = Array.from(document.querySelectorAll(".bot__edit")).find(element => element.querySelector("data")!.getAttribute("uuid") === bot.uuid)

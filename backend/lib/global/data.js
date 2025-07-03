@@ -1,6 +1,6 @@
 import fs from "fs";
-import { loggerGlobal as logger } from "../logger.js";
-import { wsWebBroadcast } from "../websocket.js";
+import { loggerGlobal as logger } from "../logger";
+import { wsWebBroadcast } from "../websocket";
 var data = {
     // 通用数据
     list: [],

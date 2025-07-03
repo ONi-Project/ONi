@@ -1,10 +1,10 @@
 import { WebSocketServer } from "ws"
 import http from "http"
-import { Config, SessionWeb, SessionOc } from "./interface.js"
-import { loggerWebsocket as logger } from "./logger.js"
-import handler from "./handler.js"
+import { Config, SessionWeb, SessionOc } from "./interface"
+import { loggerWebsocket as logger } from "./logger"
+import handler from "./handler"
 import { allMessageType } from "@oni/interface"
-import { send } from "./utils.js"
+import { send } from "./utils"
 
 export const wssWeb = new WebSocketServer({ noServer: true })
 export const wssOc = new WebSocketServer({ noServer: true })

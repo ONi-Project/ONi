@@ -1,6 +1,6 @@
-import { Config } from "../interface.js"
-import { loggerGlobal as logger } from "../logger.js"
-import { wsWebBroadcast } from "../websocket.js"
+import { Config } from "../interface"
+import { loggerGlobal as logger } from "../logger"
+import { wsWebBroadcast } from "../websocket"
 import { mcServerStatusModel, newServerToWebMessage } from "@oni/interface"
 
 let mcServerStatus = {

@@ -1,8 +1,8 @@
-import { Config } from "../interface.js"
+import { Config } from "../interface"
 import fs from "fs"
-import { loggerGlobal as logger } from "../logger.js"
+import { loggerGlobal as logger } from "../logger"
 import { newServerToWebMessage, redstoneModel, redstoneModelGuard } from "@oni/interface"
-import { wsWebBroadcast } from "src/websocket.js"
+import { wsWebBroadcast } from "src/websocket"
 
 let redstone = {
     // 红石控制组件

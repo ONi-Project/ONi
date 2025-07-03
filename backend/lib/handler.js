@@ -1,10 +1,15 @@
-import fs from "fs";
-import Global from "./global/index.js";
-import { loggerHandler as logger, loggerOcOverWs } from "./logger.js";
-import { wsOcSendByBotUuid, wsWebBroadcast } from "./websocket.js";
-import { wsBaseGuard, wsOcToServerGuard as fromOcGuard, wsWebToServerGuard as fromWebGuard } from "@oni/interface";
-import { newServerToWebMessage as toWeb, newServerToOcMessage as toOc, newGeneralMessage } from "@oni/interface/utils/createMessage.js";
-import { performanceTimer, send } from "./utils.js";
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs_1 = __importDefault(require("fs"));
+const index_1 = __importDefault(require("./global/index"));
+const logger_1 = require("./logger");
+const websocket_1 = require("./websocket");
+const interface_1 = require("@oni/interface");
+const createMessage_1 = require("@oni/interface/utils/createMessage");
+const utils_1 = require("./utils");
 const handler = {
     webMessage(msg, session) {
         // 解析 JSON
@@ -13,57 +18,57 @@ const handler = {
             json = JSON.parse(msg);
         }
         catch (e) {
-            logger.error("WEB RECEIVED INVALID JSON", msg);
-            logger.error(e);
+            logger_1.loggerHandler.error("WEB RECEIVED INVALID JSON", msg);
+            logger_1.loggerHandler.error(e);
             return;
         }
-        if (!wsBaseGuard.isMessage(json)) {
-            logger.error("WEB RECEIVED INVALID MESSAGE", json);
+        if (!interface_1.wsBaseGuard.isMessage(json)) {
+            logger_1.loggerHandler.error("WEB RECEIVED INVALID MESSAGE", json);
             return;
         }
-        logger.trace("WEB RECEIVED", json);
+        logger_1.loggerHandler.trace("WEB RECEIVED", json);
         // 登录请求
-        if (fromWebGuard.isAuthRequest(json)) {
+        if (interface_1.wsWebToServerGuard.isAuthRequest(json)) {
             processor.auth.web(json, session);
         }
         else if (!session.authenticated) {
             // 如果未登录
-            send(session, newGeneralMessage("Error", { "message": "Not authenticated" }));
+            (0, utils_1.send)(session, (0, createMessage_1.newGeneralMessage)("Error", { "message": "Not authenticated" }));
         }
         else {
             // 如果已登录，处理数据
-            if (fromWebGuard.isDataEventSet(json)) {
+            if (interface_1.wsWebToServerGuard.isDataEventSet(json)) {
                 // 事件数据
                 processor.data.eventSet(json, session);
                 return;
             }
-            else if (fromWebGuard.isOcTaskRunSingle(json)) {
+            else if (interface_1.wsWebToServerGuard.isOcTaskRunSingle(json)) {
                 // 运行单次任务
                 processor.web2oc.taskRunSingle(json, session);
                 return;
             }
-            else if (fromWebGuard.isOcTaskAdd(json)) {
+            else if (interface_1.wsWebToServerGuard.isOcTaskAdd(json)) {
                 // 添加任务
                 processor.web2oc.taskAdd(json, session);
                 return;
             }
-            else if (fromWebGuard.isOcTaskRemove(json)) {
+            else if (interface_1.wsWebToServerGuard.isOcTaskRemove(json)) {
                 // 移除任务
                 processor.web2oc.taskRemove(json, session);
                 return;
             }
-            else if (fromWebGuard.isOcForward(json)) {
+            else if (interface_1.wsWebToServerGuard.isOcForward(json)) {
                 // debug 转发
                 processor.web2oc.forward(json, session);
                 return;
             }
-            else if (fromWebGuard.isAeOrder(json)) {
+            else if (interface_1.wsWebToServerGuard.isAeOrder(json)) {
                 // AE 订单
                 processor.ae.order(json, session);
                 return;
             }
             else {
-                logger.error("WEB RECEIVED INVALID TYPE", json);
+                logger_1.loggerHandler.error("WEB RECEIVED INVALID TYPE", json);
                 return;
             }
         }
@@ -75,110 +80,110 @@ const handler = {
             json = JSON.parse(msg);
         }
         catch (e) {
-            logger.error("OC RECEIVED INVALID JSON", msg);
-            logger.error(e);
+            logger_1.loggerHandler.error("OC RECEIVED INVALID JSON", msg);
+            logger_1.loggerHandler.error(e);
             return;
         }
-        if (!wsBaseGuard.isMessage(json)) {
-            logger.error("OC RECEIVED INVALID MESSAGE", json);
+        if (!interface_1.wsBaseGuard.isMessage(json)) {
+            logger_1.loggerHandler.error("OC RECEIVED INVALID MESSAGE", json);
             return;
         }
         if (json.type != "log") {
-            logger.trace("OC RECEIVED", json);
+            logger_1.loggerHandler.trace("OC RECEIVED", json);
         }
-        if (fromOcGuard.isAuthRequest(json)) {
+        if (interface_1.wsOcToServerGuard.isAuthRequest(json)) {
             // 登录请求
             processor.auth.oc(json, session);
         }
         else if (!session.authenticated) {
             // 如果未登录
-            send(session, newGeneralMessage("Error", { "message": "Not authenticated" }));
+            (0, utils_1.send)(session, (0, createMessage_1.newGeneralMessage)("Error", { "message": "Not authenticated" }));
         }
         else {
             // 如果已登录，处理数据
-            if (fromOcGuard.isDataCommonSet(json)) {
+            if (interface_1.wsOcToServerGuard.isDataCommonSet(json)) {
                 processor.data.commonSet(json, session);
                 return;
             }
-            else if (fromOcGuard.isDataEventSet(json)) {
+            else if (interface_1.wsOcToServerGuard.isDataEventSet(json)) {
                 processor.data.eventSet(json, session);
                 return;
             }
-            else if (fromOcGuard.isDataEventAdd(json)) {
+            else if (interface_1.wsOcToServerGuard.isDataEventAdd(json)) {
                 processor.data.eventAdd(json, session);
                 return;
             }
-            else if (fromOcGuard.isDataBotComponent(json)) {
+            else if (interface_1.wsOcToServerGuard.isDataBotComponent(json)) {
                 processor.data.bot.component(json, session);
                 return;
             }
-            else if (fromOcGuard.isDataAeItemList(json)) {
+            else if (interface_1.wsOcToServerGuard.isDataAeItemList(json)) {
                 processor.data.ae.itemList(json, session);
                 return;
             }
-            else if (fromOcGuard.isDataAeCpuList(json)) {
+            else if (interface_1.wsOcToServerGuard.isDataAeCpuList(json)) {
                 processor.data.ae.cpus(json, session);
                 return;
             }
-            else if (fromOcGuard.isAeOrderResult(json)) {
+            else if (interface_1.wsOcToServerGuard.isAeOrderResult(json)) {
                 processor.ae.orderResult(json, session);
                 return;
             }
-            else if (fromOcGuard.isLog(json)) {
+            else if (interface_1.wsOcToServerGuard.isLog(json)) {
                 processor.oc.log(json, session);
                 return;
             }
             else {
-                logger.warn("OC RECEIVED INVALID TYPE", json);
+                logger_1.loggerHandler.warn("OC RECEIVED INVALID TYPE", json);
             }
         }
     }
 };
-export default handler;
+exports.default = handler;
 const processor = {
     data: {
         commonSet(json, session) {
-            const target = Global.common.list.find(common => common.uuid === json.data.uuid);
+            const target = index_1.default.common.list.find(common => common.uuid === json.data.uuid);
             if (target) {
                 const common = Object.assign({}, target, json.data);
-                Global.common.set(common);
+                index_1.default.common.set(common);
             }
             else {
-                send(session, newGeneralMessage("Error", { "message": "Common not found" }));
-                logger.error(`processor.data.commonSet: Common ${json.data.uuid} not found`);
+                (0, utils_1.send)(session, (0, createMessage_1.newGeneralMessage)("Error", { "message": "Common not found" }));
+                logger_1.loggerHandler.error(`processor.data.commonSet: Common ${json.data.uuid} not found`);
             }
         },
         eventSet(json, session) {
-            let target = Global.event.list.find(event => event.uuid === json.data.uuid);
+            let target = index_1.default.event.list.find(event => event.uuid === json.data.uuid);
             if (target) {
                 const event = Object.assign({}, target, json.data);
-                Global.event.set(event);
+                index_1.default.event.set(event);
             }
             else {
-                send(session, newGeneralMessage("Error", { "message": "Event not found" }));
-                logger.error(`processor.data.eventSet: Event ${json.data.uuid} not found`);
+                (0, utils_1.send)(session, (0, createMessage_1.newGeneralMessage)("Error", { "message": "Event not found" }));
+                logger_1.loggerHandler.error(`processor.data.eventSet: Event ${json.data.uuid} not found`);
             }
         },
         eventAdd(json, session) {
-            Global.event.add(json.data);
+            index_1.default.event.add(json.data);
         },
         ae: {
             itemList(json, session) {
                 let itemList = json.data.items;
                 let _ = [];
-                performanceTimer("ae.itemList.set", () => {
+                (0, utils_1.performanceTimer)("ae.itemList.set", () => {
                     itemList = itemList.filter((item) => item.name !== "ae2fc:fluid_drop");
                     itemList.forEach((item, index) => {
                         if (item.type === "item" || item.type === "fluid") {
                             let id, display;
-                            const resourceType = item.type === "item" ? Global.staticResources.itemPanelItemMap : Global.staticResources.itemPanelFluidMap;
+                            const resourceType = item.type === "item" ? index_1.default.staticResources.itemPanelItemMap : index_1.default.staticResources.itemPanelFluidMap;
                             const resource = resourceType.get(item.type === "item" ? item.name + "/" + item.damage : item.name);
                             if (resource) {
                                 id = resource.id;
                                 display = resource.display;
                             }
                             else {
-                                logger.warn(`${item.type.charAt(0).toUpperCase() + item.type.slice(1)} ${item.name} not found in staticResources.itemPanel`);
+                                logger_1.loggerHandler.warn(`${item.type.charAt(0).toUpperCase() + item.type.slice(1)} ${item.name} not found in staticResources.itemPanel`);
                             }
                             _.push({
                                 id: id || -1,
@@ -194,16 +199,16 @@ const processor = {
                             // TODO: 处理 vis 类型
                         }
                         else {
-                            logger.error(`Unknown item type ${item.type}`);
+                            logger_1.loggerHandler.error(`Unknown item type ${item.type}`);
                         }
                     });
                 });
-                Global.ae.items.set(json.data.uuid, _);
+                index_1.default.ae.items.set(json.data.uuid, _);
             },
             cpus(json, session) {
                 json.data.cpus.forEach((cpu) => {
                     var _a;
-                    const ae = Global.ae.list.find(ae => ae.uuid === json.data.uuid);
+                    const ae = index_1.default.ae.list.find(ae => ae.uuid === json.data.uuid);
                     if (ae) {
                         const cpuPrev = ae.cpus.find(c => c.name === cpu.name);
                         if (cpuPrev) {
@@ -221,27 +226,27 @@ const processor = {
                         }
                     }
                     else {
-                        send(session, newGeneralMessage("Error", { "message": "AE not found" }));
+                        (0, utils_1.send)(session, (0, createMessage_1.newGeneralMessage)("Error", { "message": "AE not found" }));
                     }
                 });
-                Global.ae.cpus.set(json.data.uuid, json.data.cpus);
+                index_1.default.ae.cpus.set(json.data.uuid, json.data.cpus);
             }
         },
         bot: {
             component(json, session) {
-                Global.bot.components.set(json.data.uuid, json.data.components);
+                index_1.default.bot.components.set(json.data.uuid, json.data.components);
             },
         }
     },
     ae: {
         order(json, session) {
-            const ae = Global.ae.list.find(ae => ae.uuid === json.data.uuid);
+            const ae = index_1.default.ae.list.find(ae => ae.uuid === json.data.uuid);
             if (!ae) {
-                logger.error(`processor.ae.order: AE ${json.data.uuid} not found`);
+                logger_1.loggerHandler.error(`processor.ae.order: AE ${json.data.uuid} not found`);
                 return;
             }
             let targetBot = [];
-            Global.bot.list.forEach(bot => {
+            index_1.default.bot.list.forEach(bot => {
                 let flag = false;
                 bot.tasks.forEach(task => {
                     if (task.task === "ae" && task.config.targetAeUuid === ae.uuid) {
@@ -253,14 +258,14 @@ const processor = {
                 }
             });
             if (targetBot.length === 0) {
-                logger.error(`processor.ae.order: No bot found for AE ${json.data.uuid}`);
+                logger_1.loggerHandler.error(`processor.ae.order: No bot found for AE ${json.data.uuid}`);
                 return;
             }
             let runner = targetBot[0];
             if (targetBot.length > 1) {
-                logger.warn(`processor.ae.order: More than one bot found for AE ${json.data.uuid}, using ${runner.name}`);
+                logger_1.loggerHandler.warn(`processor.ae.order: More than one bot found for AE ${json.data.uuid}, using ${runner.name}`);
             }
-            Global.bot.tasks.runSingle(runner.uuid, {
+            index_1.default.bot.tasks.runSingle(runner.uuid, {
                 "task": "ae",
                 "interval": -1,
                 "taskUuid": json.data.taskUuid,
@@ -273,70 +278,70 @@ const processor = {
             });
         },
         orderResult(json, session) {
-            wsWebBroadcast(toWeb("AeOrderResult", json.data));
+            (0, websocket_1.wsWebBroadcast)((0, createMessage_1.newServerToWebMessage)("AeOrderResult", json.data));
         }
     },
     web2oc: {
         taskRunSingle(json, session) {
-            Global.bot.tasks.runSingle(json.target, json.data);
+            index_1.default.bot.tasks.runSingle(json.target, json.data);
         },
         taskAdd(json, session) {
-            Global.bot.tasks.add(json.target, json.data);
+            index_1.default.bot.tasks.add(json.target, json.data);
         },
         taskRemove(json, session) {
-            Global.bot.tasks.remove(json.target, json.data.taskUuid);
+            index_1.default.bot.tasks.remove(json.target, json.data.taskUuid);
         },
         forward(json, session) {
-            if (!wsOcSendByBotUuid(json.target, json.data)) {
-                logger.error(`Trying to forward debug message to oc but bot ${json.target} not found or offline`);
+            if (!(0, websocket_1.wsOcSendByBotUuid)(json.target, json.data)) {
+                logger_1.loggerHandler.error(`Trying to forward debug message to oc but bot ${json.target} not found or offline`);
             }
         }
     },
     oc: {
         log(json, session) {
-            fs.writeFileSync(`./logs/oc.log`, `[${new Date().toLocaleString()}] [${json.data.level}/${json.data.file}:${json.data.location}] (${json.data.taskUuid}) ${json.data.message}\n`, { flag: "a+" });
+            fs_1.default.writeFileSync(`./logs/oc.log`, `[${new Date().toLocaleString()}] [${json.data.level}/${json.data.file}:${json.data.location}] (${json.data.taskUuid}) ${json.data.message}\n`, { flag: "a+" });
             const { level, file, location, taskUuid, message } = json.data;
-            loggerOcOverWs.log(level, `[${level}/${file}:${location}] (${taskUuid}) ${message}`);
+            logger_1.loggerOcOverWs.log(level, `[${level}/${file}:${location}] (${taskUuid}) ${message}`);
         }
     },
     auth: {
         web(json, session) {
-            const user = Global.user.list.find(user => user.token === json.data.token);
+            const user = index_1.default.user.list.find(user => user.token === json.data.token);
             if (user) {
                 session.authenticated = true;
                 session.user = user;
                 // 返回用户信息
-                send(session, toWeb("AuthResponse", session.user));
+                (0, utils_1.send)(session, (0, createMessage_1.newServerToWebMessage)("AuthResponse", session.user));
                 // 发送 overview 布局文件
-                send(session, toWeb("LayoutOverview", JSON.parse(fs.readFileSync('./data/layout/overview.json', 'utf8'))));
+                (0, utils_1.send)(session, (0, createMessage_1.newServerToWebMessage)("LayoutOverview", JSON.parse(fs_1.default.readFileSync('./data/layout/overview.json', 'utf8'))));
                 // 初始化各种数据
-                send(session, toWeb("DataCommonInit", Global.common.list));
-                send(session, toWeb("DataEventInit", Global.event.list));
-                send(session, toWeb("DataBotInit", Global.bot.list));
-                send(session, toWeb("DataAeInit", Global.ae.list));
-                send(session, toWeb("DataRedstoneInit", Global.redstone.list));
-                send(session, toWeb("DataMcServerStatusSet", Global.mcServerStatus.status));
-                send(session, toWeb("StaticBotTask", Global.staticResources.botTask));
+                (0, utils_1.send)(session, (0, createMessage_1.newServerToWebMessage)("DataCommonInit", index_1.default.common.list));
+                (0, utils_1.send)(session, (0, createMessage_1.newServerToWebMessage)("DataEventInit", index_1.default.event.list));
+                (0, utils_1.send)(session, (0, createMessage_1.newServerToWebMessage)("DataBotInit", index_1.default.bot.list));
+                (0, utils_1.send)(session, (0, createMessage_1.newServerToWebMessage)("DataAeInit", index_1.default.ae.list));
+                (0, utils_1.send)(session, (0, createMessage_1.newServerToWebMessage)("DataRedstoneInit", index_1.default.redstone.list));
+                (0, utils_1.send)(session, (0, createMessage_1.newServerToWebMessage)("DataMcServerStatusSet", index_1.default.mcServerStatus.status));
+                (0, utils_1.send)(session, (0, createMessage_1.newServerToWebMessage)("StaticBotTask", index_1.default.staticResources.botTask));
             }
             else {
-                logger.warn(`Invalid token ${json.data.token} for user ${session.sessionId.substring(0, 8)}`);
-                send(session, toWeb("AuthResponse", null));
+                logger_1.loggerHandler.warn(`Invalid token ${json.data.token} for user ${session.sessionId.substring(0, 8)}`);
+                (0, utils_1.send)(session, (0, createMessage_1.newServerToWebMessage)("AuthResponse", null));
             }
         },
         oc(json, session) {
             // 登录请求
-            const bot = Global.bot.list.find(bot => bot.token === json.data.token);
+            const bot = index_1.default.bot.list.find(bot => bot.token === json.data.token);
             if (bot) {
                 session.authenticated = true;
                 session.bot = bot;
                 // 返回用户信息
-                send(session, toOc("AuthResponse", bot));
+                (0, utils_1.send)(session, (0, createMessage_1.newServerToOcMessage)("AuthResponse", bot));
                 // 发送 tasks 数据
-                send(session, toOc("Task", bot.tasks));
+                (0, utils_1.send)(session, (0, createMessage_1.newServerToOcMessage)("Task", bot.tasks));
             }
             else {
-                logger.warn(`Invalid token ${json.data.token} for bot ${session.sessionId.substring(0, 8)}`);
-                send(session, toOc("AuthResponse", null));
+                logger_1.loggerHandler.warn(`Invalid token ${json.data.token} for bot ${session.sessionId.substring(0, 8)}`);
+                (0, utils_1.send)(session, (0, createMessage_1.newServerToOcMessage)("AuthResponse", null));
             }
         },
     }

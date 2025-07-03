@@ -28,6 +28,7 @@ export type DataBotRemove = Message<"DataBotRemove", string>
 export type DataAeInit = Message<"DataAeInit", aeModel.Ae[]>
 export type DataAeItemsSet = Message<"DataAeItemsSet", aeModel.Ae>
 export type DataAeCpusSet = Message<"DataAeCpusSet", aeModel.Ae>
+export type DataAeLevelMaintainsSet = Message<"DataAeLevelMaintainsSet", aeModel.Ae>
 export type DataAeAdd = Message<"DataAeAdd", aeModel.Ae>
 export type DataAeRemove = Message<"DataAeRemove", string>
 

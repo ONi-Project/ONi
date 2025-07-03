@@ -18,7 +18,7 @@ export interface AeCpu {
     coprocessors: number
     storage: number
     busy: boolean
-    timeStarted: number
+    timeStarted?: number
     active: boolean
     finalOutput?: AeCpuFinalOutput
 }

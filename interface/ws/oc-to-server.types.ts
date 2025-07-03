@@ -18,7 +18,13 @@ export type DataCommonSet = Message<"DataCommonSet", {
 
 export type DataAeItemList = Message<"DataAeItemList", {
     uuid: string
-    items: aeModel.AeItem[]
+    items: {
+        type: "item" | "fluid" | "vis"
+        craftable: boolean
+        name: string
+        damage?: number
+        amount: number
+    }[]
 }>
 
 export type DataAeCpuList = Message<"DataAeCpuList", {

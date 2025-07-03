@@ -23,6 +23,7 @@ export type ServerToWeb =
     | serverToWeb.DataAeInit
     | serverToWeb.DataAeItemsSet
     | serverToWeb.DataAeCpusSet
+    | serverToWeb.DataAeLevelMaintainsSet
     | serverToWeb.DataAeAdd
     | serverToWeb.DataAeRemove
     | serverToWeb.DataEventInit

@@ -5,6 +5,7 @@ import * as utils from "../utils"
 import { eventEmitter } from "../websocket"
 import { showItemInfo } from "../dialog/ae-item-info"
 import { picSource } from "../settings"
+import { aeModel, wsServerToWebGuard } from "@oni/interface"
 
 export function html(config: any) {
     return /*html*/`
@@ -113,19 +114,33 @@ export function html(config: any) {
 `}
 
 export function init() {
-    let filters: any = []
+
+    interface Filter {
+        uuid: string
+        search: {
+            type: string // all | item | fluid | vis
+            craftable: string // all | yes 只显示可合成 | no 只显示库存
+            sort: string // amount | amountr | id | idr
+            word: string // 搜索词
+            page: number // 页码
+        }
+        cpusShowMore: boolean
+    }
+
+    let filters: Filter[] = []
+
     let itemsPerPage = 40
     let cpusPerPage = 8
 
-    global.ae.forEach((ae: any) => {
+    global.ae.forEach((ae: aeModel.Ae) => {
         filters.push({
             uuid: ae.uuid,
-            filter: {
-                type: "all", // all | item | fluid | vis
-                craftable: "all", // all | yes 只显示可合成 | no 只显示库存
-                sort: "amount", // amount | amountr | id | idr
-                word: "", // 搜索词
-                page: 1 // 页码
+            search: {
+                type: "all",
+                craftable: "all",
+                sort: "amount",
+                word: "",
+                page: 1
             },
             cpusShowMore: false
         })
@@ -134,9 +149,9 @@ export function init() {
     let tooltip = document.getElementById("tooltip-ae")!;
 
     // 初始化 tooltip
-    (()=>{
+    (() => {
         let lastMousePosition = { x: 0, y: 0 }
-        
+
         document.querySelectorAll(".ae__view-item-list").forEach((element: Element) => {
             const HTMLElement = element as HTMLElement
             HTMLElement.addEventListener("mousemove", (e: MouseEvent) => {
@@ -145,12 +160,12 @@ export function init() {
                 requestAnimationFrame(updateTooltipPosition)
             })
         })
-    
+
         function updateTooltipPosition() {
             tooltip.style.left = lastMousePosition.x + "px"
             tooltip.style.top = lastMousePosition.y + "px"
         }
-    
+
         document.querySelectorAll(".ae__view-back").forEach(element => {
             element.addEventListener("click", _event => {
                 document.getElementById("ae__view")!.hidden = true
@@ -158,111 +173,119 @@ export function init() {
                 document.getElementById("ae__topbar")!.hidden = false
             })
         })
-    
+
     })()
 
 
     document.querySelectorAll(".ae__view").forEach(aeview => {
 
         const uuid = aeview.querySelector("data")!.getAttribute("uuid")!
-        let filter: any = filters.find((ae: any) => ae.uuid == uuid).filter
-        // let ae = global.ae.find((ae: any) => ae.uuid === uuid)
+        const filter = filters.find((f: Filter) => f.uuid == uuid)
+        if (!filter) {
+            console.error("filterMap not found")
+            return
+        }
+        let search = filter.search
 
         aeview.querySelectorAll(".ae__view-storage-filter-button").forEach(button => {
             button.addEventListener("click", event => {
-                filter.type = (event.target as HTMLElement).getAttribute("filter")
+                search.type = (event.target as HTMLElement).getAttribute("filter")!
                 aeview.querySelectorAll(".ae__view-storage-filter-button").forEach(button => {
                     button.removeAttribute("selected")
                 });
                 (event.target as HTMLElement).setAttribute("selected", "")
-                filter.page = 1
+                search.page = 1
                 renderItemList(uuid, undefined, aeview)
             })
         })
 
         aeview.querySelector(".ae__view-storage-filter-craftable-button")!.addEventListener("click", event => {
 
-            if (filter.craftable == "all") {
-                filter.craftable = "yes"
-            } else if (filter.craftable == "yes") {
-                filter.craftable = "no"
-            } else if (filter.craftable == "no") {
-                filter.craftable = "all"
+            if (search.craftable == "all") {
+                search.craftable = "yes"
+            } else if (search.craftable == "yes") {
+                search.craftable = "no"
+            } else if (search.craftable == "no") {
+                search.craftable = "all"
             }
 
-            if (filter.craftable == "all") {
+            if (search.craftable == "all") {
                 (event.target as HTMLElement).innerHTML = "库存 / 可合成"
-            } else if (filter.craftable == "yes") {
+            } else if (search.craftable == "yes") {
                 (event.target as HTMLElement).innerHTML = "仅可合成"
-            } else if (filter.craftable == "no") {
+            } else if (search.craftable == "no") {
                 (event.target as HTMLElement).innerHTML = "仅库存"
             }
 
-            filter.page = 1
+            search.page = 1
             renderItemList(uuid, undefined, aeview)
         })
 
         aeview.querySelector(".ae__view-storage-filter-sort-button")!.addEventListener("click", event => {
 
-            if (filter.sort == "amount") {
-                filter.sort = "amountr"
-            } else if (filter.sort == "amountr") {
-                filter.sort = "id"
-            } else if (filter.sort == "id") {
-                filter.sort = "idr"
-            } else if (filter.sort == "idr") {
-                filter.sort = "amount"
+            if (search.sort == "amount") {
+                search.sort = "amountr"
+            } else if (search.sort == "amountr") {
+                search.sort = "id"
+            } else if (search.sort == "id") {
+                search.sort = "idr"
+            } else if (search.sort == "idr") {
+                search.sort = "amount"
             }
 
-            if (filter.sort == "amount") {
+            if (search.sort == "amount") {
                 (event.target as HTMLElement).innerHTML = "数量排序 ↓"
-            } else if (filter.sort == "amountr") {
+            } else if (search.sort == "amountr") {
                 (event.target as HTMLElement).innerHTML = "数量排序 ↑"
-            } else if (filter.sort == "id") {
+            } else if (search.sort == "id") {
                 (event.target as HTMLElement).innerHTML = "ID 排序 ↓"
-            } else if (filter.sort == "idr") {
+            } else if (search.sort == "idr") {
                 (event.target as HTMLElement).innerHTML = "ID 排序 ↑"
             }
 
-            filter.page = 1
+            search.page = 1
             renderItemList(uuid, undefined, aeview)
         })
 
         aeview.querySelector(".ae__view-storage-filter-search-input")!.addEventListener("input", throttle(event => {
-            filter.word = event.target.value
-            filter.page = 1
+            search.word = event.target.value
+            search.page = 1
             renderItemList(uuid, undefined, aeview)
         }, 100))
 
         aeview.querySelector(".ae__view-item-list-more-button")!.addEventListener("click", _event => {
-            filter.page += 1
+            search.page += 1
             renderItemList(uuid, undefined, aeview)
         })
 
         aeview.querySelector(".ae__view-cpu-list-more-button")!.addEventListener("click", _event => {
-            filters.find((ae: any) => ae.uuid == uuid).cpusShowMore = true;
+            const filter = filters.find((f: Filter) => f.uuid == uuid)
+            if (!filter) { console.error("filter not found"); return }
+            filter.cpusShowMore = true;
             (aeview.querySelector(".ae__view-cpu-list-more-button")! as HTMLElement).style["display"] = "none";
             (aeview.querySelector(".ae__view-cpu-list-less-button")! as HTMLElement).style["display"] = "block"
             renderCpusList(uuid, undefined, aeview)
         })
 
         aeview.querySelector(".ae__view-cpu-list-less-button")!.addEventListener("click", _event => {
-            filters.find((ae: any) => ae.uuid == uuid).cpusShowMore = false;
+            const filter = filters.find((f: Filter) => f.uuid == uuid)
+            if (!filter) { console.error("filter not found"); return }
+            filter.cpusShowMore = false;
             (aeview.querySelector(".ae__view-cpu-list-more-button")! as HTMLElement).style["display"] = "block";
             (aeview.querySelector(".ae__view-cpu-list-less-button")! as HTMLElement).style["display"] = "none"
             renderCpusList(uuid, undefined, aeview)
         })
 
-        eventEmitter.on("message", async (event: any) => {
-            const { type, data } = event.data
-            if (type == "data/ae/set" && data.uuid === uuid) {
-                renderStatusText(uuid, data, aeview)
-                renderCpusList(uuid, data, aeview)
-                renderItemList(uuid, data, aeview)
+        eventEmitter.on("message", async m => {
+            if (wsServerToWebGuard.isDataAeItemsSet(m) && m.data.uuid === uuid) {
+                renderItemList(uuid, m.data, aeview)
+            } else if (wsServerToWebGuard.isDataAeCpusSet(m) && m.data.uuid === uuid) {
+                renderCpusList(uuid, m.data, aeview)
+                renderStatusText(uuid, m.data, aeview)
             }
         })
 
-        const ae = global.ae.find((ae: any) => ae.uuid === uuid)
+        const ae = global.ae.find((ae: aeModel.Ae) => ae.uuid === uuid)
 
         renderStatusText(uuid, ae, aeview)
         renderCpusList(uuid, ae, aeview)
@@ -279,14 +302,7 @@ export function init() {
 
         const uuid = aeListItem.querySelector("data")!.getAttribute("uuid")!
 
-        eventEmitter.on("message", async (event: any) => {
-            const { type, data } = event.data
-            if (type == "data/ae/set" && data.uuid === uuid) {
-                renderStatusText(uuid, data, aeListItem)
-            }
-        })
-
-        const ae = global.ae.find((ae: any) => ae.uuid === uuid)
+        const ae = global.ae.find((ae: aeModel.Ae) => ae.uuid === uuid)
 
         renderStatusText(uuid, ae, aeListItem)
     })
@@ -295,32 +311,32 @@ export function init() {
 
         const uuid = aeEdit.querySelector("data")!.getAttribute("uuid")!
 
-        eventEmitter.on("message", async (event: any) => {
-            const { type, data } = event.data
-            if (type == "data/ae/set" && data.uuid === uuid) {
-                renderStatusText(uuid, data, aeEdit)
-            }
-        })
-
-        const ae = global.ae.find((ae: any) => ae.uuid === uuid)
+        const ae = global.ae.find((ae: aeModel.Ae) => ae.uuid === uuid)
 
         renderStatusText(uuid, ae, aeEdit)
     })
 
 
-    function renderStatusText(target: string, ae: any, card: any) {
+    function renderStatusText(uuid: string, ae: aeModel.Ae | undefined, card: Element) {
 
         if (!ae) {
-            ae = global.ae.find((ae: any) => ae.uuid === target)
+            const targetAe: aeModel.Ae | undefined = global.ae.find((ae: aeModel.Ae) => ae.uuid === uuid)
+            if (targetAe) { ae = targetAe } else { console.error("ae not found"); return }
         }
 
         card.querySelector(".ae__overview-time-updated")!.innerHTML = `数据更新 - ${utils.timePassedDisplayConvert(ae.timeUpdated)}`
         card.querySelector(".ae__overview-time-created")!.innerHTML = `创建于 ${utils.timeDisplayConvert(ae.timeCreated)}`
-        card.querySelector(".ae__overview-cpu-status")!.innerHTML = `${ae.cpus.length - ae.cpus.filter((cpu: any) => cpu.busy).length} / ${ae.cpus.length} 核心空闲`
+        card.querySelector(".ae__overview-cpu-status")!.innerHTML = `${ae.cpus.length - ae.cpus.filter((cpu) => cpu.busy).length} / ${ae.cpus.length} 核心空闲`
         card.querySelector(".ae__overview-maintain")!.innerHTML = `test`
     }
 
-    function renderCpusList(target: any, ae: any, card: any) {
+    function renderCpusList(uuid: string, ae: aeModel.Ae | undefined, card: Element) {
+
+        if (!ae) {
+            const targetAe: aeModel.Ae | undefined = global.ae.find((ae: aeModel.Ae) => ae.uuid === uuid)
+            if (targetAe) { ae = targetAe } else { console.error("ae not found"); return }
+        }
+
         let _ = ""
 
         let targetElement = card.querySelector(".ae__view-cpu-list") as HTMLElement
@@ -331,23 +347,24 @@ export function init() {
 
         let targetElementShowLess = card.querySelector(".ae__view-cpu-list-less-button") as HTMLElement
 
-        if (!ae) {
-            ae = global.ae.find((ae: any) => ae.uuid === target)
-        }
-
-        var aeCpus = ae.cpus.sort((a: any, b: any) => {
+        let aeCpus = ae.cpus.sort((a: aeModel.AeCpu, b: aeModel.AeCpu) => {
             if (a.busy && b.busy) {
                 return 0
             } else if (a.busy) {
                 return -1
+            } else {
+                return 1
             }
         })
+
+        const filter = filters.find((f: Filter) => f.uuid == uuid)
+        if (!filter) { console.error("filter not found"); return }
 
         if (aeCpus.length <= cpusPerPage) {
             targetElementShowMore.style["display"] = "none"
             targetElementShowLess.style["display"] = "none"
         } else {
-            if (filters.find((ae: any) => ae.uuid === target).cpusShowMore) {
+            if (filter.cpusShowMore) {
                 targetElementShowMore.style["display"] = "none"
                 targetElementShowLess.style["display"] = "block"
             } else {
@@ -356,7 +373,7 @@ export function init() {
             }
         }
 
-        if (!filters.find((ae: any) => ae.uuid === target).cpusShowMore) {
+        if (!filter.cpusShowMore) {
             aeCpus = aeCpus.slice(0, cpusPerPage)
         }
 
@@ -367,14 +384,14 @@ export function init() {
             (targetElementNothing as HTMLElement).style["display"] = "none";
             (targetElement as HTMLElement).style["display"] = "grid"
 
-            aeCpus.forEach((cpu: any, i: number) => {
-                const finalOutputTotal = cpu.busy ? cpu.finalOutput.total : -1
-                const finalOutputAmount = cpu.busy ? cpu.finalOutput.amount : 0
+            aeCpus.forEach((cpu: aeModel.AeCpu, i: number) => {
+                const finalOutputTotal = cpu.busy ? cpu.finalOutput!.total : -1
+                const finalOutputAmount = cpu.busy ? cpu.finalOutput!.amount : 0
                 const icon = cpu.busy ? "settings_suggest" : "download_done"
                 const iconBig = cpu.busy ? "hourglass_bottom" : "schedule"
                 const nameStr = cpu.name ? `- "${cpu.name}"` : ""
-                const statusStr = cpu.busy ? `合成中 · ${utils.timeLengthDisplayConvert(cpu.timeStarted)}` : `空闲 · ${cpu.storage / 1024}K`
-                const finalOutput = cpu.busy ? `<div style="margin-top: .5rem;margin-bottom: .5rem;"><b>${cpu.finalOutput.display}</b> - ${finalOutputTotal - finalOutputAmount} / ${finalOutputTotal}</div>` : ""
+                const statusStr = cpu.busy ? `合成中 · ${utils.timeLengthDisplayConvert(cpu.timeStarted!)}` : `空闲 · ${cpu.storage / 1024}K`
+                const finalOutput = cpu.busy ? `<div style="margin-top: .5rem;margin-bottom: .5rem;"><b>${cpu.finalOutput!.display}</b> - ${finalOutputTotal - finalOutputAmount} / ${finalOutputTotal}</div>` : ""
                 const percentage = ((finalOutputTotal - finalOutputAmount) / finalOutputTotal * 100).toFixed(0)
                 const progressBar = cpu.busy ? /*html*/`
                 <div style="display: flex;align-items: center;margin-bottom: 0.25rem;">
@@ -408,59 +425,62 @@ export function init() {
 
     // target: 目标 ae uuid
     // ae: 目标 ae 数据，留空则从全局 ae 列表中获取
-    function renderItemList(target: any, ae: any, card: any) {
+    function renderItemList(uuid: string, ae: aeModel.Ae | undefined, card: Element) {
         let _ = ""
 
-        const targetElement = card.querySelector(".ae__view-item-list")
-        const targetElementNothing = card.querySelector(".ae__view-item-list-nothing")
-        const targetElementShowMore = card.querySelector(".ae__view-item-list-more-button")
+        const targetElement = card.querySelector(".ae__view-item-list") as HTMLElement
+        const targetElementNothing = card.querySelector(".ae__view-item-list-nothing") as HTMLElement
+        const targetElementShowMore = card.querySelector(".ae__view-item-list-more-button") as HTMLElement
 
         if (!ae) {
-            ae = global.ae.find((ae: any) => ae.uuid === target)
+            const targetAe: aeModel.Ae | undefined = global.ae.find((ae: aeModel.Ae) => ae.uuid === uuid)
+            if (targetAe) { ae = targetAe } else { console.error("ae not found"); return }
         }
 
-        const filter = filters.find((ae: any) => ae.uuid === target).filter
+        const filter = filters.find((f: Filter) => f.uuid == uuid)
+        if (!filter) { console.error("filter not found"); return }
+        const search = filter.search
 
-        const itemListFiltered = ae.itemList.filter((item: any) => {
-            if (filter.type === "all") {
+        const itemListFiltered = ae.items.filter((item: aeModel.AeItem) => {
+            if (search.type === "all") {
                 return true
-            } else if (filter.type === "item") {
+            } else if (search.type === "item") {
                 if (item.type == "item") {
                     return true
                 } else {
                     return false
                 }
-            } else if (filter.type === "fluid") {
+            } else if (search.type === "fluid") {
                 if (item.type == "fluid") {
                     return true
                 } else {
                     return false
                 }
-            } else if (filter.type === "vis") {
+            } else if (search.type === "vis") {
                 // TODO: VIS 过滤实现
                 return false
             }
-        }).filter((item: any) => {
-            if (filter.craftable === "all") {
+        }).filter((item: aeModel.AeItem) => {
+            if (search.craftable === "all") {
                 return true
-            } else if (filter.craftable === "yes") {
+            } else if (search.craftable === "yes") {
                 if (item.craftable) {
                     return true
                 } else {
                     return false
                 }
-            } else if (filter.craftable === "no") {
+            } else if (search.craftable === "no") {
                 if (item.craftable) {
                     return false
                 } else {
                     return true
                 }
             }
-        }).filter((item: any) => {
-            if (filter.word === "") {
+        }).filter((item: aeModel.AeItem) => {
+            if (search.word === "") {
                 return true
-            } else if (filter.word[0] == "@") {
-                const modName = filter.word.slice(1)
+            } else if (search.word[0] == "@") {
+                const modName = search.word.slice(1)
                 if (item.name.split(":")[0].toLocaleLowerCase().includes(modName.toLocaleLowerCase())) {
                     return true
                 } else {
@@ -469,46 +489,48 @@ export function init() {
 
             }
             if (item.display == undefined) { item.display = "" }
-            else if (pinyinPro.match(item.display, filter.word)
-                || item.name.toLocaleLowerCase().includes(filter.word.toLocaleLowerCase())
-                || item.id == filter.word
+            else if (pinyinPro.match(item.display, search.word)
+                || item.name.toLocaleLowerCase().includes(search.word.toLocaleLowerCase())
+                || String(item.id) == search.word
             ) {
                 return true
             } else {
                 return false
             }
-        }).sort((a: any, b: any) => {
-            if (filter.sort === "amount") {
+        }).sort((a: aeModel.AeItem, b: aeModel.AeItem) => {
+            if (search.sort === "amount") {
                 return b.amount - a.amount
-            } else if (filter.sort === "amountr") {
+            } else if (search.sort === "amountr") {
                 return a.amount - b.amount
-            } else if (filter.sort === "id") {
+            } else if (search.sort === "id") {
                 return b.id - a.id
-            } else if (filter.sort === "idr") {
+            } else if (search.sort === "idr") {
                 return a.id - b.id
+            } else {
+                return 0
             }
         })
 
-        const itemListFilteredSliced = itemListFiltered.slice(0, filter.page * itemsPerPage)
+        const itemListFilteredSliced = itemListFiltered.slice(0, search.page * itemsPerPage)
 
-        let unrenderedItemsAmount
+        let unrenderedItemsAmount: number
 
-        if (itemListFiltered.length > filter.page * itemsPerPage) {
-            (targetElementShowMore as HTMLElement).style["display"] = "block"
-            unrenderedItemsAmount = itemListFiltered.length - (filter.page * itemsPerPage)
+        if (itemListFiltered.length > search.page * itemsPerPage) {
+            targetElementShowMore.style["display"] = "block"
+            unrenderedItemsAmount = itemListFiltered.length - (search.page * itemsPerPage)
         } else {
-            (targetElementShowMore as HTMLElement).style["display"] = "none"
+            targetElementShowMore.style["display"] = "none"
             unrenderedItemsAmount = 0
         }
 
         if (itemListFilteredSliced.length === 0) {
-            (targetElementNothing as HTMLElement).style["display"] = "block";
-            (targetElement as HTMLElement).style["display"] = "none"
+            targetElementNothing.style["display"] = "block"
+            targetElement.style["display"] = "none"
         } else {
-            (targetElementNothing as HTMLElement).style["display"] = "none";
-            (targetElement as HTMLElement).style["display"] = "grid"
+            targetElementNothing.style["display"] = "none"
+            targetElement.style["display"] = "grid"
 
-            itemListFilteredSliced.forEach((item: any) => {
+            itemListFilteredSliced.forEach((item) => {
 
                 let link = ""
                 let type = ""
@@ -554,20 +576,20 @@ export function init() {
 
         targetElement!.innerHTML = _
 
-        card.querySelectorAll(".ae__view-item-list-item").forEach((item: any) => {
-            item.addEventListener("click", (_event: any) => {
-                const id = item.getAttribute("id")
-                const damage = item.getAttribute("damage")
-                const type = item.getAttribute("type")
-                showItemInfo(target, id, damage, type)
+        card.querySelectorAll(".ae__view-item-list-item")!.forEach((item) => {
+            item.addEventListener("click", (_event) => {
+                const id = item.getAttribute("id")!
+                const damage = item.getAttribute("damage")!
+                const type = item.getAttribute("type")!
+                showItemInfo(uuid, Number(id), Number(damage), type)
             })
             if (!utils.isMobileDevice()) {
-                item.addEventListener("mouseover", (_event: any) => {
-                    const name = item.getAttribute("name")
-                    const display = item.getAttribute("display")
-                    const type = item.getAttribute("type")
-                    const craftable = item.getAttribute("craftable")
-                    const amount = item.getAttribute("amount")
+                item.addEventListener("mouseover", (_event) => {
+                    const name = item.getAttribute("name")!
+                    const display = item.getAttribute("display")!
+                    const type = item.getAttribute("type")!
+                    const craftable = item.getAttribute("craftable")!
+                    const amount = item.getAttribute("amount")!
                     let modBar = ""
                     let craftableBar = ""
                     if (type == "item") {
@@ -585,10 +607,10 @@ export function init() {
                     <div>${display}</div>
                     ${modBar}
                     ${craftableBar}
-                    <div style="font-size: smaller; color: #888;">数量：${utils.commaNumberDisplayConvert(amount)}</div>
+                    <div style="font-size: smaller; color: #888;">数量：${utils.commaNumberDisplayConvert(Number(amount))}</div>
                     `
                 })
-                item.addEventListener("mouseout", (_event: any) => {
+                item.addEventListener("mouseout", (_event) => {
                     tooltip.style.display = "none"
                 })
 

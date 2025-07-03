@@ -1,3 +1,4 @@
+import { wsServerToWebGuard } from "@oni/interface"
 import { common } from "../global"
 import { eventEmitter } from "../websocket"
 import { Circle } from "progressbar.js"
@@ -23,29 +24,25 @@ export function init() {
     let cardIndicatorCircular__list: any = []
 
     // 卡片更新监听事件
-    eventEmitter.on("message", async (event: any) => {
-        const { type, data } = event.data
-        if (type == "data/common/set") {
+    eventEmitter.on("message", async m => {
+
+        if (wsServerToWebGuard.isDataCommonSet(m)) {
             document.querySelectorAll(".card-indicator-circular__card").forEach(element => {
 
                 let uuid = element.querySelector("data")!.getAttribute("uuid")!
                 let bottom = element.querySelector("data")!.getAttribute("bottom")!
 
-                const target = data.find((item: any) => item.uuid == uuid)
+                const { max, value, unit, avgIO } = m.data
 
-                if (target) {
-                    const { max, value, unit, avgIO } = target
-
-                    // 更新文本
-                    element.querySelector(".card-indicator-circular__value")!.innerHTML = `${value}/${max} ${unit}`
-                    if (bottom == "avgIO") {
-                        element.querySelector(".card-indicator-circular__bottom")!.innerHTML = `avg: ${avgIO} ${unit}/t`
-                    }
-
-                    // 更新环形进度条
-                    cardIndicatorCircular__list[uuid].animate(value / max)
-
+                // 更新文本
+                element.querySelector(".card-indicator-circular__value")!.innerHTML = `${value}/${max} ${unit}`
+                if (bottom == "avgIO") {
+                    element.querySelector(".card-indicator-circular__bottom")!.innerHTML = `avg: ${avgIO} ${unit}/t`
                 }
+
+                // 更新环形进度条
+                cardIndicatorCircular__list[uuid].animate(value / (max ? max : NaN))
+
             })
         }
     })
@@ -56,7 +53,7 @@ export function init() {
         let uuid = element.querySelector("data")!.getAttribute("uuid")!
         let bottom = element.querySelector("data")!.getAttribute("bottom")!
 
-        let target = common.find((item: any) => item.uuid == uuid)
+        let target = common.find(item => item.uuid == uuid)
         if (target) {
             element.querySelector(".card-indicator-circular__title")!.innerHTML = target.name
             const indicator = element.querySelector(".card-indicator-circular__indicator") as HTMLElement
@@ -95,13 +92,13 @@ export function init() {
 
             if (value) {
                 // 更新文本
-                element.querySelector(".card-indicator-circular__value")!.innerHTML = `${value}/${max} ${unit}`
+                element.querySelector(".card-indicator-circular__value")!.innerHTML = `${value}/${(max ? max : NaN)} ${unit}`
                 if (bottom == "avgIO") {
                     element.querySelector(".card-indicator-circular__bottom")!.innerHTML = `avg: ${avgIO} ${unit}/t`
                 }
 
                 // 更新环形进度条
-                cardIndicatorCircular__list[uuid].animate(value / max)
+                cardIndicatorCircular__list[uuid].animate(value / (max ? max : NaN))
             } else {
                 cardIndicatorCircular__list[uuid].setText("N/A")
             }

@@ -62,14 +62,14 @@ export function isDataAeItemList(obj: unknown): obj is DataAeItemList {
             (e !== null &&
                 typeof e === "object" ||
                 typeof e === "function") &&
+            (e["type"] === "item" ||
+                e["type"] === "fluid" ||
+                e["type"] === "vis") &&
+            typeof e["craftable"] === "boolean" &&
             typeof e["name"] === "string" &&
-            typeof e["type"] === "string" &&
-            typeof e["amount"] === "number" &&
             (typeof e["damage"] === "undefined" ||
                 typeof e["damage"] === "number") &&
-            typeof e["craftable"] === "boolean" &&
-            typeof e["id"] === "number" &&
-            typeof e["display"] === "string"
+            typeof e["amount"] === "number"
         )
     )
 }
@@ -94,7 +94,8 @@ export function isDataAeCpuList(obj: unknown): obj is DataAeCpuList {
             typeof e["coprocessors"] === "number" &&
             typeof e["storage"] === "number" &&
             typeof e["busy"] === "boolean" &&
-            typeof e["timeStarted"] === "number" &&
+            (typeof e["timeStarted"] === "undefined" ||
+                typeof e["timeStarted"] === "number") &&
             typeof e["active"] === "boolean" &&
             (typeof e["finalOutput"] === "undefined" ||
                 (e["finalOutput"] !== null &&

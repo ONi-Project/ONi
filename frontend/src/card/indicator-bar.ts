@@ -1,3 +1,4 @@
+import { wsServerToWebGuard } from "@oni/interface"
 import { common } from "../global"
 import { eventEmitter } from "../websocket"
 
@@ -15,53 +16,49 @@ export function html(config: any) {
 `}
 
 export function init() {
-    eventEmitter.on("message", async (event: any) => {
-        const { type, data } = event.data
-        if (type == "data/common/set") {
-            document.querySelectorAll(".card-indicator-bar__card").forEach(element => {
-
-                let uuid = element.querySelector("data")!.getAttribute("uuid")
-
-                const target = data.find((item: any) => item.uuid == uuid)
-
-                if (target) {
-                    const { max, value, unit, avgIO } = target
-
-                    // 更新文本
-                    element.querySelector(".card-indicator-bar__value")!.innerHTML = `${value}/${max} ${unit}`
-                    element.querySelector(".card-indicator-bar__percent")!.innerHTML = `${((value / max) * 100).toFixed(2)} %`;
-
-                    // 更新进度条
-                    (element.querySelector(".card-indicator-bar__indicator") as any).value = (value / max) * 100
-
-                    avgIO
-                }
-            })
-        }
-    })
     document.querySelectorAll(".card-indicator-bar__card").forEach(element => {
 
-        let uuid = element.querySelector("data")!.getAttribute("uuid")
+        const uuid = element.querySelector("data")!.getAttribute("uuid")
 
-        let target = common.find((item: any) => item.uuid == uuid)
+        let target = common.find(item => item.uuid == uuid)
+
         if (target) {
+
+
             element.querySelector(".card-indicator-bar__title")!.innerHTML = target.name
 
-            const { max, value, unit, avgIO } = target
+            const { max, value, unit } = target
 
             if (value) {
                 // 更新文本
                 element.querySelector(".card-indicator-bar__value")!.innerHTML = `${value}/${max} ${unit}`
-                element.querySelector(".card-indicator-bar__percent")!.innerHTML = `${((value / max) * 100).toFixed(2)} %`;
+                element.querySelector(".card-indicator-bar__percent")!.innerHTML = `${((value / (max ? max : NaN)) * 100).toFixed(2)} %`;
 
                 // 更新进度条
-                (element.querySelector(".card-indicator-bar__indicator")! as any).value = (value / max) * 100
+                (element.querySelector(".card-indicator-bar__indicator")! as any).value = (value / (max ? max : NaN)) * 100
 
             } else {
                 (element.querySelector(".card-indicator-bar__indicator")! as any).value = 0
             }
 
-            avgIO
+            eventEmitter.on("message", async m => {
+                if (wsServerToWebGuard.isDataCommonSet(m) && m.data.uuid == uuid) {
+
+                    const { max, value, unit } = m.data
+
+                    // 更新文本
+                    element.querySelector(".card-indicator-bar__value")!.innerHTML = `${value}/${max} ${unit}`
+                    element.querySelector(".card-indicator-bar__percent")!.innerHTML = `${((value / (max ? max : NaN)) * 100).toFixed(2)} %`;
+
+                    // 更新进度条
+                    (element.querySelector(".card-indicator-bar__indicator") as any).value = (value / (max ? max : NaN)) * 100
+
+                }
+            })
+
+
         }
+
+
     })
 }

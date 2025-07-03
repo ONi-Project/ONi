@@ -2,7 +2,7 @@
  * Generated type guards for "server-to-web.types.ts".
  * WARNING: Do not manually change this file.
  */
-import { AuthResponse, DataMcServerStatusSet, AeOrderResult, LayoutOverview, DataCommonInit, DataCommonSet, DataCommonAdd, DataCommonRemove, DataBotInit, DataBotComponentsSet, DataBotTasksSet, DataBotAdd, DataBotRemove, DataAeInit, DataAeItemsSet, DataAeCpusSet, DataAeAdd, DataAeRemove, DataEventInit, DataEventSet, DataEventAdd, DataEventRemove, DataRedstoneInit, DataRedstoneSet, DataRedstoneAdd, DataRedstoneRemove, StaticBotTask } from "./server-to-web.types";
+import { AuthResponse, DataMcServerStatusSet, AeOrderResult, LayoutOverview, DataCommonInit, DataCommonSet, DataCommonAdd, DataCommonRemove, DataBotInit, DataBotComponentsSet, DataBotTasksSet, DataBotAdd, DataBotRemove, DataAeInit, DataAeItemsSet, DataAeCpusSet, DataAeLevelMaintainsSet, DataAeAdd, DataAeRemove, DataEventInit, DataEventSet, DataEventAdd, DataEventRemove, DataRedstoneInit, DataRedstoneSet, DataRedstoneAdd, DataRedstoneRemove, StaticBotTask } from "./server-to-web.types";
 
 export function isAuthResponse(obj: unknown): obj is AuthResponse {
     const typedObj = obj as AuthResponse
@@ -362,7 +362,8 @@ export function isDataAeInit(obj: unknown): obj is DataAeInit {
                 typeof e["coprocessors"] === "number" &&
                 typeof e["storage"] === "number" &&
                 typeof e["busy"] === "boolean" &&
-                typeof e["timeStarted"] === "number" &&
+                (typeof e["timeStarted"] === "undefined" ||
+                    typeof e["timeStarted"] === "number") &&
                 typeof e["active"] === "boolean" &&
                 (typeof e["finalOutput"] === "undefined" ||
                     (e["finalOutput"] !== null &&
@@ -437,7 +438,8 @@ export function isDataAeItemsSet(obj: unknown): obj is DataAeItemsSet {
             typeof e["coprocessors"] === "number" &&
             typeof e["storage"] === "number" &&
             typeof e["busy"] === "boolean" &&
-            typeof e["timeStarted"] === "number" &&
+            (typeof e["timeStarted"] === "undefined" ||
+                typeof e["timeStarted"] === "number") &&
             typeof e["active"] === "boolean" &&
             (typeof e["finalOutput"] === "undefined" ||
                 (e["finalOutput"] !== null &&
@@ -511,7 +513,83 @@ export function isDataAeCpusSet(obj: unknown): obj is DataAeCpusSet {
             typeof e["coprocessors"] === "number" &&
             typeof e["storage"] === "number" &&
             typeof e["busy"] === "boolean" &&
-            typeof e["timeStarted"] === "number" &&
+            (typeof e["timeStarted"] === "undefined" ||
+                typeof e["timeStarted"] === "number") &&
+            typeof e["active"] === "boolean" &&
+            (typeof e["finalOutput"] === "undefined" ||
+                (e["finalOutput"] !== null &&
+                    typeof e["finalOutput"] === "object" ||
+                    typeof e["finalOutput"] === "function") &&
+                typeof e["finalOutput"]["name"] === "string" &&
+                typeof e["finalOutput"]["damage"] === "number" &&
+                typeof e["finalOutput"]["amount"] === "number" &&
+                typeof e["finalOutput"]["id"] === "number" &&
+                typeof e["finalOutput"]["display"] === "string" &&
+                typeof e["finalOutput"]["total"] === "number")
+        ) &&
+        Array.isArray(typedObj["data"]["items"]) &&
+        typedObj["data"]["items"].every((e: any) =>
+            (e !== null &&
+                typeof e === "object" ||
+                typeof e === "function") &&
+            typeof e["name"] === "string" &&
+            typeof e["type"] === "string" &&
+            typeof e["amount"] === "number" &&
+            (typeof e["damage"] === "undefined" ||
+                typeof e["damage"] === "number") &&
+            typeof e["craftable"] === "boolean" &&
+            typeof e["id"] === "number" &&
+            typeof e["display"] === "string"
+        ) &&
+        Array.isArray(typedObj["data"]["levelMaintains"]) &&
+        typedObj["data"]["levelMaintains"].every((e: any) =>
+            (e !== null &&
+                typeof e === "object" ||
+                typeof e === "function") &&
+            typeof e["uuid"] === "string" &&
+            typeof e["enabled"] === "boolean" &&
+            Array.isArray(e["list"]) &&
+            e["list"].every((e: any) =>
+                (e !== null &&
+                    typeof e === "object" ||
+                    typeof e === "function") &&
+                typeof e["name"] === "string" &&
+                typeof e["type"] === "string" &&
+                typeof e["damage"] === "number" &&
+                typeof e["request"] === "number" &&
+                typeof e["amount"] === "number" &&
+                typeof e["id"] === "number" &&
+                typeof e["display"] === "string"
+            )
+        )
+    )
+}
+
+export function isDataAeLevelMaintainsSet(obj: unknown): obj is DataAeLevelMaintainsSet {
+    const typedObj = obj as DataAeLevelMaintainsSet
+    return (
+        (typedObj !== null &&
+            typeof typedObj === "object" ||
+            typeof typedObj === "function") &&
+        typedObj["type"] === "DataAeLevelMaintainsSet" &&
+        (typedObj["data"] !== null &&
+            typeof typedObj["data"] === "object" ||
+            typeof typedObj["data"] === "function") &&
+        typeof typedObj["data"]["uuid"] === "string" &&
+        typeof typedObj["data"]["name"] === "string" &&
+        typeof typedObj["data"]["timeCreated"] === "number" &&
+        typeof typedObj["data"]["timeUpdated"] === "number" &&
+        Array.isArray(typedObj["data"]["cpus"]) &&
+        typedObj["data"]["cpus"].every((e: any) =>
+            (e !== null &&
+                typeof e === "object" ||
+                typeof e === "function") &&
+            typeof e["name"] === "string" &&
+            typeof e["coprocessors"] === "number" &&
+            typeof e["storage"] === "number" &&
+            typeof e["busy"] === "boolean" &&
+            (typeof e["timeStarted"] === "undefined" ||
+                typeof e["timeStarted"] === "number") &&
             typeof e["active"] === "boolean" &&
             (typeof e["finalOutput"] === "undefined" ||
                 (e["finalOutput"] !== null &&
@@ -585,7 +663,8 @@ export function isDataAeAdd(obj: unknown): obj is DataAeAdd {
             typeof e["coprocessors"] === "number" &&
             typeof e["storage"] === "number" &&
             typeof e["busy"] === "boolean" &&
-            typeof e["timeStarted"] === "number" &&
+            (typeof e["timeStarted"] === "undefined" ||
+                typeof e["timeStarted"] === "number") &&
             typeof e["active"] === "boolean" &&
             (typeof e["finalOutput"] === "undefined" ||
                 (e["finalOutput"] !== null &&

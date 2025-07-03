@@ -1,3 +1,4 @@
+import { botModel, newWebToServerMessage, wsServerToWebGuard, wsWebToServer } from "@oni/interface"
 import { botTaskNew } from "../dialog/bot-task"
 import * as global from "../global"
 import { randomUUID } from "../utils"
@@ -152,15 +153,15 @@ export function html(config: any) {
 
 export function init() {
   let taskEditMode = false
-  let taskEditPreview: any = []
-  let taskEditOperation: any = []
+  let taskEditPreview: botModel.BotTask[] = []
+  let taskEditOperation: (wsWebToServer.OcTaskAdd | wsWebToServer.OcTaskRemove)[] = []
 
   document.querySelectorAll(".bot__edit-back").forEach(element => {
     element.addEventListener("click", _event => {
       document.getElementById("bot__edit")!.hidden = true
       document.getElementById("bot__list")!.hidden = false
     })
-    global.bot.forEach((bot: any) => {
+    global.bot.forEach(bot => {
       let target = Array.from(document.querySelectorAll(".bot__edit")).find(element => element.querySelector("data")!.getAttribute("uuid") === bot.uuid)
       if (target) {
         renderComponentList(target, bot)
@@ -169,22 +170,24 @@ export function init() {
     })
   })
 
-  eventEmitter.on("message", async (event: any) => {
-    const { type, data: bot } = event.data
-    if (type == "data/bot/set") {
-      let target = Array.from(document.querySelectorAll(".bot__edit")).find(element => element.querySelector("data")!.getAttribute("uuid") === bot.uuid)
+  eventEmitter.on("message", async m => {
+
+    if (wsServerToWebGuard.isDataBotTasksSet(m)) {
+      let target = Array.from(document.querySelectorAll(".bot__edit")).find(element => element.querySelector("data")!.getAttribute("uuid") === m.data.uuid)
       if (target) {
-        renderComponentList(target, bot)
-        renderTaskList(target, bot)
+        renderComponentList(target, m.data)
+        renderTaskList(target, m.data)
       }
     }
+
   })
 
 
 
   document.querySelectorAll(".bot__edit").forEach(element => {
-    const uuid = element.querySelector("data")!.getAttribute("uuid")
-    const bot = global.bot.find((bot: any) => bot.uuid === uuid)
+    const uuid = element.querySelector("data")!.getAttribute("uuid")!
+    const bot = global.bot.find(bot => bot.uuid === uuid)
+    if (!bot) { console.error("Bot not found"); return }
 
     const buttonComponentsRefresh = element.querySelector(".bot__edit-button-components-refresh")!
     buttonComponentsRefresh.addEventListener("click", async (event) => {
@@ -195,17 +198,12 @@ export function init() {
         target.parentElement!.querySelector("mdui-list")!.style.opacity = "1"
         target.removeAttribute("loading")
       }, 30000)
-      send({
-        "type": "oc/task/runSingle",
-        "target": uuid,
-        "data":
-        {
-          "task": "component",
-          "interval": -1,
-          "taskUuid": randomUUID(),
-          "config": {}
-        }
-      })
+      send(newWebToServerMessage("OcTaskRunSingle", {
+        task: "component",
+        interval: -1,
+        taskUuid: randomUUID(),
+        config: {}
+      }, uuid))
     })
 
     const buttonTaskEdit = element.querySelector(".bot__edit-before-edit")?.querySelector("mdui-chip")!
@@ -224,7 +222,7 @@ export function init() {
       (element.querySelector(".bot__edit-after-edit") as HTMLElement)!.style.display = "none"
       renderTaskList(element, bot)
       console.log(taskEditOperation)
-      taskEditOperation.forEach((op: any) => {
+      taskEditOperation.forEach(op => {
         send(op)
       })
       taskEditPreview = []
@@ -250,22 +248,22 @@ export function init() {
 
   })
 
-  function taskEditPreviewAdd(task: any, botUUid: string, element: any) {
+  function taskEditPreviewAdd(task: botModel.BotTask, botUUid: string, element: Element) {
     taskEditPreview.push(task)
     taskEditOperation.push({
-      type: "oc/task/add",
+      type: "OcTaskAdd",
       target: botUUid,
       data: task
     })
     renderTaskList(element, { uuid: botUUid, tasks: taskEditPreview })
   }
 
-  function taskEditPreviewRemove(task: any, botUUid: string, element: any) {
-    const index = taskEditPreview.findIndex((t: any) => t.taskUuid === task.taskUuid)
+  function taskEditPreviewRemove(task: botModel.BotTask, botUUid: string, element: Element) {
+    const index = taskEditPreview.findIndex(t => t.taskUuid === task.taskUuid)
     if (index !== -1) {
       taskEditPreview.splice(index, 1)
       taskEditOperation.push({
-        type: "oc/task/remove",
+        type: "OcTaskRemove",
         target: botUUid,
         data: task
       })
@@ -273,7 +271,7 @@ export function init() {
     }
   }
 
-  function renderComponentList(element: any, bot: any) {
+  function renderComponentList(element: Element, bot: botModel.Bot) {
     let _ = ""
     if (bot.components.length == 0) {
       _ = `
@@ -288,7 +286,7 @@ export function init() {
                 </mdui-list-item>
             `
     } else {
-      bot.components.forEach((component: any) => {
+      bot.components.forEach(component => {
         let icon = "question_mark"
         switch (component.class) {
           case "volume":
@@ -330,12 +328,12 @@ export function init() {
       })
 
     }
-    element.querySelector(".bot__edit-components").innerHTML = _
-    element.querySelector(".bot__edit-components").style.opacity = "1"
-    element.querySelector(".bot__edit-button-components-refresh").removeAttribute("loading")
+    element.querySelector(".bot__edit-components")!.innerHTML = _;
+    (element.querySelector(".bot__edit-components") as HTMLElement).style.opacity = "1"
+    element.querySelector(".bot__edit-button-components-refresh")!.removeAttribute("loading")
   }
 
-  function renderTaskList(element: any, bot: any) {
+  function renderTaskList(element: Element, bot: { uuid: string, tasks: botModel.BotTask[] }) {
 
     let _ = ""
     if (bot.tasks.length === 0) {
@@ -351,9 +349,9 @@ export function init() {
             </mdui-list-item>
           `
     } else {
-      bot.tasks.forEach((task: any) => {
-        const taskGroup = global.botTask.find((t: any) => t.id === task.task)
-        const { id, description } = taskGroup.mode.find((m: any) => m.id === task.config.mode)
+      bot.tasks.forEach(task => {
+        const taskGroup = global.botTask.find(t => t.id === task.task)!
+        const { id, description } = taskGroup.mode.find(m => m.id === task.config.mode)!
         _ += `
           <mdui-list-item>
             <div style="display: flex;align-items: center;">
@@ -368,9 +366,9 @@ export function init() {
         `
       })
     }
-    element.querySelector(".bot__edit-tasks").innerHTML = _
+    element.querySelector(".bot__edit-tasks")!.innerHTML = _
     if (taskEditMode) {
-      element.querySelector(".bot__edit-tasks").querySelectorAll(".bot__edit-task-delete").forEach((e: any) => {
+      element.querySelector(".bot__edit-tasks")!.querySelectorAll(".bot__edit-task-delete").forEach((e: any) => {
         const botUuid = bot.uuid
         e.addEventListener("click", async (event: any) => {
           const taskUuid = event.target.getAttribute("taskUuid")

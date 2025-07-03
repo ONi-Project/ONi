@@ -135,10 +135,10 @@ export function init() {
     const step1Element = document.getElementById("bot__task-dialog-step1") as Dialog
     const step2Element = document.getElementById("bot__task-dialog-step2") as Dialog
 
-    let mode = botTask.find((task: any) => task.id == botTaskSelectedTask.split(".")[0])
-      .mode.find((mode: any) => mode.id == botTaskSelectedTask.split(".")[1])
+    let mode = botTask.find(task => task.id == botTaskSelectedTask.split(".")[0])!
+      .mode.find((mode: any) => mode.id == botTaskSelectedTask.split(".")[1])!
 
-    const icon = botTask.find((task: any) => task.id == botTaskSelectedTask.split(".")[0]).icon
+    const icon = botTask.find(task => task.id == botTaskSelectedTask.split(".")[0])!.icon
 
     document.getElementById("bot__task-dialog-step2-icon")!.setAttribute("name", icon)
     document.getElementById("bot__task-dialog-step2-id")!.innerHTML = botTaskSelectedTask
@@ -152,7 +152,7 @@ export function init() {
             此模式无配置项
         </div>`
     } else {
-      mode.config.forEach((config: any) => {
+      mode.config.forEach(config => {
         const title = config.id
         const type = `${config.type}${!config.required ? "?" : ""}`
         const description = config.description

@@ -1,6 +1,7 @@
 import { picSource } from "../settings"
 import { eventEmitter } from "../websocket"
 import * as global from "../global"
+import { aeModel, wsServerToWebGuard } from "@oni/interface"
 
 export function html(config: any) {
     return /*html*/`
@@ -127,11 +128,10 @@ export function init() {
         const uuid = aeEdit.querySelector("data")!.getAttribute("uuid")!
         let editMode = false
 
-        eventEmitter.on("message", (event: any) => {
-            const { type, data } = event.data
-            if (type === "data/ae/set" && data.uuid === uuid) {
-                if(!editMode){
-                    renderMaintainList(data.uuid, data, aeEdit)
+        eventEmitter.on("message", m => {
+            if (wsServerToWebGuard.isDataAeLevelMaintainsSet(m) && m.data.uuid === uuid) {
+                if (!editMode) {
+                    renderMaintainList(m.data.uuid, m.data, aeEdit)
                 }
             }
         })
@@ -168,14 +168,17 @@ export function init() {
             renderMaintainList(uuid, undefined, aeEdit)
         })
 
-        function renderMaintainList(target: any, ae: any, card: any) {
-            let _ = ""
-            const elementMaintainList = card.querySelector(".ae__maintain-list")!
+        function renderMaintainList(uuid: string, ae: aeModel.Ae | undefined, card: Element) {
+
             if (!ae) {
-                ae = global.ae.find((ae: any) => ae.uuid === target)
+                const targetAe: aeModel.Ae | undefined = global.ae.find((ae: aeModel.Ae) => ae.uuid === uuid)
+                if (targetAe) { ae = targetAe } else { console.error("ae not found"); return }
             }
 
-            ae.levelMaintain.forEach((maintain: any, i: number) => {
+            let _ = ""
+            const elementMaintainList = card.querySelector(".ae__maintain-list")!
+
+            ae.levelMaintains.forEach((maintain: aeModel.AeLevelMaintain, i: number) => {
                 _ += /*html*/`
             <mdui-card style="padding-bottom: 0.5rem;gap: 0.5rem;">
             <div style="display: flex;align-items: center;gap: 0.5rem;padding: 1rem;margin-bottom: -1rem;">
@@ -189,8 +192,8 @@ export function init() {
             </div>
             <mdui-list style="margin-left: 1rem;margin-right: 1rem;">
             `
-                maintain.list.forEach((item: any) => {
-                    const currentItem = ae.itemList.find((_: any) => _.id === item.id && _.damage === item.damage)
+                maintain.list.forEach(item => {
+                    const currentItem = ae.items.find((_) => _.id === item.id && _.damage === item.damage)
                     let current = 0
                     if (currentItem) {
                         current = currentItem.amount
@@ -209,7 +212,7 @@ export function init() {
                     let info = ""
                     if (editMode) {
                         info = item.name
-                    } else if (current > item.amount) { 
+                    } else if (current > item.amount) {
                         info = "已达到库存维持数量"
                     } else {
                         info = "请求中..."
@@ -228,22 +231,22 @@ export function init() {
                 </mdui-list-item>
                 `
                 })
-    if (editMode) {
-        _ += /*html*/`
+                if (editMode) {
+                    _ += /*html*/`
                     <mdui-list-item>
                     <div style="display: flex;align-items: center;gap: 0.75rem;">
                         <mdui-icon name="add"></mdui-icon>添加...
                     </div>
                     </mdui-list-item>
                     `
-    }
-    _ += /*html*/`
+                }
+                _ += /*html*/`
             </mdui-list>
             </mdui-card>
             `
-})
+            })
 
-elementMaintainList.innerHTML = _
+            elementMaintainList.innerHTML = _
 
         }
     })

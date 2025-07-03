@@ -49,7 +49,8 @@ export function isAeCpu(obj: unknown): obj is AeCpu {
         typeof typedObj["coprocessors"] === "number" &&
         typeof typedObj["storage"] === "number" &&
         typeof typedObj["busy"] === "boolean" &&
-        typeof typedObj["timeStarted"] === "number" &&
+        (typeof typedObj["timeStarted"] === "undefined" ||
+            typeof typedObj["timeStarted"] === "number") &&
         typeof typedObj["active"] === "boolean" &&
         (typeof typedObj["finalOutput"] === "undefined" ||
             isAeCpuFinalOutput(typedObj["finalOutput"]) as boolean)

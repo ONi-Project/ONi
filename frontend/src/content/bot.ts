@@ -1,3 +1,4 @@
+import { layoutModel, wsServerToWebGuard } from "@oni/interface"
 import { renderLayout } from "../renderer"
 import { eventEmitter } from "../websocket"
 
@@ -15,12 +16,50 @@ export const html = /*html*/`
 `
 
 export function init() {
-    eventEmitter.on("message", (event: any) => {
-        const { type, data } = event.data
-        if (type == "layout/botList") {
-            renderLayout(data, document.getElementById("bot__list"))
-        } else if (type == "layout/botEdit") {
-            renderLayout(data, document.getElementById("bot__edit"), false)
+    eventEmitter.on("message", m => {
+        if (wsServerToWebGuard.isDataBotInit(m)) {
+
+            let layoutList: layoutModel.Layout = [{
+                type: "grid-m",
+                content: []
+            }]
+
+            m.data.forEach(bot => {
+                layoutList[0].content.push({
+                    type: "card",
+                    id: "bot-overview",
+                    config: {
+                        uuid: bot.uuid,
+                        name: bot.name,
+                    }
+                })
+            })
+
+
+            renderLayout(layoutList, document.getElementById("bot__list")!)
+
+
+
+            let layoutEdit: layoutModel.Layout = [{
+                type: "raw",
+                content: []
+            }]
+
+            m.data.forEach(bot => {
+                layoutEdit[0].content.push({
+                    type: "tab",
+                    id: "bot-edit",
+                    config: {
+                        uuid: bot.uuid,
+                        name: bot.name,
+                    }
+                })
+            })
+
+
+            renderLayout(layoutEdit, document.getElementById("bot__edit")!, false)
+
+
         }
     })
 }

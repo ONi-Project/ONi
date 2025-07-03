@@ -22,4 +22,4 @@ export type DataEventSet = Message<"DataEventSet", {
 
 export type OcForward = OcMessage<"OcForward", unknown, string>
 
-export type AeOrder = OcMessage<"AeOrder", aeModel.AeOrder, string> 
+export type AeOrder = Message<"AeOrder", aeModel.AeOrder> 

@@ -3,6 +3,7 @@ import { picSource } from "../settings"
 import { Parser } from "expr-eval"
 import { eventEmitter, send } from "../websocket"
 import { randomUUID } from "../utils"
+import { newWebToServerMessage } from "@oni/interface"
 
 export const html = /*html*/`
 <mdui-dialog id="ae__order-dialog" style="padding: 0 !important;">
@@ -106,16 +107,13 @@ export function init() {
 
   document.getElementById("ae__order-submit")!.addEventListener("click", () => {
     const taskUuid = randomUUID()
-    send({
-      "type": "ae/order",
-      "data": {
-        "uuid": aeUuid,
-        "taskUuid": taskUuid,
-        "name": item.name,
-        "damage": item.damage,
-        "amount": parseInt(input.value)
-      }
-    })
+    send(newWebToServerMessage("AeOrder", {
+      uuid: aeUuid,
+      taskUuid: taskUuid,
+      name: item.name,
+      damage: item.damage,
+      amount: parseInt(input.value)
+    }))
     const submitBtn = document.getElementById("ae__order-submit")!
     let processed: boolean
     submitBtn.setAttribute("disabled", "true")
@@ -145,7 +143,7 @@ export function init() {
     }
     eventEmitter.on("message", waitingForMessage)
     setTimeout(() => {
-      eventEmitter.removeEventListener("message", waitingForMessage)
+      eventEmitter.off("message", waitingForMessage)
       submitBtn.removeAttribute("loading")
       submitBtn.removeAttribute("disabled")
       if (!processed) {

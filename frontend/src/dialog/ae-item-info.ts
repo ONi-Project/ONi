@@ -3,6 +3,7 @@ import { ae } from "../global"
 import { numberDisplayConvert } from "../utils"
 import { showOrderDialog } from "./ae-order"
 import { picSource } from "../settings"
+import { aeModel } from "@oni/interface"
 
 export const html = /*html*/`
 <mdui-dialog close-on-overlay-click id="ae__item-info-dialog" style="padding: 0 !important;">
@@ -37,17 +38,26 @@ export function init() {
 
 }
 
-export function showItemInfo(aeuuid: string, id: string, damage: string, type: string) {
+export function showItemInfo(aeuuid: string, id: number, damage: number, type: string) {
 
-  let item: any
+  let item: aeModel.AeItem | undefined
 
   if (type == "item") {
-    item = ae.find((ae: any) => ae.uuid == aeuuid).itemList.find((item: any) => item.type == "item" && item.id == id && item.damage == damage)
+    let targetAe = ae.find(ae => ae.uuid == aeuuid)
+    if (targetAe) {
+      item = targetAe.items.find(item => item.type == "item" && item.id == id && item.damage == damage)
+    }
   } else if (type == "fluid") {
-    item = ae.find((ae: any) => ae.uuid == aeuuid).itemList.find((item: any) => item.type == "fluid" && item.id == id)
+    let targetAe = ae.find(ae => ae.uuid == aeuuid)
+    if (targetAe) {
+      item = targetAe.items.find(item => item.type == "fluid" && item.id == id)
+    }
   } else if (type == "vis") {
     // TODO: vis
+    item = undefined
   }
+
+  if (!item) { return }
 
   let link = ""
 

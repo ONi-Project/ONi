@@ -9,7 +9,7 @@ import { wsOcSendByBotUuid, wssOc, wsWebBroadcast } from "./websocket.js"
 import { wsBase, wsBaseGuard, wsOcToServer as fromOc, wsOcToServerGuard as fromOcGuard, wsWebToServer as fromWeb, wsWebToServerGuard as fromWebGuard, messageTypeMap, wsGeneral, wsGeneralGuard, aeModel } from "@oni/interface"
 import { botModel, commonModel } from "@oni/interface"
 import { newServerToWebMessage as toWeb, newServerToOcMessage as toOc, newGeneralMessage } from "@oni/interface/utils/createMessage.js"
-import { send } from "./utils.js"
+import { performanceTimer, send } from "./utils.js"
 
 const handler = {
     webMessage(msg: string, session: SessionWeb) {
@@ -174,7 +174,38 @@ const processor = {
         },
         ae: {
             itemList(json: fromOc.DataAeItemList, session: SessionOc) {
-                Global.ae.items.set(json.data.uuid, json.data.items)
+                let itemList = json.data.items
+                let _: aeModel.AeItem[] = []
+                performanceTimer("ae.itemList.set", () => {
+                    itemList = itemList.filter((item) => item.name !== "ae2fc:fluid_drop")
+                    itemList.forEach((item, index: number) => {
+                        if (item.type === "item" || item.type === "fluid") {
+                            let id, display
+                            const resourceType = item.type === "item" ? Global.staticResources.itemPanelItemMap : Global.staticResources.itemPanelFluidMap
+                            const resource = resourceType.get(item.type === "item" ? item.name + "/" + item.damage : item.name)
+                            if (resource) {
+                                id = resource.id
+                                display = resource.display
+                            } else {
+                                logger.warn(`${item.type.charAt(0).toUpperCase() + item.type.slice(1)} ${item.name} not found in staticResources.itemPanel`)
+                            }
+                            _.push({
+                                id: id || -1,
+                                name: item.name,
+                                damage: item.damage,
+                                amount: item.amount,
+                                display: display || "",
+                                type: item.type,
+                                craftable: item.craftable
+                            })
+                        } else if (item.type === "vis") {
+                            // TODO: 处理 vis 类型
+                        } else {
+                            logger.error(`Unknown item type ${item.type}`)
+                        }
+                    })
+                })
+                Global.ae.items.set(json.data.uuid, _)
             },
             cpus(json: fromOc.DataAeCpuList, session: SessionOc) {
                 json.data.cpus.forEach((cpu: aeModel.AeCpu) => {

@@ -110,7 +110,6 @@ export function isAeOrder(obj: unknown): obj is AeOrder {
         (typedObj !== null &&
             typeof typedObj === "object" ||
             typeof typedObj === "function") &&
-        typeof typedObj["target"] === "string" &&
         typedObj["type"] === "AeOrder" &&
         (typedObj["data"] !== null &&
             typeof typedObj["data"] === "object" ||

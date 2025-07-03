@@ -56,9 +56,9 @@ export function init() {
     })
 
     document.getElementById("debug__ws-button-send")!.addEventListener("click", async () => {
-        const data = (document.getElementById("debug__ws-input") as TextField).value
-        const target = (document.getElementById("debug__ws-select-bot") as Select)!.value
-        send({ type: "oc/forward", target: target, data: JSON.parse(data) })
+        // const data = (document.getElementById("debug__ws-input") as TextField).value
+        // const target = (document.getElementById("debug__ws-select-bot") as Select)!.value
+        // send({ type: "oc/forward", target: target, data: JSON.parse(data) })
     })
 
     // document.getElementById("ae__item-info-dialog").open = true

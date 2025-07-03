@@ -1,6 +1,7 @@
 import { type Switch } from "mdui"
 import { randomUUID } from "../utils"
 import { send } from "../websocket"
+import { newWebToServerMessage } from "@oni/interface"
 
 export function html(config: any) {
   return /*html*/`<mdui-card variant="filled" class="card control-redstone-digital__card">
@@ -26,26 +27,22 @@ export function html(config: any) {
 
 export function init() {
   document.querySelectorAll(".control-redstone-digital__card").forEach(element => {
-    let uuid = element.querySelector("data")!.getAttribute("uuid")
-    let botUuid = element.querySelector("data")!.getAttribute("botUuid")
-    let side = element.querySelector("data")!.getAttribute("side")
+    let uuid = element.querySelector("data")!.getAttribute("uuid")!
+    let botUuid = element.querySelector("data")!.getAttribute("botUuid")!
+    let side = element.querySelector("data")!.getAttribute("side")!
 
     element.querySelector("mdui-switch")!.addEventListener("change", event => {
-      send({
-        "type": "oc/task/runSingle",
-        "target": botUuid,
-        "data": {
-          "task": "redstone",
-          "interval": -1,
-          "taskUuid": randomUUID(),
-          "config": {
-            "mode": "setOutput",
-            "strength": (event.target as Switch).checked ? 15 : 0,
-            "uuid": uuid,
-            "side": side
-          }
+      send(newWebToServerMessage("OcTaskRunSingle", {
+        task: "redstone",
+        interval: -1,
+        taskUuid: randomUUID(),
+        config: {
+          mode: "setOutput",
+          strength: (event.target as Switch).checked ? 15 : 0,
+          uuid: uuid,
+          side: side
         }
-      })
+      }, botUuid))
     })
   })
 }

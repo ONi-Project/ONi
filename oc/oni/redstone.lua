@@ -75,7 +75,7 @@ end
 
 function redstone.getInput(ws, uuid, taskUuid, side)
     local message = {
-        type = "data/redstone",
+        type = "DataRedstone",
         data = {
             taskUuid = taskUuid,
             allColor = false,
@@ -103,7 +103,7 @@ end
 
 function redstone.getBundledInput(ws, uuid, taskUuid, side, color)
     local message = {
-        type = "data/redstone",
+        type = "DataRedstone",
         data = {
             taskUuid = taskUuid,
             allColor = false,
@@ -149,7 +149,7 @@ end
 
 function redstone.getOutput(ws, uuid, taskUuid, side)
     local message = {
-        type = "data/redstone",
+        type = "DataRedstone",
         data = {
             taskUuid = taskUuid,
             allColor = false,
@@ -177,7 +177,7 @@ end
 
 function redstone.getBundledOutput(ws, uuid, taskUuid, side, color)
     local message = {
-        type = "data/redstone",
+        type = "DataRedstone",
         data = {
             taskUuid = taskUuid,
             allColor = false,

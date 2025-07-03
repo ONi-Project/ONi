@@ -65,7 +65,7 @@ function gt_machine.getMachine(ws, taskUuid)
     gt_machine.updateMachine()
 
     local message = {
-        type = "data/gt_machine",
+        type = "DataGtMachine",
         data = {
             taskUuid = taskUuid,
             machine = {}
@@ -110,7 +110,7 @@ function gt_machine.getEUInfo(ws, taskUuid, uuid)
     local comp = machineList[uuid].component
 
     local message = {
-        type = "data/eu",
+        type = "DataEu",
         data = {
             taskUuid = taskUuid,
             uuid = uuid,
@@ -166,7 +166,7 @@ function gt_machine.getFluidInfo(ws, taskUuid, uuid)
     end
 
     local message = {
-        type = "data/fluid",
+        type = "DataFluid",
         data = {
             taskUuid = taskUuid,
             fluid = {}

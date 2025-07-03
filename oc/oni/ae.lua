@@ -28,9 +28,10 @@ function ae.updateAeComponents()
     end
 end
 
+--- Unused
 function ae.getAeComponents(ws, taskUuid)
     local message = {
-        type = "update/ae/components",
+        type = "Unused",
         data = {
             taskUuid = taskUuid,
             components = {}
@@ -48,7 +49,7 @@ function ae.getCpus(ws, taskUuid, uuid, targetAeUuid)
     local comp = aeComponents[uuid]
 
     local message = {
-        type = "data/ae/cpus",
+        type = "DataAeCpuList",
         data = {
             uuid = targetAeUuid,
             cpus = {}
@@ -127,7 +128,7 @@ function ae.request(ws, taskUuid, uuid, name, damage, amount)
     craftTasks[carftTaskQueue[queuePointer]] = status
 
     local message = {
-        type = "ae/order/result",
+        type = "AeOrderResult",
         data = {
             success = false,
             taskUuid = taskUuid,
@@ -176,6 +177,7 @@ end
 --     "type": "update/ae/craftStatus",
 --     "data": { "canceled": false, "done": true, "computing": false, "failed": false }
 -- }
+---Unused
 function ae.check(ws, taskUuid, craftUuid)
     local status = craftTasks[craftUuid]
 
@@ -185,7 +187,7 @@ function ae.check(ws, taskUuid, craftUuid)
     end
 
     local message = {
-        type = "update/ae/craftStatus",
+        type = "Unused",
         data = {
             taskUuid = taskUuid,
             computing = status.isComputing(),

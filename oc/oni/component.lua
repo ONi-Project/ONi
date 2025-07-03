@@ -67,7 +67,7 @@ function component.newTask(ws, taskUuid, config)
     return (function()
         local componentList = component.getComponent()
         local message = {
-            type = "data/bot/component",
+            type = "DataBotComponent",
             data = {
                 components = componentList,
                 taskUuid = taskUuid

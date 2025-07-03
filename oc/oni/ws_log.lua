@@ -11,7 +11,7 @@ function ws_log.trace(ws, message, file, location, taskUuid)
     end
 
     local message = {
-        type = "log",
+        type = "Log",
         data = {
             level = "trace",
             message = message,
@@ -31,7 +31,7 @@ function ws_log.debug(ws, message, file, location, taskUuid)
     end
 
     local message = {
-        type = "log",
+        type = "Log",
         data = {
             level = "debug",
             message = message,
@@ -51,7 +51,7 @@ function ws_log.info(ws, message, file, location, taskUuid)
     end
 
     local message = {
-        type = "log",
+        type = "Log",
         data = {
             level = "info",
             message = message,
@@ -70,7 +70,7 @@ function ws_log.warn(ws, message, file, location, taskUuid)
     end
 
     local message = {
-        type = "log",
+        type = "Log",
         data = {
             level = "warn",
             message = message,
@@ -89,7 +89,7 @@ function ws_log.error(ws, message, file, location, taskUuid)
     end
 
     local message = {
-        type = "log",
+        type = "Log",
         data = {
             level = "error",
             message = message,

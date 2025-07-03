@@ -21,7 +21,7 @@ local ws
 function login(ws)
     -- 发送登录验证信息
     ws:send(json.encode({
-        type = "auth/request",
+        type = "AuthRequest",
         data = {
             token = "CWN78VN0MB00WFYIL8AN"
         }
@@ -104,8 +104,9 @@ function updateComponent()
     local modified, componentList = component.update()
     if modified then
         local message = {
-            type = "data/bot/component",
+            type = "DataBotComponent",
             data = {
+                uuid = uuid,
                 components = componentList
             }
         }
@@ -166,7 +167,7 @@ while true do
 
     local tasks = json.decode(message)
 
-    if tasks.type ~= "task" then
+    if tasks.type ~= "Task" then
         print("received message: " .. message)
         print("unknown message type: " .. tasks.type)
         goto task_loop_continue

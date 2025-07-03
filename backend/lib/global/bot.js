@@ -23,50 +23,6 @@ let bot = {
             logger.error("bot.remove", "Bot not found.");
         }
     },
-    // getListLayout() {
-    //     let content: layoutModel.PageContentElement[] = []
-    //     this.list.forEach(bot => {
-    //         content.push({
-    //             type: "card",
-    //             id: "bot-overview",
-    //             config: {
-    //                 uuid: bot.uuid,
-    //                 name: bot.name,
-    //             }
-    //         })
-    //     })
-    //     let _ = [{
-    //         type: "grid-m",
-    //         content: content
-    //     }]
-    //     _.push({
-    //         type: "raw",
-    //         content: [{
-    //             type: "card",
-    //             id: "create-bot",
-    //             config: {}
-    //         }]
-    //     })
-    //     return _
-    // },
-    // getEditLayout() {
-    //     let content: layoutModel.PageContentElement[] = []
-    //     this.list.forEach(bot => {
-    //         content.push({
-    //             type: "tab",
-    //             id: "bot-edit",
-    //             config: {
-    //                 uuid: bot.uuid,
-    //                 name: bot.name,
-    //             }
-    //         })
-    //     })
-    //     let _ = [{
-    //         type: "raw",
-    //         content: content
-    //     }]
-    //     return _
-    // },
     components: {
         set(uuid, components) {
             let targetBot = bot.list.find(item => item.uuid == uuid);

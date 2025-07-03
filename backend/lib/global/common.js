@@ -9,12 +9,13 @@ let common = {
         return this.list.find(item => item.uuid == uuid);
     },
     set(common) {
-        this.list.forEach((item, index) => {
+        return this.list.some((item, index) => {
             if (item.uuid == common.uuid) {
                 this.list[index] = common;
                 wsWebBroadcast(newServerToWebMessage("DataCommonSet", common));
-                return;
+                return true;
             }
+            return false;
         });
     },
     add(common) {

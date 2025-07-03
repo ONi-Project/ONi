@@ -4,7 +4,7 @@ import { loggerHandler as logger, loggerOcOverWs } from "./logger.js";
 import { wsOcSendByBotUuid, wsWebBroadcast } from "./websocket.js";
 import { wsBaseGuard, wsOcToServerGuard as fromOcGuard, wsWebToServerGuard as fromWebGuard } from "@oni/interface";
 import { newServerToWebMessage as toWeb, newServerToOcMessage as toOc, newGeneralMessage } from "@oni/interface/utils/createMessage.js";
-import { send } from "./utils.js";
+import { performanceTimer, send } from "./utils.js";
 const handler = {
     webMessage(msg, session) {
         // 解析 JSON
@@ -138,23 +138,25 @@ export default handler;
 const processor = {
     data: {
         commonSet(json, session) {
-            let target = Global.common.list.find(data => data.uuid === json.data.uuid);
+            const target = Global.common.list.find(common => common.uuid === json.data.uuid);
             if (target) {
-                const data = Object.assign({}, target, json.data);
-                Global.common.set(data);
+                const common = Object.assign({}, target, json.data);
+                Global.common.set(common);
             }
             else {
-                send(session, newGeneralMessage("Error", { "message": "Data not found" }));
+                send(session, newGeneralMessage("Error", { "message": "Common not found" }));
+                logger.error(`processor.data.commonSet: Common ${json.data.uuid} not found`);
             }
         },
         eventSet(json, session) {
             let target = Global.event.list.find(event => event.uuid === json.data.uuid);
             if (target) {
                 const event = Object.assign({}, target, json.data);
-                send(session, newGeneralMessage("Error", { "message": "Event not found" }));
+                Global.event.set(event);
             }
             else {
                 send(session, newGeneralMessage("Error", { "message": "Event not found" }));
+                logger.error(`processor.data.eventSet: Event ${json.data.uuid} not found`);
             }
         },
         eventAdd(json, session) {
@@ -162,7 +164,41 @@ const processor = {
         },
         ae: {
             itemList(json, session) {
-                Global.ae.items.set(json.data.uuid, json.data.items);
+                let itemList = json.data.items;
+                let _ = [];
+                performanceTimer("ae.itemList.set", () => {
+                    itemList = itemList.filter((item) => item.name !== "ae2fc:fluid_drop");
+                    itemList.forEach((item, index) => {
+                        if (item.type === "item" || item.type === "fluid") {
+                            let id, display;
+                            const resourceType = item.type === "item" ? Global.staticResources.itemPanelItemMap : Global.staticResources.itemPanelFluidMap;
+                            const resource = resourceType.get(item.type === "item" ? item.name + "/" + item.damage : item.name);
+                            if (resource) {
+                                id = resource.id;
+                                display = resource.display;
+                            }
+                            else {
+                                logger.warn(`${item.type.charAt(0).toUpperCase() + item.type.slice(1)} ${item.name} not found in staticResources.itemPanel`);
+                            }
+                            _.push({
+                                id: id || -1,
+                                name: item.name,
+                                damage: item.damage,
+                                amount: item.amount,
+                                display: display || "",
+                                type: item.type,
+                                craftable: item.craftable
+                            });
+                        }
+                        else if (item.type === "vis") {
+                            // TODO: 处理 vis 类型
+                        }
+                        else {
+                            logger.error(`Unknown item type ${item.type}`);
+                        }
+                    });
+                });
+                Global.ae.items.set(json.data.uuid, _);
             },
             cpus(json, session) {
                 json.data.cpus.forEach((cpu) => {

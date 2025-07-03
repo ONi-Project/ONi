@@ -8,11 +8,12 @@ let user = {
         return this.list.find(user => user.uuid === uuid);
     },
     set(user) {
-        this.list.forEach((item, index) => {
-            if (item.uuid === user.uuid) {
+        return this.list.some((item, index) => {
+            if (item.uuid == user.uuid) {
                 this.list[index] = user;
-                return;
+                return true;
             }
+            return false;
         });
     },
     add(user) {

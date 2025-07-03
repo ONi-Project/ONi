@@ -14,8 +14,11 @@ export function isEvent(obj: unknown): obj is Event {
         typeof typedObj["name"] === "string" &&
         (typeof typedObj["description"] === "undefined" ||
             typeof typedObj["description"] === "string") &&
-        typeof typedObj["priority"] === "number" &&
-        typeof typedObj["status"] === "number" &&
+        (typedObj["priority"] === 0 ||
+            typedObj["priority"] === 1 ||
+            typedObj["priority"] === 2) &&
+        (typedObj["status"] === 0 ||
+            typedObj["status"] === 1) &&
         typeof typedObj["timestamp"] === "number"
     )
 }

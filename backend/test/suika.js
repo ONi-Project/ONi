@@ -46,16 +46,32 @@ ws.onopen = () => {
     // 开始发送数据
     sendData()
 
-    ws.send(JSON.stringify({
-        type: "DataEventAdd", data: {
-            uuid: "00000000-0000-000000000000",
-            name: "test0",
-            description: "test0000",
-            priority: 0,
-            status: 0,
-            timestamp: 0
-        }
-    }))
+    setInterval(() => {
+        ws.send(JSON.stringify({
+            type: "DataEventAdd", data: {
+                uuid: crypto.randomUUID(),
+                name: "test0",
+                description: "test0000",
+                priority: 2,
+                status: 0,
+                timestamp: Date.now()
+            }
+        }))
+    }, 20000)
+
+    setInterval(() => {
+        ws.send(JSON.stringify({
+            type: "DataEventAdd", data: {
+                uuid: crypto.randomUUID(),
+                name: "test0",
+                description: "test0000",
+                priority: 1,
+                status: 0,
+                timestamp: Date.now()
+            }
+        }))
+    }, 10000)
+
     setInterval(() => {
         ws.send(JSON.stringify({
             type: "DataEventAdd", data: {
@@ -64,10 +80,10 @@ ws.onopen = () => {
                 description: "test0000",
                 priority: 0,
                 status: 0,
-                timestamp: 0
+                timestamp: Date.now()
             }
         }))
-    }, 10000)
+    }, 5000)
 
     ws.send(JSON.stringify({
         type: "DataAeItemList",

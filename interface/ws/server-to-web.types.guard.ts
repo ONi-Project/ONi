@@ -742,8 +742,11 @@ export function isDataEventInit(obj: unknown): obj is DataEventInit {
             typeof e["name"] === "string" &&
             (typeof e["description"] === "undefined" ||
                 typeof e["description"] === "string") &&
-            typeof e["priority"] === "number" &&
-            typeof e["status"] === "number" &&
+            (e["priority"] === 0 ||
+                e["priority"] === 1 ||
+                e["priority"] === 2) &&
+            (e["status"] === 0 ||
+                e["status"] === 1) &&
             typeof e["timestamp"] === "number"
         )
     )
@@ -763,8 +766,11 @@ export function isDataEventSet(obj: unknown): obj is DataEventSet {
         typeof typedObj["data"]["name"] === "string" &&
         (typeof typedObj["data"]["description"] === "undefined" ||
             typeof typedObj["data"]["description"] === "string") &&
-        typeof typedObj["data"]["priority"] === "number" &&
-        typeof typedObj["data"]["status"] === "number" &&
+        (typedObj["data"]["priority"] === 0 ||
+            typedObj["data"]["priority"] === 1 ||
+            typedObj["data"]["priority"] === 2) &&
+        (typedObj["data"]["status"] === 0 ||
+            typedObj["data"]["status"] === 1) &&
         typeof typedObj["data"]["timestamp"] === "number"
     )
 }
@@ -783,8 +789,11 @@ export function isDataEventAdd(obj: unknown): obj is DataEventAdd {
         typeof typedObj["data"]["name"] === "string" &&
         (typeof typedObj["data"]["description"] === "undefined" ||
             typeof typedObj["data"]["description"] === "string") &&
-        typeof typedObj["data"]["priority"] === "number" &&
-        typeof typedObj["data"]["status"] === "number" &&
+        (typedObj["data"]["priority"] === 0 ||
+            typedObj["data"]["priority"] === 1 ||
+            typedObj["data"]["priority"] === 2) &&
+        (typedObj["data"]["status"] === 0 ||
+            typedObj["data"]["status"] === 1) &&
         typeof typedObj["data"]["timestamp"] === "number"
     )
 }

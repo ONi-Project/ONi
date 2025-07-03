@@ -1,6 +1,7 @@
 import { aeModel, botModel, commonModel, eventModel, mcServerStatusModel, redstoneModel, staticModel } from "@oni/interface"
 import { eventEmitter } from "./websocket"
 import { wsServerToWebGuard as toWebGuard } from "@oni/interface"
+import * as contentEvent from "./content/event"
 
 export let common: commonModel.CommonArray = []
 export let bot: botModel.BotArray = []
@@ -26,6 +27,7 @@ export function init() {
             ae = m.data
         } else if (toWebGuard.isDataEventInit(m)) {
             event = m.data
+            contentEvent.update()
         } else if (toWebGuard.isDataRedstoneInit(m)) {
             redstone = m.data
         } else if (toWebGuard.isDataAeAdd(m)) {
@@ -67,13 +69,16 @@ export function init() {
             }
         } else if (toWebGuard.isDataEventAdd(m)) {
             event.push(m.data)
+            contentEvent.update()
         } else if (toWebGuard.isDataEventRemove(m)) {
             event = event.filter((event) => event.uuid !== m.data)
+            contentEvent.update()
         } else if (toWebGuard.isDataEventSet(m)) {
-            let target = event.find((event) => event.uuid === m.data.uuid)
-            if (target) {
-                target = m.data
+            let index = event.findIndex((event) => event.uuid === m.data.uuid)
+            if (index !== -1) {
+                event[index] = m.data
             }
+            contentEvent.update()
         } else if (toWebGuard.isDataRedstoneAdd(m)) {
             redstone.push(m.data)
         } else if (toWebGuard.isDataRedstoneRemove(m)) {

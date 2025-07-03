@@ -141,8 +141,11 @@ export function isDataEventAdd(obj: unknown): obj is DataEventAdd {
         typeof typedObj["data"]["name"] === "string" &&
         (typeof typedObj["data"]["description"] === "undefined" ||
             typeof typedObj["data"]["description"] === "string") &&
-        typeof typedObj["data"]["priority"] === "number" &&
-        typeof typedObj["data"]["status"] === "number" &&
+        (typedObj["data"]["priority"] === 0 ||
+            typedObj["data"]["priority"] === 1 ||
+            typedObj["data"]["priority"] === 2) &&
+        (typedObj["data"]["status"] === 0 ||
+            typedObj["data"]["status"] === 1) &&
         typeof typedObj["data"]["timestamp"] === "number"
     )
 }

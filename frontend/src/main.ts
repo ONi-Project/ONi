@@ -31,7 +31,9 @@ ${layoutTopbar.html}
 
 <div style="display: flex;width: 100dvw;height: calc(100dvh - 4rem);">
 
-    ${layoutNavrail.html}
+  ${layoutNavrail.html}
+
+  <div id="navrail-dim"></div>
 
   <div style="overflow: hidden;width: 100%;">
 

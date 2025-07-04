@@ -39,7 +39,7 @@ export function html(config: any) {
   
           <div style="display: flex;opacity: 0.75;gap: 0.5rem;">
             <mdui-icon name="commit"></mdui-icon>
-            <div>Oni Lib v1</div>
+            <div>ONi Lib v1</div>
           </div>
         </div>
   
@@ -130,7 +130,7 @@ export function html(config: any) {
           </mdui-chip>
   
           <mdui-chip elevated>
-            更新 Oni Lib
+            更新 ONi Lib
             <mdui-icon slot="icon" name="update"></mdui-icon>
           </mdui-chip>
         </div>

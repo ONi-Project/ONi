@@ -3,7 +3,7 @@ import { setToken } from "../settings"
 
 export const html = /*html*/`
 <mdui-dialog id="settings-dialog">
-    <span slot="headline">Oni Settings</span>
+    <span slot="headline">ONi Settings</span>
     <mdui-button full-width id="button-settings-logout">退出登录</mdui-button>
     <mdui-button variant="outlined" id="button-settings-discard" style="margin-top: 1rem;">取消</mdui-button>
     <mdui-button variant="filled" id="button-settings-apply">保存</mdui-button>

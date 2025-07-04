@@ -97,9 +97,7 @@ export function randomUUID() {
 }
 
 export function isMobileDevice() {
-    const ua = navigator.userAgent.toLowerCase()
-    const kw = ['iphone', 'ipod', 'android', 'windows phone', 'blackberry', 'mobile']
-    return kw.some(keyword => ua.includes(keyword))
+    return (window.innerWidth / window.innerHeight < 0.7)
 }
 
 export function capitalizeFirstLetter(string: string) {

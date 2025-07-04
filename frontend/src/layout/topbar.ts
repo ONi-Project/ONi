@@ -1,5 +1,5 @@
 import { isMobileDevice } from "../utils"
-import { toggleFold } from "./navrail"
+import { toggleDrawer, toggleFold } from "./navrail"
 import { user } from "../websocket"
 import { endpoint } from "../settings"
 
@@ -14,7 +14,7 @@ export const html = /*html*/`
     <div style="display: flex;flex-direction: row;">
       <div style="font-weight: bolder;">ONi</div>
       &nbsp;
-      <mdui-badge>Next+</mdui-badge>
+      <mdui-badge>dev</mdui-badge>
     </div>
     <div id="navi-label" slot="label-large" style="font-weight: bold;height: 100%;font-size: 2rem;margin-left: 3rem;opacity: 0.9;"></div>
   </mdui-top-app-bar-title>
@@ -30,7 +30,16 @@ export const html = /*html*/`
 
 export function init() {
 
-  document.getElementById("navi-toggler")!.addEventListener("click", () => { toggleFold() })
+  if (isMobileDevice()) {
+    document.getElementById("navi-toggler")!.addEventListener("click", () => {
+      toggleDrawer()
+    })
+  } else {
+    document.getElementById("navi-toggler")!.addEventListener("click", () => {
+      toggleFold()
+    })
+  }
+
 
 }
 

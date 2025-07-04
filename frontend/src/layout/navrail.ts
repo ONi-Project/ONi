@@ -1,7 +1,8 @@
-import 'mdui/components/navigation-rail.js'
-import 'mdui/components/navigation-rail-item.js'
+import { ListItem, setTheme, type NavigationDrawer } from 'mdui'
 import 'mdui/components/navigation-drawer.js'
-import { getTheme, setColorScheme, setTheme, type Button, type NavigationDrawer, ListItem } from 'mdui'
+import 'mdui/components/navigation-rail-item.js'
+import 'mdui/components/navigation-rail.js'
+import { isMobileDevice } from '../utils'
 
 export const html = /*html*/`
 <div id="navi-drawer">
@@ -18,6 +19,7 @@ const railItemsDisplay = ["看板", "事件", "控制", "AE", "BOT", "统计", "
 const railItemsIcon = ["home--outlined", "crisis_alert", "tune--outlined", "grid_on--outlined", "adb--outlined", "insert_chart--outlined", "build--outlined", "settings--outlined"]
 
 let folded = true
+let drawerOpen = false
 
 export function init() {
 
@@ -80,22 +82,32 @@ export function init() {
 
 
   // 导轨双方案切换
-  // if (window.innerWidth / window.innerHeight > 0.7) {
-  //   console.log("横屏")
+  if (isMobileDevice()) {
+    console.log("移动端布局")
 
-  //   const drawer = document.getElementById("navi-drawer") as NavigationDrawer
-  //   const rail = document.getElementById("navi-rail") as NavigationRail
+    toggleFold(false)
 
-  //   drawer.removeChild(rail)
-  //   drawer.parentNode!.insertBefore(rail, drawer)
+    const drawer = document.getElementById("navi-drawer")!
 
-  //   document.getElementById("navi-toggler")!.style["display"] = "none"
-  //   rail.placement = "left"
-  // }
+    drawer.style.position = "fixed"
+    drawer.style.left = "-152px"
+    drawer.style.zIndex = "100"
 
-  setTimeout(() => {
-    document.getElementById(`rail-${railItems[0]}`)!.click()
-  }, 100)
+    const dim = document.getElementById("navrail-dim")!
+    dim.addEventListener("click", () => {
+      toggleDrawer(false)
+    })
+
+    railItems.forEach(item => {
+      document.getElementById(`rail-${item}`)!.addEventListener("click", () => {
+        toggleDrawer(false)
+      })
+    })
+
+  }
+
+
+  document.getElementById(`rail-${railItems[0]}`)!.click()
 
   // 深色模式
   // const buttonDarkMode = document.getElementById("buttonDarkMode")! as Button
@@ -135,17 +147,24 @@ export function init() {
 
 }
 
-// 切换左侧导航栏的显示状态
-export function toggleLeftNavi(tf?: boolean) {
-  const e = document.getElementById("navi-drawer") as NavigationDrawer
-  if (typeof tf === "undefined") {
-    e.open = !e.open
+// 切换左侧导航栏的显示状态（移动端布局）
+export function toggleDrawer(tf?: boolean) {
+  if (typeof tf === "undefined") { tf = !drawerOpen }
+  const dim = document.getElementById("navrail-dim")!
+  const drawer = document.getElementById("navi-drawer")!
+  if (tf) {
+    drawer.style.left = "0"
+    dim.style.opacity = "1"
+    dim.style.pointerEvents = "auto"
   } else {
-    e.open = tf
+    drawer.style.left = "-152px"
+    dim.style.opacity = "0"
+    dim.style.pointerEvents = "none"
   }
-
+  drawerOpen = tf
 }
 
+// 切换左侧导航栏的折叠状态（桌面端布局）
 export function toggleFold(tf?: boolean) {
   if (typeof tf === "undefined") { tf = !folded }
   if (tf) {

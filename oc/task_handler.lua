@@ -12,7 +12,7 @@ local address = "localhost"
 local port = 5600
 local path = "/ws/oc"
 
-local uuid = "12345678-1234-1234-1234-123456789abc"
+local uuid = "308f3581-1e64-4d10-953a-39d1103c9ddb"
 
 local file = "task_handler.lua"
 

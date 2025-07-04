@@ -154,8 +154,8 @@ mdui-top-app-bar:not([shrink]) {
 }
 
 #navi-drawer {
-  transition: min-width 0.25s, width 0.25s;
-  height: calc(100% - 6px);
+  transition: min-width 0.25s, width 0.25s, left 0.25s;
+  height: calc(100dvh - 4rem - 6px);
   padding-top: 6px;
   padding-left: 6px;
   padding-right: 6px;
@@ -167,8 +167,6 @@ mdui-top-app-bar:not([shrink]) {
   gap: 0.25rem;
   /* background-color: rgb(var(--mdui-color-surface-container-low)); */
 }
-
-
 
 /* #navrail-area mdui-list-item {
   --shape-corner-rounded: 0.75rem;
@@ -189,4 +187,18 @@ mdui-top-app-bar:not([shrink]) {
   bottom: 0.5rem;
   width: 100%;
   text-align: center;
+}
+
+#navrail-dim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  transition: backdrop-filter 0.25s, opacity 0.25s;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
 }

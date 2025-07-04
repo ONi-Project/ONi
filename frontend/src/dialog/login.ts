@@ -35,6 +35,7 @@ export function setText(text: string) {
 }
 
 export function openLoginDialog() {
+    document.getElementById("overview__loading")!.style.display = "none";
     (document.getElementById("dialog-login")! as Dialog).open = true
     initSettingsContent()
 }

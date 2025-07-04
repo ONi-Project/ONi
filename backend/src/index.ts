@@ -11,7 +11,7 @@ import TaskMcServerStatus from "./task/mcServerStatus"
 logger.level = "TRACE"
 logger.info("Starting ONi...")
 
-var config: Config
+let config: Config
 
 try {
     config = yaml.parse(fs.readFileSync('./config.yml', 'utf8'))

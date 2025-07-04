@@ -44,6 +44,9 @@ export type WebToServer =
     | webToServer.DataEventSet
     | webToServer.OcForward
     | webToServer.AeOrder
+    | webToServer.RedstoneTask
+    | webToServer.BotComponentUpdate
+    | webToServer.DataAeLevelMaintainsSet
 
 export type ServerToOc = 
     | serverToOc.AuthResponse
@@ -61,6 +64,8 @@ export type OcToServer =
     | ocToServer.Log
 
 export type General = 
+    | general.Info
+    | general.Warning
     | general.Error
 
 export type All =

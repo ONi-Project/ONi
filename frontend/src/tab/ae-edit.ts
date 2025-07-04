@@ -1,7 +1,9 @@
 import { picSource } from "../settings"
-import { eventEmitter } from "../websocket"
+import { eventEmitter, send } from "../websocket"
 import * as global from "../global"
-import { aeModel, wsServerToWebGuard } from "@oni/interface"
+import { aeModel, newWebToServerMessage, wsServerToWebGuard } from "@oni/interface"
+import { randomUUID } from "../utils"
+import { selectItem } from "../dialog/ae-item-select"
 
 export function html(config: any) {
     return /*html*/`
@@ -126,11 +128,12 @@ export function init() {
 
     document.querySelectorAll(".ae__edit").forEach(aeEdit => {
         const uuid = aeEdit.querySelector("data")!.getAttribute("uuid")!
-        let editMode = false
+        let maintainEditMode = false
+        let maintainPreviews: aeModel.AeLevelMaintain[] = []
 
         eventEmitter.on("message", m => {
             if (wsServerToWebGuard.isDataAeLevelMaintainsSet(m) && m.data.uuid === uuid) {
-                if (!editMode) {
+                if (!maintainEditMode) {
                     renderMaintainList(m.data.uuid, m.data, aeEdit)
                 }
             }
@@ -144,55 +147,72 @@ export function init() {
         const editButton = beforeEditGroup.querySelector("mdui-chip:nth-child(1)")!
         const applyButton = afterEditGroup.querySelector("mdui-chip:nth-child(1)")!
         const cancelButton = afterEditGroup.querySelector("mdui-chip:nth-child(2)")!
+        const addButton = afterEditGroup.querySelector("mdui-chip:nth-child(3)")!
 
 
         editButton.addEventListener("click", _event => {
-            editMode = true
+            maintainEditMode = true
+            maintainPreviews = JSON.parse(JSON.stringify(global.ae.find((ae: aeModel.Ae) => ae.uuid === uuid)!.levelMaintains))
             beforeEditGroup.style.display = "none"
             afterEditGroup.style.display = "flex"
             renderMaintainList(uuid, undefined, aeEdit)
         })
 
         applyButton.addEventListener("click", _event => {
-            // TODO: 应用修改
+            send(newWebToServerMessage("DataAeLevelMaintainsSet", {
+                uuid: uuid,
+                levelMaintains: maintainPreviews
+            }))
+
             beforeEditGroup.style.display = "flex"
             afterEditGroup.style.display = "none"
-            editMode = false
+            maintainEditMode = false
             renderMaintainList(uuid, undefined, aeEdit)
         })
 
         cancelButton.addEventListener("click", _event => {
             beforeEditGroup.style.display = "flex"
             afterEditGroup.style.display = "none"
-            editMode = false
+            maintainEditMode = false
             renderMaintainList(uuid, undefined, aeEdit)
         })
 
-        function renderMaintainList(uuid: string, ae: aeModel.Ae | undefined, card: Element) {
+        addButton.addEventListener("click", _event => {
+            maintainPreviews.push({
+                uuid: randomUUID(),
+                enabled: false,
+                list: []
+            })
+            renderMaintainList(uuid, undefined, aeEdit)
+        })
+
+        function renderMaintainList(uuid: string, ae: aeModel.Ae | undefined, adEdit: Element) {
 
             if (!ae) {
                 const targetAe: aeModel.Ae | undefined = global.ae.find((ae: aeModel.Ae) => ae.uuid === uuid)
                 if (targetAe) { ae = targetAe } else { console.error("ae not found"); return }
             }
 
-            let _ = ""
-            const elementMaintainList = card.querySelector(".ae__maintain-list")!
+            let usedList = maintainEditMode ? maintainPreviews : ae.levelMaintains
 
-            ae.levelMaintains.forEach((maintain: aeModel.AeLevelMaintain, i: number) => {
+            let _ = ""
+            const elementMaintainList = adEdit.querySelector(".ae__maintain-list")!
+
+            usedList.forEach((maintain: aeModel.AeLevelMaintain, i: number) => {
                 _ += /*html*/`
-            <mdui-card style="padding-bottom: 0.5rem;gap: 0.5rem;">
-            <div style="display: flex;align-items: center;gap: 0.5rem;padding: 1rem;margin-bottom: -1rem;">
-                <mdui-icon style="margin-left: 0.25rem;" name="receipt_long"></mdui-icon>
-                <div>
-                    <div style="font-weight: bold;font-size: large;margin-left: 0.25rem;">队列 #${i + 1}</div>
-                </div>
-                ${editMode ? `<mdui-button-icon style="margin-left: auto;" icon="settings"></mdui-button-icon>` : ""}
-                <mdui-switch style="margin-right: 0.25rem;${editMode ? "" : "margin-left: auto;"}" ${maintain.enabled ? "checked" : ""}></mdui-switch>
-                
-            </div>
-            <mdui-list style="margin-left: 1rem;margin-right: 1rem;">
-            `
-                maintain.list.forEach(item => {
+                <mdui-card style="padding-bottom: 0.5rem;gap: 0.5rem;">
+                    <div style="display: flex;align-items: center;gap: 0.5rem;padding: 1rem;margin-bottom: -1rem;">
+                        <mdui-icon style="margin-left: 0.25rem;" name="receipt_long"></mdui-icon>
+                        <div>
+                            <div style="font-weight: bold;font-size: large;margin-left: 0.25rem;">队列 #${i + 1}</div>
+                        </div>
+                        ${maintainEditMode ? `<mdui-button-icon style="margin-left: auto;" icon="settings"></mdui-button-icon>` : ""}
+                        <mdui-switch i="${i}" class="ae__edit-maintain-enabled" style="margin-right: 0.25rem;${maintainEditMode ? "" : "margin-left: auto;"}" ${maintain.enabled ? "checked" : ""}></mdui-switch>
+                        
+                    </div>
+                <mdui-list style="margin-left: 1rem;margin-right: 1rem;">
+                `
+                maintain.list.forEach((item, ii) => {
                     const currentItem = ae.items.find((_) => _.id === item.id && _.damage === item.damage)
                     let current = 0
                     if (currentItem) {
@@ -200,17 +220,18 @@ export function init() {
                     }
 
                     let bar = ""
-                    if (editMode) {
+                    if (maintainEditMode) {
                         bar = /*html*/`
-                        <mdui-text-field value="${item.request}" type="number" style="width: 8rem;margin-left: auto;" variant="outlined" label="单次请求量"></mdui-text-field>
-                        <mdui-text-field value="${item.amount}" type="number" style="width: 8rem;" variant="outlined" label="维持总量"></mdui-text-field>
+                        <mdui-text-field i="${i}" ii="${ii}" class="ae__edit-maintain-item-request" value="${item.request}" type="number" style="width: 8rem;margin-left: auto;" variant="outlined" label="单次请求量"></mdui-text-field>
+                        <mdui-text-field i="${i}" ii="${ii}" class="ae__edit-maintain-item-total" value="${item.amount}" type="number" style="width: 8rem;" variant="outlined" label="维持总量"></mdui-text-field>
+                        <mdui-button-icon i="${i}" ii="${ii}" class="ae__edit-maintain-item-remove" icon="clear"></mdui-button-icon>
                         `
                     } else {
                         bar = /*html*/`<div style="opacity: 0.5;text-align: right;margin-left: auto;">${current} / ${item.amount}</div>`
                     }
 
                     let info = ""
-                    if (editMode) {
+                    if (maintainEditMode) {
                         info = item.name
                     } else if (current > item.amount) {
                         info = "已达到库存维持数量"
@@ -231,9 +252,9 @@ export function init() {
                 </mdui-list-item>
                 `
                 })
-                if (editMode) {
+                if (maintainEditMode) {
                     _ += /*html*/`
-                    <mdui-list-item>
+                    <mdui-list-item i="${i}" class="ae__edit-maintain-item-add">
                     <div style="display: flex;align-items: center;gap: 0.75rem;">
                         <mdui-icon name="add"></mdui-icon>添加...
                     </div>
@@ -247,6 +268,67 @@ export function init() {
             })
 
             elementMaintainList.innerHTML = _
+
+            if (maintainEditMode) {
+                aeEdit.querySelectorAll(".ae__edit-maintain-item-remove").forEach(element => {
+                    element.addEventListener("click", _event => {
+                        const i = parseInt((_event.target as HTMLElement).getAttribute("i")!)
+                        const ii = parseInt((_event.target as HTMLElement).getAttribute("ii")!)
+                        maintainPreviews[i].list.splice(ii, 1)
+                        renderMaintainList(uuid, undefined, adEdit)
+                    })
+                })
+                aeEdit.querySelectorAll(".ae__edit-maintain-item-add").forEach(element => {
+                    const i = parseInt(element.getAttribute("i")!)
+                    element.addEventListener("click", _event => {
+                        console.log(i)
+                        selectItem(ae).then(item => {
+                            maintainPreviews[i].list.push({
+                                id: item.id,
+                                damage: item.damage,
+                                name: item.name,
+                                type: item.type,
+                                display: item.display,
+                                amount: 1,
+                                request: 1
+                            })
+                            renderMaintainList(uuid, undefined, adEdit)
+                        })
+                    })
+                })
+                aeEdit.querySelectorAll(".ae__edit-maintain-item-request").forEach(element => {
+                    const i = parseInt(element.getAttribute("i")!)
+                    const ii = parseInt(element.getAttribute("ii")!)
+                    element.addEventListener("change", _event => {
+                        maintainPreviews[i].list[ii].request = parseInt((_event.target as HTMLInputElement).value)
+                    })
+                })
+                aeEdit.querySelectorAll(".ae__edit-maintain-item-total").forEach(element => {
+                    const i = parseInt(element.getAttribute("i")!)
+                    const ii = parseInt(element.getAttribute("ii")!)
+                    element.addEventListener("change", _event => {
+                        maintainPreviews[i].list[ii].amount = parseInt((_event.target as HTMLInputElement).value)
+                    })
+                })
+
+            }
+
+            aeEdit.querySelectorAll(".ae__edit-maintain-enabled").forEach(element => {
+                const i = parseInt(element.getAttribute("i")!)
+                element.addEventListener("change", _event => {
+                    if (maintainEditMode) {
+                        maintainPreviews[i].enabled = (element as HTMLInputElement).checked
+                    } else {
+                        ae.levelMaintains[i].enabled = (element as HTMLInputElement).checked
+                        console.log(ae.levelMaintains[i])
+                        console.log(i)
+                        send(newWebToServerMessage("DataAeLevelMaintainsSet", {
+                            uuid: uuid,
+                            levelMaintains: ae.levelMaintains
+                        }))
+                    }
+                })
+            })
 
         }
     })

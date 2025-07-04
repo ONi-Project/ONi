@@ -1,8 +1,10 @@
-import { aeModel, botModel, commonModel, eventModel, mcServerStatusModel, redstoneModel, staticModel } from "@oni/interface"
+import { aeModel, allMessageType, botModel, commonModel, eventModel, mcServerStatusModel, redstoneModel, staticModel } from "@oni/interface"
 import { eventEmitter } from "./websocket"
-import { wsServerToWebGuard as toWebGuard } from "@oni/interface"
+import { wsServerToWebGuard as toWebGuard, wsGeneralGuard } from "@oni/interface"
 import * as contentEvent from "./content/event"
 import { botTaskUpdate } from "./dialog/bot-task"
+import { snackbar } from "mdui"
+import { newGeneralMessage } from "@oni/interface/utils/createMessage"
 
 export let common: commonModel.CommonArray = []
 export let bot: botModel.BotArray = []
@@ -45,6 +47,11 @@ export function init() {
             let target = ae.find((ae) => ae.uuid === m.data.uuid)
             if (target) {
                 target.cpus = m.data.cpus
+            }
+        } else if (toWebGuard.isDataAeLevelMaintainsSet(m)) {
+            let target = ae.find((ae) => ae.uuid === m.data.uuid)
+            if (target) {
+                target.levelMaintains = m.data.levelMaintains
             }
         } else if (toWebGuard.isDataBotAdd(m)) {
             bot.push(m.data)
@@ -90,6 +97,24 @@ export function init() {
             if (target) {
                 target = m.data
             }
+        } else if (wsGeneralGuard.isInfo(m)) {
+            snackbar({
+                message: `服务端消息: ${m.data.message}`,
+                autoCloseDelay: 5000,
+                closeable: true
+            })
+        } else if (wsGeneralGuard.isWarning(m)) {
+            snackbar({
+                message: `服务端警告: ${m.data.message}`,
+                autoCloseDelay: 5000,
+                closeable: true
+            })
+        } else if (wsGeneralGuard.isError(m)) {
+            snackbar({
+                message: `服务端错误: ${m.data.message}`,
+                autoCloseDelay: 5000,
+                closeable: true
+            })
         }
     })
 

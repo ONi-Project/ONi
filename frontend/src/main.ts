@@ -14,6 +14,7 @@ import * as contentSetting from "./content/setting"
 
 import * as dialogAeOrder from "./dialog/ae-order"
 import * as dialogAeItemInfo from "./dialog/ae-item-info"
+import * as dialogAeItemSelect from "./dialog/ae-item-select"
 import * as dialogBotTask from "./dialog/bot-task"
 import * as dialogLogin from "./dialog/login"
 import * as dialogSettings from "./dialog/settings"
@@ -60,9 +61,11 @@ ${layoutTopbar.html}
 
 ${dialogAeOrder.html}
 ${dialogAeItemInfo.html}
+${dialogAeItemSelect.html}
 ${dialogBotTask.html}
 ${dialogLogin.html}
 ${dialogSettings.html}
+
 
 `
 
@@ -83,6 +86,7 @@ contentSetting.init()
 
 dialogAeOrder.init()
 dialogAeItemInfo.init()
+dialogAeItemSelect.init()
 dialogBotTask.init()
 dialogLogin.init()
 dialogSettings.init()

@@ -40,7 +40,7 @@ class EventEmitter<Events extends Record<string, any>> {
 }
 
 export const eventEmitter = new EventEmitter<{
-    message: allMessageType.ServerToWeb
+    message: allMessageType.ServerToWeb | allMessageType.General
 }>()
 
 // 建立ws连接

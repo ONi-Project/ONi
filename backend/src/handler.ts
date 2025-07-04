@@ -70,6 +70,18 @@ const handler = {
                 processor.ae.order(json, session)
                 return
 
+            } else if (fromWebGuard.isRedstoneTask(json)) {
+                processor.redstone.task(json, session)
+                return
+
+            } else if (fromWebGuard.isBotComponentUpdate(json)) {
+                processor.bot.componentUpdate(json, session)
+                return
+
+            } else if (fromWebGuard.isDataAeLevelMaintainsSet(json)) {
+                processor.data.ae.levelMaintains(json, session)
+                return
+
             } else {
                 logger.error("WEB RECEIVED INVALID TYPE", json)
                 return
@@ -123,7 +135,7 @@ const handler = {
                 return
 
             } else if (fromOcGuard.isDataAeItemList(json)) {
-                processor.data.ae.itemList(json, session)
+                processor.data.ae.items(json, session)
                 return
 
             } else if (fromOcGuard.isDataAeCpuList(json)) {
@@ -139,7 +151,7 @@ const handler = {
                 return
 
             } else {
-                logger.warn("OC RECEIVED INVALID TYPE", json)
+                logger.error("OC RECEIVED INVALID TYPE", json)
             }
         }
     }
@@ -173,7 +185,7 @@ const processor = {
             Global.event.add(json.data)
         },
         ae: {
-            itemList(json: fromOc.DataAeItemList, session: SessionOc) {
+            items(json: fromOc.DataAeItemList, session: SessionOc) {
                 let itemList = json.data.items
                 let _: aeModel.AeItem[] = []
                 performanceTimer("ae.itemList.set", () => {
@@ -228,6 +240,9 @@ const processor = {
                     }
                 })
                 Global.ae.cpus.set(json.data.uuid, json.data.cpus)
+            },
+            levelMaintains(json: fromWeb.DataAeLevelMaintainsSet, session: SessionWeb) {
+                Global.ae.levelMaintains.set(json.data.uuid, json.data.levelMaintains)
             }
         },
         bot: {
@@ -238,35 +253,103 @@ const processor = {
     },
     ae: {
         order(json: fromWeb.AeOrder, session: SessionWeb) {
-            const ae = Global.ae.list.find(ae => ae.uuid === json.data.uuid)
-            if (!ae) { logger.error(`processor.ae.order: AE ${json.data.uuid} not found`); return }
             let targetBot: botModel.Bot[] = []
             Global.bot.list.forEach(bot => {
                 let flag = false
                 bot.tasks.forEach(task => {
-                    if (task.task === "ae" && task.config.targetAeUuid === ae.uuid) { flag = true }
+                    if (task.task === "ae" && task.config.targetAeUuid === json.data.uuid) { flag = true }
                 })
                 if (flag) { targetBot.push(bot) }
             })
-            if (targetBot.length === 0) { logger.error(`processor.ae.order: No bot found for AE ${json.data.uuid}`); return }
+            if (targetBot.length === 0) {
+                logger.error(`processor.ae.order: No bot found for AE ${json.data.uuid}`)
+                send(session, newGeneralMessage("Error", { "message": "No bot found for AE." }))
+                return
+            }
             let runner = targetBot[0]
             if (targetBot.length > 1) {
                 logger.warn(`processor.ae.order: More than one bot found for AE ${json.data.uuid}, using ${runner.name}`)
+                send(session, newGeneralMessage("Warning", { "message": `More than one bot found for AE, using ${runner.name}.` }))
             }
-            Global.bot.tasks.runSingle(runner.uuid, {
-                "task": "ae",
-                "interval": -1,
-                "taskUuid": json.data.taskUuid,
-                "config": {
-                    "mode": "request",
-                    "name": json.data.name,
-                    "damage": json.data.damage,
-                    "amount": json.data.amount
+            let ok = Global.bot.tasks.runSingle(runner.uuid, {
+                task: "ae",
+                interval: -1,
+                taskUuid: json.data.taskUuid,
+                config: {
+                    mode: "request",
+                    name: json.data.name,
+                    damage: json.data.damage,
+                    amount: json.data.amount
                 }
             })
+            if (!ok) {
+                send(session, newGeneralMessage("Error", { "message": `Trying to send task to oc but bot ${runner.name} offline.` }))
+            }
         },
         orderResult(json: fromOc.AeOrderResult, session: SessionOc) {
             wsWebBroadcast(toWeb("AeOrderResult", json.data))
+        }
+    },
+    redstone: {
+        task(json: fromWeb.RedstoneTask, session: SessionWeb) {
+            const targetRedstone = Global.redstone.list.find(redstone => redstone.uuid === json.data.uuid)
+            if (!targetRedstone) {
+                logger.error(`processor.redstone.task: Redstone ${json.data.uuid} not found.`)
+                send(session, newGeneralMessage("Error", { "message": "Redstone not found." }))
+                return
+            }
+            let targetBot: botModel.Bot[] = []
+            Global.bot.list.forEach(bot => {
+                let flag = false
+                bot.tasks.forEach(task => {
+                    if (task.task === "redstone" && task.config.targetRedstoneUuid === json.data.uuid) { flag = true }
+                })
+                if (flag) { targetBot.push(bot) }
+            })
+            if (targetBot.length === 0) {
+                logger.error(`processor.redstone.task: No bot found for redstone ${json.data.uuid}.`)
+                send(session, newGeneralMessage("Error", { "message": "No bot found for redstone." }))
+                return
+            }
+            let runner = targetBot[0]
+            if (targetBot.length > 1) {
+                logger.warn(`processor.redstone.task: More than one bot found for redstone ${json.data.uuid}, using ${runner.name}.`)
+                send(session, newGeneralMessage("Warning", { "message": `More than one bot found for redstone, using ${runner.name}.` }))
+            }
+            let ok = Global.bot.tasks.runSingle(runner.uuid, {
+                task: "redstone",
+                interval: -1,
+                taskUuid: json.data.taskUuid,
+                config: {
+                    mode: "setOutput",
+                    strength: json.data.value,
+                    uuid: json.data.uuid,
+                    side: targetRedstone.side
+                }
+            })
+            if (!ok) {
+                send(session, newGeneralMessage("Error", { "message": `Trying to send task to oc but bot ${runner.name} offline.` }))
+            }
+
+        }
+    },
+    bot: {
+        componentUpdate(json: fromWeb.BotComponentUpdate, session: SessionWeb) {
+            const targetBot = Global.bot.list.find(bot => bot.uuid === json.data.uuid)
+            if (!targetBot) {
+                logger.error(`processor.bot.componentUpdate: Bot ${json.data.uuid} not found.`)
+                send(session, newGeneralMessage("Error", { "message": "Bot not found." }))
+                return
+            }
+            let ok = Global.bot.tasks.runSingle(json.data.uuid, {
+                task: "component",
+                interval: -1,
+                taskUuid: json.data.taskUuid,
+                config: {}
+            })
+            if (!ok) {
+                send(session, newGeneralMessage("Error", { "message": `Trying to send task to oc but bot ${targetBot.name} offline.` }))
+            }
         }
     },
     web2oc: {

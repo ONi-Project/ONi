@@ -30,17 +30,11 @@ export function init() {
     let side = element.querySelector("data")!.getAttribute("side")!
 
     element.querySelector("mdui-slider")!.addEventListener("change", event => {
-      send(newWebToServerMessage("OcTaskRunSingle", {
-        task: "redstone",
-        interval: -1,
-        taskUuid: randomUUID(),
-        config: {
-          mode: "setOutput",
-          strength: (event.target as Slider).value,
-          uuid: uuid,
-          side: side
-        }
-      }, botUuid))
+      send(newWebToServerMessage("RedstoneTask", {
+        value: (event.target as Slider).value,
+        uuid: uuid,
+        taskUuid: randomUUID()
+      }))
     })
   })
 }

@@ -32,17 +32,11 @@ export function init() {
     let side = element.querySelector("data")!.getAttribute("side")!
 
     element.querySelector("mdui-switch")!.addEventListener("change", event => {
-      send(newWebToServerMessage("OcTaskRunSingle", {
-        task: "redstone",
-        interval: -1,
-        taskUuid: randomUUID(),
-        config: {
-          mode: "setOutput",
-          strength: (event.target as Switch).checked ? 15 : 0,
-          uuid: uuid,
-          side: side
-        }
-      }, botUuid))
+      send(newWebToServerMessage("RedstoneTask", {
+        value: (event.target as Switch).checked ? 15 : 0,
+        uuid: uuid,
+        taskUuid: randomUUID()
+      }))
     })
   })
 }

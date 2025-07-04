@@ -1,5 +1,5 @@
 import type { Message, OcMessage } from "./base.types"
-import type { aeModel, botModel, eventModel } from "../index"
+import type { aeModel, botModel, eventModel, redstoneModel } from "../index"
 
 export type AuthRequest = Message<"AuthRequest", {
     token: string
@@ -22,4 +22,20 @@ export type DataEventSet = Message<"DataEventSet", {
 
 export type OcForward = OcMessage<"OcForward", unknown, string>
 
-export type AeOrder = Message<"AeOrder", aeModel.AeOrder> 
+export type AeOrder = Message<"AeOrder", aeModel.AeOrder>
+
+export type RedstoneTask = Message<"RedstoneTask", {
+    uuid: string
+    taskUuid: string
+    value: number
+}>
+
+export type BotComponentUpdate = Message<"BotComponentUpdate", {
+    uuid: string
+    taskUuid: string
+}>
+
+export type DataAeLevelMaintainsSet = Message<"DataAeLevelMaintainsSet", {
+    uuid: string,
+    levelMaintains: aeModel.AeLevelMaintain[]
+}>

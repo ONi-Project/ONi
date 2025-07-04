@@ -199,18 +199,16 @@ export function init() {
         target.parentElement!.querySelector("mdui-list")!.style.opacity = "1"
         target.removeAttribute("loading")
       }, 30000)
-      send(newWebToServerMessage("OcTaskRunSingle", {
-        task: "component",
-        interval: -1,
-        taskUuid: randomUUID(),
-        config: {}
-      }, uuid))
+      send(newWebToServerMessage("BotComponentUpdate", {
+        uuid: uuid,
+        taskUuid: randomUUID()
+      }))
     })
 
     const buttonTaskEdit = element.querySelector(".bot__edit-before-edit")?.querySelector("mdui-chip")!
     buttonTaskEdit.addEventListener("click", async (_event) => {
       taskEditMode = true
-      taskEditPreview = JSON.parse(JSON.stringify(bot.tasks)) //深拷贝
+      taskEditPreview = JSON.parse(JSON.stringify(bot.tasks)) // 深拷贝
       renderTaskList(element, bot);
       (element.querySelector(".bot__edit-before-edit") as HTMLElement)!.style.display = "none";
       (element.querySelector(".bot__edit-after-edit") as HTMLElement)!.style.display = "flex"

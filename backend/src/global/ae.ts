@@ -4,8 +4,9 @@ import { loggerGlobal as logger } from "../logger"
 import { wsWebBroadcast } from "../websocket"
 import { deepEqual, performanceTimer } from "../utils"
 import Global from "./index"
-import { aeModel, aeModelGuard, newServerToWebMessage } from "@oni/interface"
+import { aeModel, aeModelGuard, botModel, newServerToWebMessage } from "@oni/interface"
 import { layoutModel } from "@oni/interface"
+import { randomUUID } from "crypto"
 
 let ae = {
     // AE 列表
@@ -90,6 +91,40 @@ let ae = {
         update(ae: aeModel.Ae) {
             ae.timeUpdated = new Date().getTime()
             wsWebBroadcast(newServerToWebMessage("DataAeLevelMaintainsSet", ae))
+            Global.bot.list.forEach(bot => {
+                let flag = false
+                let oldInterval: number = -1
+                const toRemove = (task: botModel.BotTask) =>
+                    task.task === "ae" &&
+                    task.config.mode === "levelMaintain" &&
+                    task.config.targetAeUuid === ae.uuid
+
+                bot.tasks = bot.tasks.filter(task => {
+                    const shouldRemove = toRemove(task)
+                    if (shouldRemove) {
+                        flag = true
+                        oldInterval = task.interval
+                    }
+                    return !shouldRemove
+                })
+
+                if (flag) {
+                    ae.levelMaintains.forEach(levelMaintain => {
+                        bot.tasks.push({
+                            task: "ae",
+                            interval: oldInterval,
+                            taskUuid: randomUUID(),
+                            config: {
+                                mode: "levelMaintain",
+                                targetAeUuid: ae.uuid,
+                                enabled: levelMaintain.enabled,
+                                list: levelMaintain.list
+                            }
+                        })
+                    })
+                    Global.bot.tasks.update(bot)
+                }
+            })
         }
     },
 

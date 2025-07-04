@@ -49,7 +49,9 @@ let bot = {
         runSingle(uuid: string, task: botModel.BotTask) {
             if (!wsOcSendByBotUuid(uuid, newServerToOcMessage("Task", [task]))) {
                 logger.error("bot.tasks.runSingleTask", `Trying to send task to oc but bot ${uuid} not found or offline.`)
+                return false
             }
+            return true
         },
         add(uuid: string, task: botModel.BotTask) {
             let targetBot = bot.list.find(item => item.uuid == uuid)

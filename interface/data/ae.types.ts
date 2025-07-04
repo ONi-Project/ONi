@@ -20,7 +20,11 @@ export interface AeCpu {
     busy: boolean
     timeStarted?: number
     active: boolean
-    finalOutput?: AeCpuFinalOutput
+    finalOutput?: {
+        name: string
+        damage?: number
+        amount: number
+    }
 }
 
 export interface AeCpuFinalOutput {

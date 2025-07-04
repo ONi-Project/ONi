@@ -8,11 +8,7 @@ local redstone = require("oni/redstone")
 local ae = require("oni/ae")
 local gt_machine = require("oni/gt_machine")
 
-local address = "localhost"
-local port = 5600
-local path = "/ws/oc"
-
-local uuid = "308f3581-1e64-4d10-953a-39d1103c9ddb"
+local config = require("config")
 
 local file = "task_handler.lua"
 
@@ -34,9 +30,9 @@ end
 
 function connect()
     ws = webSocket.new({
-        address = address,
-        port = port,
-        path = path
+        address = config.address,
+        port = config.port,
+        path = config.path
     })
 
     -- 等待web socket连接建立完毕
@@ -55,7 +51,7 @@ function connect()
 
     login(ws)
 
-    print("Successfully connected to " .. address .. ":" .. port .. path)
+    print("Successfully connected to " .. config.address .. ":" .. config.port .. config.path)
     return ws
 end
 
@@ -106,7 +102,7 @@ function updateComponent()
         local message = {
             type = "DataBotComponent",
             data = {
-                uuid = uuid,
+                uuid = config.uuid,
                 components = componentList
             }
         }

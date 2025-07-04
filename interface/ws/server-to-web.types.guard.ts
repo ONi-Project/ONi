@@ -370,11 +370,9 @@ export function isDataAeInit(obj: unknown): obj is DataAeInit {
                         typeof e["finalOutput"] === "object" ||
                         typeof e["finalOutput"] === "function") &&
                     typeof e["finalOutput"]["name"] === "string" &&
-                    typeof e["finalOutput"]["damage"] === "number" &&
-                    typeof e["finalOutput"]["amount"] === "number" &&
-                    typeof e["finalOutput"]["id"] === "number" &&
-                    typeof e["finalOutput"]["display"] === "string" &&
-                    typeof e["finalOutput"]["total"] === "number")
+                    (typeof e["finalOutput"]["damage"] === "undefined" ||
+                        typeof e["finalOutput"]["damage"] === "number") &&
+                    typeof e["finalOutput"]["amount"] === "number")
             ) &&
             Array.isArray(e["items"]) &&
             e["items"].every((e: any) =>
@@ -446,11 +444,9 @@ export function isDataAeItemsSet(obj: unknown): obj is DataAeItemsSet {
                     typeof e["finalOutput"] === "object" ||
                     typeof e["finalOutput"] === "function") &&
                 typeof e["finalOutput"]["name"] === "string" &&
-                typeof e["finalOutput"]["damage"] === "number" &&
-                typeof e["finalOutput"]["amount"] === "number" &&
-                typeof e["finalOutput"]["id"] === "number" &&
-                typeof e["finalOutput"]["display"] === "string" &&
-                typeof e["finalOutput"]["total"] === "number")
+                (typeof e["finalOutput"]["damage"] === "undefined" ||
+                    typeof e["finalOutput"]["damage"] === "number") &&
+                typeof e["finalOutput"]["amount"] === "number")
         ) &&
         Array.isArray(typedObj["data"]["items"]) &&
         typedObj["data"]["items"].every((e: any) =>
@@ -521,11 +517,9 @@ export function isDataAeCpusSet(obj: unknown): obj is DataAeCpusSet {
                     typeof e["finalOutput"] === "object" ||
                     typeof e["finalOutput"] === "function") &&
                 typeof e["finalOutput"]["name"] === "string" &&
-                typeof e["finalOutput"]["damage"] === "number" &&
-                typeof e["finalOutput"]["amount"] === "number" &&
-                typeof e["finalOutput"]["id"] === "number" &&
-                typeof e["finalOutput"]["display"] === "string" &&
-                typeof e["finalOutput"]["total"] === "number")
+                (typeof e["finalOutput"]["damage"] === "undefined" ||
+                    typeof e["finalOutput"]["damage"] === "number") &&
+                typeof e["finalOutput"]["amount"] === "number")
         ) &&
         Array.isArray(typedObj["data"]["items"]) &&
         typedObj["data"]["items"].every((e: any) =>
@@ -596,11 +590,9 @@ export function isDataAeLevelMaintainsSet(obj: unknown): obj is DataAeLevelMaint
                     typeof e["finalOutput"] === "object" ||
                     typeof e["finalOutput"] === "function") &&
                 typeof e["finalOutput"]["name"] === "string" &&
-                typeof e["finalOutput"]["damage"] === "number" &&
-                typeof e["finalOutput"]["amount"] === "number" &&
-                typeof e["finalOutput"]["id"] === "number" &&
-                typeof e["finalOutput"]["display"] === "string" &&
-                typeof e["finalOutput"]["total"] === "number")
+                (typeof e["finalOutput"]["damage"] === "undefined" ||
+                    typeof e["finalOutput"]["damage"] === "number") &&
+                typeof e["finalOutput"]["amount"] === "number")
         ) &&
         Array.isArray(typedObj["data"]["items"]) &&
         typedObj["data"]["items"].every((e: any) =>
@@ -671,11 +663,9 @@ export function isDataAeAdd(obj: unknown): obj is DataAeAdd {
                     typeof e["finalOutput"] === "object" ||
                     typeof e["finalOutput"] === "function") &&
                 typeof e["finalOutput"]["name"] === "string" &&
-                typeof e["finalOutput"]["damage"] === "number" &&
-                typeof e["finalOutput"]["amount"] === "number" &&
-                typeof e["finalOutput"]["id"] === "number" &&
-                typeof e["finalOutput"]["display"] === "string" &&
-                typeof e["finalOutput"]["total"] === "number")
+                (typeof e["finalOutput"]["damage"] === "undefined" ||
+                    typeof e["finalOutput"]["damage"] === "number") &&
+                typeof e["finalOutput"]["amount"] === "number")
         ) &&
         Array.isArray(typedObj["data"]["items"]) &&
         typedObj["data"]["items"].every((e: any) =>

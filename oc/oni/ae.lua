@@ -62,7 +62,7 @@ function ae.getCpus(ws, taskUuid, uuid, targetAeUuid)
         local output = v.cpu.finalOutput()
         local info = {
             name = v.name,
-            coproccessors = v.coproccessors,
+            coprocessors = v.coprocessors,
             storage = v.storage,
             busy = v.busy,
             active = v.cpu.isActive()
@@ -248,10 +248,10 @@ function ae.getItems(ws, taskUuid, uuid, targetAeUuid)
     local message = {
         token = "CWN78VN0MB00WFYIL8AN",
         data = {
-            type = "data/ae/itemList",
+            type = "DataAeItemList",
             data = {
                 uuid = targetAeUuid,
-                itemList = itemList
+                items = itemList
             }
         }
     }

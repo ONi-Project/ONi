@@ -102,11 +102,9 @@ export function isDataAeCpuList(obj: unknown): obj is DataAeCpuList {
                     typeof e["finalOutput"] === "object" ||
                     typeof e["finalOutput"] === "function") &&
                 typeof e["finalOutput"]["name"] === "string" &&
-                typeof e["finalOutput"]["damage"] === "number" &&
-                typeof e["finalOutput"]["amount"] === "number" &&
-                typeof e["finalOutput"]["id"] === "number" &&
-                typeof e["finalOutput"]["display"] === "string" &&
-                typeof e["finalOutput"]["total"] === "number")
+                (typeof e["finalOutput"]["damage"] === "undefined" ||
+                    typeof e["finalOutput"]["damage"] === "number") &&
+                typeof e["finalOutput"]["amount"] === "number")
         )
     )
 }

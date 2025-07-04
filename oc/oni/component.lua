@@ -1,6 +1,8 @@
 local computer = require("computer")
 local json = require("dkjson")
 
+local config = require("config")
+
 component = {}
 
 -- 保存之前的组件列表，用于判断组件是否更新
@@ -70,7 +72,7 @@ function component.newTask(ws, taskUuid, config)
             type = "DataBotComponent",
             data = {
                 components = componentList,
-                taskUuid = taskUuid
+                uuid = config.uuid
             }
         }
         ws:send(json.encode(message))

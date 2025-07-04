@@ -53,7 +53,13 @@ export function isAeCpu(obj: unknown): obj is AeCpu {
             typeof typedObj["timeStarted"] === "number") &&
         typeof typedObj["active"] === "boolean" &&
         (typeof typedObj["finalOutput"] === "undefined" ||
-            isAeCpuFinalOutput(typedObj["finalOutput"]) as boolean)
+            (typedObj["finalOutput"] !== null &&
+                typeof typedObj["finalOutput"] === "object" ||
+                typeof typedObj["finalOutput"] === "function") &&
+            typeof typedObj["finalOutput"]["name"] === "string" &&
+            (typeof typedObj["finalOutput"]["damage"] === "undefined" ||
+                typeof typedObj["finalOutput"]["damage"] === "number") &&
+            typeof typedObj["finalOutput"]["amount"] === "number")
     )
 }
 

@@ -36,7 +36,7 @@ let ae = {
         set(uuid: string, cpus: aeModel.AeCpu[]) {
             let targetAe = ae.list.find(ae => ae.uuid === uuid)
             if (targetAe) {
-                cpus.forEach((cpu: aeModel.AeCpu) => {
+                cpus.forEach(cpu => {
                     if (cpu.busy && cpu.finalOutput) {
                         const finalOutput = cpu.finalOutput
                         const itemPanelItem = Global.staticResources.itemPanelItem.find(itemPanelItem => (itemPanelItem.name == finalOutput.name) && (itemPanelItem.damage == finalOutput.damage))
@@ -156,6 +156,9 @@ let ae = {
             logger.error(MODULE_NAME, "Json initialization failed.")
             logger.error(MODULE_NAME, e)
         }
+        setInterval(() => {
+            this.save()
+        }, config.data_auto_save_interval * 1000)
     }
 }
 

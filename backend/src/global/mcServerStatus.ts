@@ -29,7 +29,6 @@ let mcServerStatus = {
             logger.debug("mcServerStatus", "mc_server_ip is set to " + config.mc_server_ip)
             logger.trace("mcServerStatus", mcServerStatus)
         }
-
     }
 }
 

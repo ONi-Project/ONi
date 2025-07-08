@@ -2,7 +2,8 @@
   "name": "oni",
   "version": "1.0.0",
   "description": "A web panel designed for GTNH | Powered by OpenComputers",
-  "main": "index",
+  "main": "./lib/index",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "dev": "nodemon",

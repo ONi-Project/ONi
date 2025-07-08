@@ -1,0 +1,11 @@
+import { AuthRequest, OcTaskRunSingle, OcTaskAdd, OcTaskRemove, DataEventSet, OcForward, AeOrder, RedstoneTask, BotComponentUpdate, DataAeLevelMaintainsSet } from "./web-to-server";
+export declare function isAuthRequest(obj: unknown): obj is AuthRequest;
+export declare function isOcTaskRunSingle(obj: unknown): obj is OcTaskRunSingle;
+export declare function isOcTaskAdd(obj: unknown): obj is OcTaskAdd;
+export declare function isOcTaskRemove(obj: unknown): obj is OcTaskRemove;
+export declare function isDataEventSet(obj: unknown): obj is DataEventSet;
+export declare function isOcForward(obj: unknown): obj is OcForward;
+export declare function isAeOrder(obj: unknown): obj is AeOrder;
+export declare function isRedstoneTask(obj: unknown): obj is RedstoneTask;
+export declare function isBotComponentUpdate(obj: unknown): obj is BotComponentUpdate;
+export declare function isDataAeLevelMaintainsSet(obj: unknown): obj is DataAeLevelMaintainsSet;

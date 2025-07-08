@@ -8,7 +8,7 @@ import { loggerHandler as logger, loggerOcOverWs } from "./logger"
 import { wsOcSendByBotUuid, wssOc, wsWebBroadcast } from "./websocket"
 import { wsBase, wsBaseGuard, wsOcToServer as fromOc, wsOcToServerGuard as fromOcGuard, wsWebToServer as fromWeb, wsWebToServerGuard as fromWebGuard, messageTypeMap, wsGeneral, wsGeneralGuard, aeModel } from "@oni/interface"
 import { botModel, commonModel } from "@oni/interface"
-import { newServerToWebMessage as toWeb, newServerToOcMessage as toOc, newGeneralMessage } from "@oni/interface/utils/createMessage"
+import { newServerToWebMessage as toWeb, newServerToOcMessage as toOc, newGeneralMessage } from "@oni/interface"
 import { performanceTimer, send } from "./utils"
 
 const handler = {
@@ -220,7 +220,30 @@ const processor = {
                 Global.ae.items.set(json.data.uuid, _)
             },
             cpus(json: fromOc.DataAeCpuList, session: SessionOc) {
-                json.data.cpus.forEach((cpu: aeModel.AeCpu) => {
+                let cpus: aeModel.AeCpu[] = []
+                json.data.cpus.forEach(cpu => {
+                    let finalOutput
+                    if (cpu.finalOutput) {
+                        finalOutput = {
+                            amount: cpu.finalOutput.amount,
+                            total: -1,
+                            name: cpu.finalOutput.name,
+                            damage: cpu.finalOutput.damage,
+                            id: -1,
+                            display: "",
+                        }
+                    }
+                    cpus.push({
+                        name: cpu.name,
+                        coprocessors: cpu.coprocessors,
+                        storage: cpu.storage,
+                        busy: cpu.busy,
+                        active: cpu.active,
+                        timeStarted: 0,
+                        finalOutput: finalOutput
+                    })
+                })
+                cpus.forEach((cpu: aeModel.AeCpu) => {
                     const ae = Global.ae.list.find(ae => ae.uuid === json.data.uuid)
                     if (ae) {
                         const cpuPrev = ae.cpus.find(c => c.name === cpu.name)
@@ -239,7 +262,7 @@ const processor = {
                         send(session, newGeneralMessage("Error", { "message": "AE not found" }))
                     }
                 })
-                Global.ae.cpus.set(json.data.uuid, json.data.cpus)
+                Global.ae.cpus.set(json.data.uuid, cpus)
             },
             levelMaintains(json: fromWeb.DataAeLevelMaintainsSet, session: SessionWeb) {
                 Global.ae.levelMaintains.set(json.data.uuid, json.data.levelMaintains)

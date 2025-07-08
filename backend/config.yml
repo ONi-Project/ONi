@@ -14,3 +14,6 @@ mc_server_status_update_interval: 60
 
 ## 调试模式
 debug: true
+
+## 数据自动保存间隔 [ 秒 ]
+data_auto_save_interval: 60

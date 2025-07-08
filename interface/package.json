@@ -1,11 +1,12 @@
 {
   "name": "@oni/interface",
   "version": "1.0.0",
-  "main": "index.ts",
-  "types": "index.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "type": "module",
   "scripts": {
     "test": "jest",
-    "build": "powershell -ExecutionPolicy Bypass -File ./script/generate-interface-guard.ps1 && bun ./script/generate-union.ts"
+    "build": "powershell -ExecutionPolicy Bypass -File ./script/generate-interface-guard.ps1 && bun ./script/generate-union.ts && tsc"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",

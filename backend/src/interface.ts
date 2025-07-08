@@ -19,5 +19,6 @@ export interface Config {
     mc_server_ip: string
     mc_server_status_update_interval: number
     debug: boolean
+    data_auto_save_interval: number
 }
 

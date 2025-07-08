@@ -2,7 +2,7 @@ import { Config } from "../interface"
 import fs from "fs"
 import { loggerGlobal as logger } from "../logger"
 import { newServerToWebMessage, redstoneModel, redstoneModelGuard } from "@oni/interface"
-import { wsWebBroadcast } from "src/websocket"
+import { wsWebBroadcast } from "../websocket"
 
 let redstone = {
     // 红石控制组件
@@ -67,6 +67,9 @@ let redstone = {
             logger.error(MODULE_NAME, "Json initialization failed.")
             logger.error(MODULE_NAME, e)
         }
+        setInterval(() => {
+            this.save()
+        }, config.data_auto_save_interval * 1000)
     }
 }
 

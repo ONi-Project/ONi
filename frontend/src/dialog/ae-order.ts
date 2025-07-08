@@ -3,7 +3,7 @@ import { picSource } from "../settings"
 import { Parser } from "expr-eval"
 import { eventEmitter, send } from "../websocket"
 import { randomUUID } from "../utils"
-import { newWebToServerMessage } from "@oni/interface"
+import { allMessageType, newWebToServerMessage, wsServerToWebGuard } from "@oni/interface"
 
 export const html = /*html*/`
 <mdui-dialog id="ae__order-dialog" style="padding: 0 !important;">
@@ -118,12 +118,11 @@ export function init() {
     let processed: boolean
     submitBtn.setAttribute("disabled", "true")
     submitBtn.setAttribute("loading", "true")
-    function waitingForMessage(event: any) {
-      const { type, data } = event.data
-      if (type === "ae/order/result" && data.taskUuid === taskUuid) {
+    function waitingForMessage(m: allMessageType.All) {
+      if (wsServerToWebGuard.isAeOrderResult(m) && m.data.taskUuid === taskUuid) { 
         submitBtn.removeAttribute("loading")
         submitBtn.removeAttribute("disabled")
-        if (data.success) {
+        if (m.data.success) {
           dialog.open = false
           processed = true
           snackbar({

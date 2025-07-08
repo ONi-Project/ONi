@@ -1,4 +1,4 @@
-import { Message, OcMessage, } from "../ws/base.types.js"
+import { Message, OcMessage, } from "../ws/base.js"
 
 export type DataType<T extends Message<string, any>> = {
     [K in T["type"]]:

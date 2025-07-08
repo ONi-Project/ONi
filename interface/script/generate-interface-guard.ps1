@@ -1,14 +1,14 @@
 npx ts-auto-guard --export-all `
-    'ws/oc-to-server.types.ts' `
-    'ws/server-to-oc.types.ts' `
-    'ws/server-to-web.types.ts' `
-    'ws/web-to-server.types.ts' `
-    'ws/general.types.ts' `
-    'data/ae.types.ts' `
-    'data/bot.types.ts' `
-    'data/common.types.ts' `
-    'data/event.types.ts' `
-    'data/mcServerStatus.types.ts' `
-    'data/redstone.types.ts' `
-    'data/user.types.ts' `
-    'data/static.types.ts' `
+    'ws/oc-to-server.ts' `
+    'ws/server-to-oc.ts' `
+    'ws/server-to-web.ts' `
+    'ws/web-to-server.ts' `
+    'ws/general.ts' `
+    'data/ae.ts' `
+    'data/bot.ts' `
+    'data/common.ts' `
+    'data/event.ts' `
+    'data/mcServerStatus.ts' `
+    'data/redstone.ts' `
+    'data/user.ts' `
+    'data/static.ts' `

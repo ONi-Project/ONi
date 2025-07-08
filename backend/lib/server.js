@@ -1,28 +1,23 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const ejs_1 = __importDefault(require("ejs"));
-const http_1 = __importDefault(require("http"));
-const ws_1 = __importDefault(require("ws"));
-const websocket_1 = require("./websocket");
-const logger_1 = require("./logger");
-const interface_1 = require("@oni/interface");
+import express from "express";
+import ejs from "ejs";
+import http from "http";
+import WebSocket from 'ws';
+import { wssWeb, wssOc } from "./websocket";
+import { loggerServer as logger } from "./logger";
+import { newWebToServerMessage } from "@oni/interface";
 let Server = {
     init(config) {
-        const app = (0, express_1.default)();
-        const server = http_1.default.createServer(app);
+        const app = express();
+        const server = http.createServer(app);
         server.on("upgrade", (request, socket, head) => {
             if (request.url === "/ws/web") {
-                websocket_1.wssWeb.handleUpgrade(request, socket, head, (ws) => {
-                    websocket_1.wssWeb.emit("connection", ws, request);
+                wssWeb.handleUpgrade(request, socket, head, (ws) => {
+                    wssWeb.emit("connection", ws, request);
                 });
             }
             else if (request.url === "/ws/oc") {
-                websocket_1.wssOc.handleUpgrade(request, socket, head, (ws) => {
-                    websocket_1.wssOc.emit("connection", ws, request);
+                wssOc.handleUpgrade(request, socket, head, (ws) => {
+                    wssOc.emit("connection", ws, request);
                 });
             }
             else {
@@ -30,9 +25,9 @@ let Server = {
             }
         });
         app.get("/", (req, res) => {
-            ejs_1.default.renderFile("views/index/index.ejs", { debugMode: config.debug }, (err, str) => {
+            ejs.renderFile("views/index/index.ejs", { debugMode: config.debug }, (err, str) => {
                 if (err) {
-                    logger_1.loggerServer.error(err);
+                    logger.error(err);
                     res.sendStatus(500);
                 }
                 else {
@@ -46,27 +41,27 @@ let Server = {
         //     "token": "XXX",
         //     "data": {...}
         // }
-        app.use(express_1.default.json({ limit: '200mb' }));
-        app.post("/api/oc/wsSend", express_1.default.json(), (req, res) => {
-            logger_1.loggerServer.trace(req.body);
+        app.use(express.json({ limit: '200mb' }));
+        app.post("/api/oc/wsSend", express.json(), (req, res) => {
+            logger.trace(req.body);
             if (Object.keys(req.body).length == 0) {
-                logger_1.loggerServer.error("/api/oc/wsSend received empty body");
+                logger.error("/api/oc/wsSend received empty body");
                 res.sendStatus(400);
             }
             else {
-                const ws = new ws_1.default(`ws://localhost:${config.port}/ws/oc`);
+                const ws = new WebSocket(`ws://localhost:${config.port}/ws/oc`);
                 ws.on("open", () => {
-                    ws.send(JSON.stringify((0, interface_1.newWebToServerMessage)("AuthRequest", { token: req.body.token })));
+                    ws.send(JSON.stringify(newWebToServerMessage("AuthRequest", { token: req.body.token })));
                     ws.send(JSON.stringify(req.body.data));
                     ws.close();
                 });
                 res.sendStatus(200);
             }
         });
-        app.use(express_1.default.static("public"));
+        app.use(express.static("public"));
         server.listen(config.port, () => {
-            logger_1.loggerServer.info(`ONi server started on port ${config.port}.`);
+            logger.info(`ONi server started on port ${config.port}.`);
         });
     }
 };
-exports.default = Server;
+export default Server;

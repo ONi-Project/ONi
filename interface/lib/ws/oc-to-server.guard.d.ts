@@ -1,0 +1,10 @@
+import { AuthRequest, DataCommonSet, DataAeItemList, DataAeCpuList, AeOrderResult, DataEventAdd, DataEventSet, DataBotComponent, Log } from "./oc-to-server";
+export declare function isAuthRequest(obj: unknown): obj is AuthRequest;
+export declare function isDataCommonSet(obj: unknown): obj is DataCommonSet;
+export declare function isDataAeItemList(obj: unknown): obj is DataAeItemList;
+export declare function isDataAeCpuList(obj: unknown): obj is DataAeCpuList;
+export declare function isAeOrderResult(obj: unknown): obj is AeOrderResult;
+export declare function isDataEventAdd(obj: unknown): obj is DataEventAdd;
+export declare function isDataEventSet(obj: unknown): obj is DataEventSet;
+export declare function isDataBotComponent(obj: unknown): obj is DataBotComponent;
+export declare function isLog(obj: unknown): obj is Log;

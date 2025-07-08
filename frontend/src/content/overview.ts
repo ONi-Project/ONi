@@ -5,7 +5,7 @@ import { setEndpoint, setToken } from "../settings"
 
 export const html = /*html*/`<div id="overview__content" class="panel-content">
   
-  <div id="overview__loading" style="display: flex;flex-direction: column;align-items: center;margin-top: 35%;">
+  <div id="overview__loading" style="display: flex;flex-direction: column;align-items: center;margin-top: 10rem;">
     <div class="animate__animated animate__fadeInUp animate__faster" style="margin: 2rem;width: 25rem;max-width: 90%;text-align: center;">
       <div style="font-size: larger;text-align: center;margin-bottom: 1rem;opacity: 0.75;">
         少女祈祷中...

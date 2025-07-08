@@ -1,13 +1,9 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const fs_1 = __importDefault(require("fs"));
-const logger_1 = require("../logger");
-const websocket_1 = require("../websocket");
-const index_1 = __importDefault(require("./index"));
-const interface_1 = require("@oni/interface");
+import fs from "fs";
+import { loggerGlobal as logger } from "../logger";
+import { wsWebBroadcast } from "../websocket";
+import Global from "./index";
+import { aeModelGuard, newServerToWebMessage } from "@oni/interface";
+import { randomUUID } from "crypto";
 let ae = {
     // AE 列表
     list: [],
@@ -16,28 +12,28 @@ let ae = {
     },
     add(ae) {
         this.list.push(ae);
-        (0, websocket_1.wsWebBroadcast)((0, interface_1.newServerToWebMessage)("DataAeAdd", ae));
+        wsWebBroadcast(newServerToWebMessage("DataAeAdd", ae));
     },
     remove(uuid) {
         let index = this.list.findIndex(ae => ae.uuid === uuid);
         if (index >= 0) {
             let ae = this.list[index];
             this.list.splice(index, 1);
-            (0, websocket_1.wsWebBroadcast)((0, interface_1.newServerToWebMessage)("DataAeRemove", uuid));
+            wsWebBroadcast(newServerToWebMessage("DataAeRemove", uuid));
         }
         else {
-            logger_1.loggerGlobal.warn("ae.remove", "Ae not found.");
+            logger.warn("ae.remove", "Ae not found.");
         }
     },
     cpus: {
         set(uuid, cpus) {
             let targetAe = ae.list.find(ae => ae.uuid === uuid);
             if (targetAe) {
-                cpus.forEach((cpu) => {
+                cpus.forEach(cpu => {
                     if (cpu.busy && cpu.finalOutput) {
                         const finalOutput = cpu.finalOutput;
-                        const itemPanelItem = index_1.default.staticResources.itemPanelItem.find(itemPanelItem => (itemPanelItem.name == finalOutput.name) && (itemPanelItem.damage == finalOutput.damage));
-                        const itemPanelFluid = index_1.default.staticResources.itemPanelFluid.find(itemPanelFluid => itemPanelFluid.name == finalOutput.name);
+                        const itemPanelItem = Global.staticResources.itemPanelItem.find(itemPanelItem => (itemPanelItem.name == finalOutput.name) && (itemPanelItem.damage == finalOutput.damage));
+                        const itemPanelFluid = Global.staticResources.itemPanelFluid.find(itemPanelFluid => itemPanelFluid.name == finalOutput.name);
                         if (itemPanelItem) {
                             cpu.finalOutput.id = itemPanelItem.id;
                             cpu.finalOutput.display = itemPanelItem.display;
@@ -47,7 +43,7 @@ let ae = {
                             cpu.finalOutput.display = itemPanelFluid.display;
                         }
                         else {
-                            logger_1.loggerGlobal.warn(`Item/Fluid ${cpu.finalOutput.name} not found in staticResources.itemPanel`);
+                            logger.warn(`Item/Fluid ${cpu.finalOutput.name} not found in staticResources.itemPanel`);
                         }
                     }
                 });
@@ -57,7 +53,7 @@ let ae = {
         },
         update(ae) {
             ae.timeUpdated = new Date().getTime();
-            (0, websocket_1.wsWebBroadcast)((0, interface_1.newServerToWebMessage)("DataAeCpusSet", ae));
+            wsWebBroadcast(newServerToWebMessage("DataAeCpusSet", ae));
         }
     },
     items: {
@@ -68,12 +64,12 @@ let ae = {
                 ae.items.update(targetAe);
             }
             else {
-                logger_1.loggerGlobal.warn("ae.items.set", "Ae not found.");
+                logger.warn("ae.items.set", "Ae not found.");
             }
         },
         update(ae) {
             ae.timeUpdated = new Date().getTime();
-            (0, websocket_1.wsWebBroadcast)((0, interface_1.newServerToWebMessage)("DataAeItemsSet", ae));
+            wsWebBroadcast(newServerToWebMessage("DataAeItemsSet", ae));
         }
     },
     levelMaintains: {
@@ -84,44 +80,78 @@ let ae = {
                 ae.levelMaintains.update(targetAe);
             }
             else {
-                logger_1.loggerGlobal.warn("ae.levelMaintains.set", "Ae not found.");
+                logger.warn("ae.levelMaintains.set", "Ae not found.");
             }
         },
         update(ae) {
             ae.timeUpdated = new Date().getTime();
-            (0, websocket_1.wsWebBroadcast)((0, interface_1.newServerToWebMessage)("DataAeLevelMaintainsSet", ae));
+            wsWebBroadcast(newServerToWebMessage("DataAeLevelMaintainsSet", ae));
+            Global.bot.list.forEach(bot => {
+                let flag = false;
+                let oldInterval = -1;
+                const toRemove = (task) => task.task === "ae" &&
+                    task.config.mode === "levelMaintain" &&
+                    task.config.targetAeUuid === ae.uuid;
+                bot.tasks = bot.tasks.filter(task => {
+                    const shouldRemove = toRemove(task);
+                    if (shouldRemove) {
+                        flag = true;
+                        oldInterval = task.interval;
+                    }
+                    return !shouldRemove;
+                });
+                if (flag) {
+                    ae.levelMaintains.forEach(levelMaintain => {
+                        bot.tasks.push({
+                            task: "ae",
+                            interval: oldInterval,
+                            taskUuid: randomUUID(),
+                            config: {
+                                mode: "levelMaintain",
+                                targetAeUuid: ae.uuid,
+                                enabled: levelMaintain.enabled,
+                                list: levelMaintain.list
+                            }
+                        });
+                    });
+                    Global.bot.tasks.update(bot);
+                }
+            });
         }
     },
     save() {
         const MODULE_NAME = "ae.save";
         const FILE_PATH = "./data/ae/ae.json";
         try {
-            fs_1.default.writeFileSync(FILE_PATH, JSON.stringify(this.list), 'utf8');
-            logger_1.loggerGlobal.debug(MODULE_NAME, "Json saved successfully.");
+            fs.writeFileSync(FILE_PATH, JSON.stringify(this.list), 'utf8');
+            logger.debug(MODULE_NAME, "Json saved successfully.");
         }
         catch (e) {
-            logger_1.loggerGlobal.error(MODULE_NAME, "Json save failed.");
-            logger_1.loggerGlobal.error(MODULE_NAME, e);
+            logger.error(MODULE_NAME, "Json save failed.");
+            logger.error(MODULE_NAME, e);
         }
     },
     init(config) {
         const MODULE_NAME = "ae.init";
         const FILE_PATH = "./data/ae/ae.json";
         try {
-            let json = JSON.parse(fs_1.default.readFileSync(FILE_PATH, 'utf8'));
-            if (interface_1.aeModelGuard.isAeArray(json)) {
+            let json = JSON.parse(fs.readFileSync(FILE_PATH, 'utf8'));
+            if (aeModelGuard.isAeArray(json)) {
                 this.list = json;
-                logger_1.loggerGlobal.debug(MODULE_NAME, "Json initialized successfully.");
-                logger_1.loggerGlobal.trace(MODULE_NAME, this.list);
+                logger.debug(MODULE_NAME, "Json initialized successfully.");
+                logger.trace(MODULE_NAME, this.list);
             }
             else {
-                logger_1.loggerGlobal.error(MODULE_NAME, "Json initialization failed. Invalid data format.");
+                logger.error(MODULE_NAME, "Json initialization failed. Invalid data format.");
             }
         }
         catch (e) {
-            logger_1.loggerGlobal.error(MODULE_NAME, "Json initialization failed.");
-            logger_1.loggerGlobal.error(MODULE_NAME, e);
+            logger.error(MODULE_NAME, "Json initialization failed.");
+            logger.error(MODULE_NAME, e);
         }
+        setInterval(() => {
+            this.save();
+        }, config.data_auto_save_interval * 1000);
     }
 };
-exports.default = ae;
+export default ae;

@@ -67,6 +67,9 @@ let event = {
             logger.error(MODULE_NAME, "Json initialization failed.")
             logger.error(MODULE_NAME, e)
         }
+        setInterval(() => {
+            this.save()
+        }, config.data_auto_save_interval * 1000)
     }
 
 }

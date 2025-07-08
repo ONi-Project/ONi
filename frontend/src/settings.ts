@@ -1,4 +1,4 @@
-import { initSettingsContent } from "./dialog/settings"
+import { initSettingsContent } from "./dialog/settings.js"
 
 // 设置项初始化
 export let endpoint = ""

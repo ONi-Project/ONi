@@ -1,4 +1,4 @@
-import type { Message } from "./base";
+import type { Message } from "./base.js";
 export type Info = Message<"Info", {
     message: string;
 }>;

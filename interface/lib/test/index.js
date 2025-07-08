@@ -1,4 +1,4 @@
-import * as serverToOcGuard from "../ws/server-to-oc.guard";
+import * as serverToOcGuard from "../ws/server-to-oc.guard.js";
 console.log(serverToOcGuard.isAuthResponse({
     type: "AuthResponse",
     data: {

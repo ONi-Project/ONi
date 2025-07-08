@@ -1,14 +1,14 @@
 npx ts-auto-guard --export-all `
-    'ws/oc-to-server.ts' `
-    'ws/server-to-oc.ts' `
-    'ws/server-to-web.ts' `
-    'ws/web-to-server.ts' `
-    'ws/general.ts' `
-    'data/ae.ts' `
-    'data/bot.ts' `
-    'data/common.ts' `
-    'data/event.ts' `
-    'data/mcServerStatus.ts' `
-    'data/redstone.ts' `
-    'data/user.ts' `
-    'data/static.ts' `
+    'src/ws/oc-to-server.ts' `
+    'src/ws/server-to-oc.ts' `
+    'src/ws/server-to-web.ts' `
+    'src/ws/web-to-server.ts' `
+    'src/ws/general.ts' `
+    'src/data/ae.ts' `
+    'src/data/bot.ts' `
+    'src/data/common.ts' `
+    'src/data/event.ts' `
+    'src/data/mcServerStatus.ts' `
+    'src/data/redstone.ts' `
+    'src/data/user.ts' `
+    'src/data/static.ts' `

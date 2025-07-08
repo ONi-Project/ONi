@@ -1,7 +1,7 @@
 import { wsServerToWebGuard } from "@oni/interface"
-import { renderLayout } from "../renderer"
-import { eventEmitter } from "../websocket"
-import { setEndpoint, setToken } from "../settings"
+import { renderLayout } from "../renderer.js"
+import { eventEmitter } from "../websocket.js"
+import { setEndpoint, setToken } from "../settings.js"
 
 export const html = /*html*/`<div id="overview__content" class="panel-content">
   

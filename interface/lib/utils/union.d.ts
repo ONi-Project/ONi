@@ -1,8 +1,8 @@
-import type * as serverToWeb from "../ws/server-to-web";
-import type * as webToServer from "../ws/web-to-server";
-import type * as serverToOc from "../ws/server-to-oc";
-import type * as ocToServer from "../ws/oc-to-server";
-import type * as general from "../ws/general";
+import type * as serverToWeb from "../ws/server-to-web.js";
+import type * as webToServer from "../ws/web-to-server.js";
+import type * as serverToOc from "../ws/server-to-oc.js";
+import type * as ocToServer from "../ws/oc-to-server.js";
+import type * as general from "../ws/general.js";
 export type ServerToWeb = serverToWeb.AuthResponse | serverToWeb.DataMcServerStatusSet | serverToWeb.AeOrderResult | serverToWeb.LayoutOverview | serverToWeb.DataCommonInit | serverToWeb.DataCommonSet | serverToWeb.DataCommonAdd | serverToWeb.DataCommonRemove | serverToWeb.DataBotInit | serverToWeb.DataBotComponentsSet | serverToWeb.DataBotTasksSet | serverToWeb.DataBotAdd | serverToWeb.DataBotRemove | serverToWeb.DataAeInit | serverToWeb.DataAeItemsSet | serverToWeb.DataAeCpusSet | serverToWeb.DataAeLevelMaintainsSet | serverToWeb.DataAeAdd | serverToWeb.DataAeRemove | serverToWeb.DataEventInit | serverToWeb.DataEventSet | serverToWeb.DataEventAdd | serverToWeb.DataEventRemove | serverToWeb.DataRedstoneInit | serverToWeb.DataRedstoneSet | serverToWeb.DataRedstoneAdd | serverToWeb.DataRedstoneRemove | serverToWeb.StaticBotTask;
 export type WebToServer = webToServer.AuthRequest | webToServer.OcTaskRunSingle | webToServer.OcTaskAdd | webToServer.OcTaskRemove | webToServer.DataEventSet | webToServer.OcForward | webToServer.AeOrder | webToServer.RedstoneTask | webToServer.BotComponentUpdate | webToServer.DataAeLevelMaintainsSet;
 export type ServerToOc = serverToOc.AuthResponse | serverToOc.Task;

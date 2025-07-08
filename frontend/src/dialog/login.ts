@@ -1,5 +1,5 @@
 import type { Dialog, TextField } from "mdui"
-import { endpoint, setEndpoint, setToken } from "../settings"
+import { endpoint, setEndpoint, setToken } from "../settings.js"
 
 export const html = /*html*/`
 <mdui-dialog icon="person" id="dialog-login" headline="ONi 身份认证">

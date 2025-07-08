@@ -1,7 +1,7 @@
 import fs from "fs";
-import { loggerGlobal as logger } from "../logger";
-import { wsWebBroadcast } from "../websocket";
-import Global from "./index";
+import { loggerGlobal as logger } from "../logger.js";
+import { wsWebBroadcast } from "../websocket.js";
+import Global from "./index.js";
 import { aeModelGuard, newServerToWebMessage } from "@oni/interface";
 import { randomUUID } from "crypto";
 let ae = {

@@ -1,5 +1,5 @@
-import { loggerGlobal as logger } from "../logger";
-import { wsWebBroadcast } from "../websocket";
+import { loggerGlobal as logger } from "../logger.js";
+import { wsWebBroadcast } from "../websocket.js";
 import { newServerToWebMessage } from "@oni/interface";
 let mcServerStatus = {
     // MC 服务器状态

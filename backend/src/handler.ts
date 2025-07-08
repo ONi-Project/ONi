@@ -2,14 +2,14 @@
 
 
 import fs from "fs"
-import Global from "./global/index"
-import { SessionOc, SessionWeb } from "./interface"
-import { loggerHandler as logger, loggerOcOverWs } from "./logger"
-import { wsOcSendByBotUuid, wssOc, wsWebBroadcast } from "./websocket"
+import Global from "./global/index.js"
+import { SessionOc, SessionWeb } from "./interface.js"
+import { loggerHandler as logger, loggerOcOverWs } from "./logger.js"
+import { wsOcSendByBotUuid, wssOc, wsWebBroadcast } from "./websocket.js"
 import { wsBase, wsBaseGuard, wsOcToServer as fromOc, wsOcToServerGuard as fromOcGuard, wsWebToServer as fromWeb, wsWebToServerGuard as fromWebGuard, messageTypeMap, wsGeneral, wsGeneralGuard, aeModel } from "@oni/interface"
 import { botModel, commonModel } from "@oni/interface"
 import { newServerToWebMessage as toWeb, newServerToOcMessage as toOc, newGeneralMessage } from "@oni/interface"
-import { performanceTimer, send } from "./utils"
+import { performanceTimer, send } from "./utils.js"
 
 const handler = {
     webMessage(msg: string, session: SessionWeb) {

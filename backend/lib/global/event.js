@@ -1,7 +1,7 @@
 import fs from "fs";
-import { wsWebBroadcast } from "../websocket";
+import { wsWebBroadcast } from "../websocket.js";
 import { eventModelGuard, newServerToWebMessage } from "@oni/interface";
-import { loggerGlobal as logger } from "../logger";
+import { loggerGlobal as logger } from "../logger.js";
 let event = {
     // 事件
     list: [],

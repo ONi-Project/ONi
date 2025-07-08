@@ -1,8 +1,8 @@
 import { botModel, newWebToServerMessage, wsServerToWebGuard, wsWebToServer } from "@oni/interface"
-import { botTaskNew } from "../dialog/bot-task"
-import * as global from "../global"
-import { randomUUID } from "../utils"
-import { eventEmitter, send } from "../websocket"
+import { botTaskNew } from "../dialog/bot-task.js"
+import * as global from "../global.js"
+import { randomUUID } from "../utils.js"
+import { eventEmitter, send } from "../websocket.js"
 
 
 export function html(config: any) {

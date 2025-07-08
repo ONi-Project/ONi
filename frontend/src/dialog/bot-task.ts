@@ -1,6 +1,6 @@
 import { Checkbox, CollapseItem, Dialog } from "mdui"
-import { botTask } from "../global"
-import { randomUUID } from "../utils"
+import { botTask } from "../global.js"
+import { randomUUID } from "../utils.js"
 
 export const html = /*html*/`
 <mdui-dialog id="bot__task-dialog-step1" style="padding: 0 !important;">

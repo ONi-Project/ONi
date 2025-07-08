@@ -1,4 +1,4 @@
-import { isOcMessage } from "../ws/base.guard"
+import { isOcMessage } from "../ws/base.guard.js"
 
 describe("isOcMessage", () => {
     test("returns true for valid OcMessage", () => {

@@ -1,5 +1,5 @@
-import type { Message, OcMessage } from "./base"
-import type { aeModel, botModel, eventModel, redstoneModel } from "../index"
+import type { Message, OcMessage } from "./base.js"
+import type { aeModel, botModel, eventModel, redstoneModel } from "../index.js"
 
 export type AuthRequest = Message<"AuthRequest", {
     token: string

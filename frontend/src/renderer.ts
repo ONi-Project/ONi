@@ -1,7 +1,7 @@
 import { layoutModel } from "@oni/interface"
-import * as blockRenderer from "./block"
-import * as cardRenderer from "./card"
-import * as tabRenderer from "./tab"
+import * as blockRenderer from "./block/index.js"
+import * as cardRenderer from "./card/index.js"
+import * as tabRenderer from "./tab/index.js"
 // 渲染布局
 export async function renderLayout(layout: layoutModel.Layout, element: HTMLElement, animation = true) {
     console.log("renderLayout", layout)

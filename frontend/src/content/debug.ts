@@ -1,6 +1,6 @@
 import { Select, TextField } from "mdui"
-import { eventEmitter, send } from "../websocket"
-import { bot } from "../global"
+import { eventEmitter, send } from "../websocket.js"
+import { bot } from "../global.js"
 
 export const html = /*html*/ `
 <div id="debug__content" class="panel-content" hidden>

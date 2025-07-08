@@ -1,9 +1,9 @@
 import { aeModel } from "@oni/interface"
 import * as pinyinPro from "pinyin-pro"
 import { Dialog, throttle } from "mdui"
-import * as utils from "../utils"
-import { picSource } from "../settings"
-import * as global from "../global"
+import * as utils from "../utils.js"
+import { picSource } from "../settings.js"
+import * as global from "../global.js"
 
 
 export const html = /*html*/`<mdui-dialog id="ae__item-select" style="padding: 0 !important;">

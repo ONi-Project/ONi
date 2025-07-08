@@ -1,10 +1,10 @@
 import { throttle } from "mdui"
 import * as pinyinPro from "pinyin-pro"
-import * as global from "../global"
-import * as utils from "../utils"
-import { eventEmitter } from "../websocket"
-import { showItemInfo } from "../dialog/ae-item-info"
-import { picSource } from "../settings"
+import * as global from "../global.js"
+import * as utils from "../utils.js"
+import { eventEmitter } from "../websocket.js"
+import { showItemInfo } from "../dialog/ae-item-info.js"
+import { picSource } from "../settings.js"
 import { aeModel, wsServerToWebGuard } from "@oni/interface"
 
 export function html(config: any) {

@@ -1,7 +1,7 @@
 import { WebSocketServer } from "ws";
-import { loggerWebsocket as logger } from "./logger";
-import handler from "./handler";
-import { send } from "./utils";
+import { loggerWebsocket as logger } from "./logger.js";
+import handler from "./handler.js";
+import { send } from "./utils.js";
 export const wssWeb = new WebSocketServer({ noServer: true });
 export const wssOc = new WebSocketServer({ noServer: true });
 let Websocket = {

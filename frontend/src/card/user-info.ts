@@ -1,4 +1,4 @@
-import { user } from "../websocket"
+import { user } from "../websocket.js"
 
 export function html(config: any) {
     return /*html*/`

@@ -5,12 +5,11 @@
     "moduleResolution": "node",
     "strict": true,
     "declaration": true,
-    "outDir": "./lib",
-    "composite": true,
+    "outDir": "lib",
     "baseUrl": ".",
-    "isolatedModules": true
+    "rootDir": "src",
   },
   "include": [
-    "./**/*.ts"
+    "src"
   ]
 }

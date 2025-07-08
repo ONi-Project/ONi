@@ -1,5 +1,5 @@
-import type { Message, OcMessage } from "./base";
-import type { aeModel, botModel } from "../index";
+import type { Message, OcMessage } from "./base.js";
+import type { aeModel, botModel } from "../index.js";
 export type AuthRequest = Message<"AuthRequest", {
     token: string;
 }>;

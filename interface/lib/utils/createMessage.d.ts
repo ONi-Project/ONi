@@ -1,214 +1,214 @@
-import { allMessageType, messageTypeMap } from "../index";
-export declare let newServerToWebMessage: <T extends "AuthResponse" | "DataMcServerStatusSet" | "AeOrderResult" | "LayoutOverview" | "DataCommonInit" | "DataCommonSet" | "DataCommonAdd" | "DataCommonRemove" | "DataBotInit" | "DataBotComponentsSet" | "DataBotTasksSet" | "DataBotAdd" | "DataBotRemove" | "DataAeInit" | "DataAeItemsSet" | "DataAeCpusSet" | "DataAeLevelMaintainsSet" | "DataAeAdd" | "DataAeRemove" | "DataEventInit" | "DataEventSet" | "DataEventAdd" | "DataEventRemove" | "DataRedstoneInit" | "DataRedstoneSet" | "DataRedstoneAdd" | "DataRedstoneRemove" | "StaticBotTask">(type: T, ...args: messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").AuthResponse, {
+import { allMessageType, messageTypeMap } from "../index.js";
+export declare let newServerToWebMessage: <T extends "AuthResponse" | "DataMcServerStatusSet" | "AeOrderResult" | "LayoutOverview" | "DataCommonInit" | "DataCommonSet" | "DataCommonAdd" | "DataCommonRemove" | "DataBotInit" | "DataBotComponentsSet" | "DataBotTasksSet" | "DataBotAdd" | "DataBotRemove" | "DataAeInit" | "DataAeItemsSet" | "DataAeCpusSet" | "DataAeLevelMaintainsSet" | "DataAeAdd" | "DataAeRemove" | "DataEventInit" | "DataEventSet" | "DataEventAdd" | "DataEventRemove" | "DataRedstoneInit" | "DataRedstoneSet" | "DataRedstoneAdd" | "DataRedstoneRemove" | "StaticBotTask">(type: T, ...args: messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").AuthResponse, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataMcServerStatusSet, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataMcServerStatusSet, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").AeOrderResult, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").AeOrderResult, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").LayoutOverview, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").LayoutOverview, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataCommonInit, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataCommonInit, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataCommonSet, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataCommonSet, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataCommonAdd, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataCommonAdd, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataCommonRemove, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataCommonRemove, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataBotInit, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataBotInit, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataBotComponentsSet, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataBotComponentsSet, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataBotTasksSet, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataBotTasksSet, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataBotAdd, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataBotAdd, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataBotRemove, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataBotRemove, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataAeInit, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataAeInit, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataAeItemsSet, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataAeItemsSet, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataAeCpusSet, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataAeCpusSet, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataAeLevelMaintainsSet, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataAeLevelMaintainsSet, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataAeAdd, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataAeAdd, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataAeRemove, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataAeRemove, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataEventInit, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataEventInit, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataEventSet, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataEventSet, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataEventAdd, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataEventAdd, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataEventRemove, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataEventRemove, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataRedstoneInit, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataRedstoneInit, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataRedstoneSet, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataRedstoneSet, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataRedstoneAdd, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataRedstoneAdd, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").DataRedstoneRemove, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").DataRedstoneRemove, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web").StaticBotTask, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-web.js").StaticBotTask, {
     type: T;
-}>> extends true ? [data: messageTypeMap.DataType<allMessageType.ServerToWeb>[T], target: messageTypeMap.TargetType<allMessageType.ServerToWeb>[T]] : [data: messageTypeMap.DataType<allMessageType.ServerToWeb>[T]]) => Extract<import("../ws/server-to-web").AuthResponse, {
+}>> extends true ? [data: messageTypeMap.DataType<allMessageType.ServerToWeb>[T], target: messageTypeMap.TargetType<allMessageType.ServerToWeb>[T]] : [data: messageTypeMap.DataType<allMessageType.ServerToWeb>[T]]) => Extract<import("../ws/server-to-web.js").AuthResponse, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataMcServerStatusSet, {
+}> | Extract<import("../ws/server-to-web.js").DataMcServerStatusSet, {
     type: T;
-}> | Extract<import("../ws/server-to-web").AeOrderResult, {
+}> | Extract<import("../ws/server-to-web.js").AeOrderResult, {
     type: T;
-}> | Extract<import("../ws/server-to-web").LayoutOverview, {
+}> | Extract<import("../ws/server-to-web.js").LayoutOverview, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataCommonInit, {
+}> | Extract<import("../ws/server-to-web.js").DataCommonInit, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataCommonSet, {
+}> | Extract<import("../ws/server-to-web.js").DataCommonSet, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataCommonAdd, {
+}> | Extract<import("../ws/server-to-web.js").DataCommonAdd, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataCommonRemove, {
+}> | Extract<import("../ws/server-to-web.js").DataCommonRemove, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataBotInit, {
+}> | Extract<import("../ws/server-to-web.js").DataBotInit, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataBotComponentsSet, {
+}> | Extract<import("../ws/server-to-web.js").DataBotComponentsSet, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataBotTasksSet, {
+}> | Extract<import("../ws/server-to-web.js").DataBotTasksSet, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataBotAdd, {
+}> | Extract<import("../ws/server-to-web.js").DataBotAdd, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataBotRemove, {
+}> | Extract<import("../ws/server-to-web.js").DataBotRemove, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataAeInit, {
+}> | Extract<import("../ws/server-to-web.js").DataAeInit, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataAeItemsSet, {
+}> | Extract<import("../ws/server-to-web.js").DataAeItemsSet, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataAeCpusSet, {
+}> | Extract<import("../ws/server-to-web.js").DataAeCpusSet, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataAeLevelMaintainsSet, {
+}> | Extract<import("../ws/server-to-web.js").DataAeLevelMaintainsSet, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataAeAdd, {
+}> | Extract<import("../ws/server-to-web.js").DataAeAdd, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataAeRemove, {
+}> | Extract<import("../ws/server-to-web.js").DataAeRemove, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataEventInit, {
+}> | Extract<import("../ws/server-to-web.js").DataEventInit, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataEventSet, {
+}> | Extract<import("../ws/server-to-web.js").DataEventSet, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataEventAdd, {
+}> | Extract<import("../ws/server-to-web.js").DataEventAdd, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataEventRemove, {
+}> | Extract<import("../ws/server-to-web.js").DataEventRemove, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataRedstoneInit, {
+}> | Extract<import("../ws/server-to-web.js").DataRedstoneInit, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataRedstoneSet, {
+}> | Extract<import("../ws/server-to-web.js").DataRedstoneSet, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataRedstoneAdd, {
+}> | Extract<import("../ws/server-to-web.js").DataRedstoneAdd, {
     type: T;
-}> | Extract<import("../ws/server-to-web").DataRedstoneRemove, {
+}> | Extract<import("../ws/server-to-web.js").DataRedstoneRemove, {
     type: T;
-}> | Extract<import("../ws/server-to-web").StaticBotTask, {
+}> | Extract<import("../ws/server-to-web.js").StaticBotTask, {
     type: T;
 }>;
-export declare let newWebToServerMessage: <T extends "DataAeLevelMaintainsSet" | "DataEventSet" | "AuthRequest" | "OcTaskRunSingle" | "OcTaskAdd" | "OcTaskRemove" | "OcForward" | "AeOrder" | "RedstoneTask" | "BotComponentUpdate">(type: T, ...args: messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server").AuthRequest, {
+export declare let newWebToServerMessage: <T extends "DataAeLevelMaintainsSet" | "DataEventSet" | "AuthRequest" | "OcTaskRunSingle" | "OcTaskAdd" | "OcTaskRemove" | "OcForward" | "AeOrder" | "RedstoneTask" | "BotComponentUpdate">(type: T, ...args: messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server.js").AuthRequest, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server").OcTaskRunSingle, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server.js").OcTaskRunSingle, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server").OcTaskAdd, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server.js").OcTaskAdd, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server").OcTaskRemove, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server.js").OcTaskRemove, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server").DataEventSet, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server.js").DataEventSet, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server").OcForward, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server.js").OcForward, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server").AeOrder, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server.js").AeOrder, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server").RedstoneTask, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server.js").RedstoneTask, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server").BotComponentUpdate, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server.js").BotComponentUpdate, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server").DataAeLevelMaintainsSet, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/web-to-server.js").DataAeLevelMaintainsSet, {
     type: T;
-}>> extends true ? [data: messageTypeMap.DataType<allMessageType.WebToServer>[T], target: messageTypeMap.TargetType<allMessageType.WebToServer>[T]] : [data: messageTypeMap.DataType<allMessageType.WebToServer>[T]]) => Extract<import("../ws/web-to-server").AuthRequest, {
+}>> extends true ? [data: messageTypeMap.DataType<allMessageType.WebToServer>[T], target: messageTypeMap.TargetType<allMessageType.WebToServer>[T]] : [data: messageTypeMap.DataType<allMessageType.WebToServer>[T]]) => Extract<import("../ws/web-to-server.js").AuthRequest, {
     type: T;
-}> | Extract<import("../ws/web-to-server").OcTaskRunSingle, {
+}> | Extract<import("../ws/web-to-server.js").OcTaskRunSingle, {
     type: T;
-}> | Extract<import("../ws/web-to-server").OcTaskAdd, {
+}> | Extract<import("../ws/web-to-server.js").OcTaskAdd, {
     type: T;
-}> | Extract<import("../ws/web-to-server").OcTaskRemove, {
+}> | Extract<import("../ws/web-to-server.js").OcTaskRemove, {
     type: T;
-}> | Extract<import("../ws/web-to-server").DataEventSet, {
+}> | Extract<import("../ws/web-to-server.js").DataEventSet, {
     type: T;
-}> | Extract<import("../ws/web-to-server").OcForward, {
+}> | Extract<import("../ws/web-to-server.js").OcForward, {
     type: T;
-}> | Extract<import("../ws/web-to-server").AeOrder, {
+}> | Extract<import("../ws/web-to-server.js").AeOrder, {
     type: T;
-}> | Extract<import("../ws/web-to-server").RedstoneTask, {
+}> | Extract<import("../ws/web-to-server.js").RedstoneTask, {
     type: T;
-}> | Extract<import("../ws/web-to-server").BotComponentUpdate, {
+}> | Extract<import("../ws/web-to-server.js").BotComponentUpdate, {
     type: T;
-}> | Extract<import("../ws/web-to-server").DataAeLevelMaintainsSet, {
-    type: T;
-}>;
-export declare let newServerToOcMessage: <T extends "AuthResponse" | "Task">(type: T, ...args: messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-oc").AuthResponse, {
-    type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-oc").Task, {
-    type: T;
-}>> extends true ? [data: messageTypeMap.DataType<allMessageType.ServerToOc>[T], target: messageTypeMap.TargetType<allMessageType.ServerToOc>[T]] : [data: messageTypeMap.DataType<allMessageType.ServerToOc>[T]]) => Extract<import("../ws/server-to-oc").AuthResponse, {
-    type: T;
-}> | Extract<import("../ws/server-to-oc").Task, {
+}> | Extract<import("../ws/web-to-server.js").DataAeLevelMaintainsSet, {
     type: T;
 }>;
-export declare let newOcToServerMessage: <T extends "AeOrderResult" | "DataCommonSet" | "DataEventSet" | "DataEventAdd" | "AuthRequest" | "DataAeItemList" | "DataAeCpuList" | "DataBotComponent" | "Log">(type: T, ...args: messageTypeMap.IsOcMessage<Extract<import("../ws/oc-to-server").AuthRequest, {
+export declare let newServerToOcMessage: <T extends "AuthResponse" | "Task">(type: T, ...args: messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-oc.js").AuthResponse, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/oc-to-server").DataCommonSet, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/server-to-oc.js").Task, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/oc-to-server").DataAeItemList, {
+}>> extends true ? [data: messageTypeMap.DataType<allMessageType.ServerToOc>[T], target: messageTypeMap.TargetType<allMessageType.ServerToOc>[T]] : [data: messageTypeMap.DataType<allMessageType.ServerToOc>[T]]) => Extract<import("../ws/server-to-oc.js").AuthResponse, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/oc-to-server").DataAeCpuList, {
-    type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/oc-to-server").AeOrderResult, {
-    type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/oc-to-server").DataEventAdd, {
-    type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/oc-to-server").DataEventSet, {
-    type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/oc-to-server").DataBotComponent, {
-    type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/oc-to-server").Log, {
-    type: T;
-}>> extends true ? [data: messageTypeMap.DataType<allMessageType.OcToServer>[T], target: messageTypeMap.TargetType<allMessageType.OcToServer>[T]] : [data: messageTypeMap.DataType<allMessageType.OcToServer>[T]]) => Extract<import("../ws/oc-to-server").AuthRequest, {
-    type: T;
-}> | Extract<import("../ws/oc-to-server").DataCommonSet, {
-    type: T;
-}> | Extract<import("../ws/oc-to-server").DataAeItemList, {
-    type: T;
-}> | Extract<import("../ws/oc-to-server").DataAeCpuList, {
-    type: T;
-}> | Extract<import("../ws/oc-to-server").AeOrderResult, {
-    type: T;
-}> | Extract<import("../ws/oc-to-server").DataEventAdd, {
-    type: T;
-}> | Extract<import("../ws/oc-to-server").DataEventSet, {
-    type: T;
-}> | Extract<import("../ws/oc-to-server").DataBotComponent, {
-    type: T;
-}> | Extract<import("../ws/oc-to-server").Log, {
+}> | Extract<import("../ws/server-to-oc.js").Task, {
     type: T;
 }>;
-export declare let newGeneralMessage: <T extends "Info" | "Warning" | "Error">(type: T, ...args: messageTypeMap.IsOcMessage<Extract<import("../ws/general").Info, {
+export declare let newOcToServerMessage: <T extends "AeOrderResult" | "DataCommonSet" | "DataEventSet" | "DataEventAdd" | "AuthRequest" | "DataAeItemList" | "DataAeCpuList" | "DataBotComponent" | "Log">(type: T, ...args: messageTypeMap.IsOcMessage<Extract<import("../ws/oc-to-server.js").AuthRequest, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/general").Warning, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/oc-to-server.js").DataCommonSet, {
     type: T;
-}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/general").Error, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/oc-to-server.js").DataAeItemList, {
     type: T;
-}>> extends true ? [data: messageTypeMap.DataType<allMessageType.General>[T], target: messageTypeMap.TargetType<allMessageType.General>[T]] : [data: messageTypeMap.DataType<allMessageType.General>[T]]) => Extract<import("../ws/general").Info, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/oc-to-server.js").DataAeCpuList, {
     type: T;
-}> | Extract<import("../ws/general").Warning, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/oc-to-server.js").AeOrderResult, {
     type: T;
-}> | Extract<import("../ws/general").Error, {
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/oc-to-server.js").DataEventAdd, {
+    type: T;
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/oc-to-server.js").DataEventSet, {
+    type: T;
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/oc-to-server.js").DataBotComponent, {
+    type: T;
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/oc-to-server.js").Log, {
+    type: T;
+}>> extends true ? [data: messageTypeMap.DataType<allMessageType.OcToServer>[T], target: messageTypeMap.TargetType<allMessageType.OcToServer>[T]] : [data: messageTypeMap.DataType<allMessageType.OcToServer>[T]]) => Extract<import("../ws/oc-to-server.js").AuthRequest, {
+    type: T;
+}> | Extract<import("../ws/oc-to-server.js").DataCommonSet, {
+    type: T;
+}> | Extract<import("../ws/oc-to-server.js").DataAeItemList, {
+    type: T;
+}> | Extract<import("../ws/oc-to-server.js").DataAeCpuList, {
+    type: T;
+}> | Extract<import("../ws/oc-to-server.js").AeOrderResult, {
+    type: T;
+}> | Extract<import("../ws/oc-to-server.js").DataEventAdd, {
+    type: T;
+}> | Extract<import("../ws/oc-to-server.js").DataEventSet, {
+    type: T;
+}> | Extract<import("../ws/oc-to-server.js").DataBotComponent, {
+    type: T;
+}> | Extract<import("../ws/oc-to-server.js").Log, {
+    type: T;
+}>;
+export declare let newGeneralMessage: <T extends "Info" | "Warning" | "Error">(type: T, ...args: messageTypeMap.IsOcMessage<Extract<import("../ws/general.js").Info, {
+    type: T;
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/general.js").Warning, {
+    type: T;
+}>> | messageTypeMap.IsOcMessage<Extract<import("../ws/general.js").Error, {
+    type: T;
+}>> extends true ? [data: messageTypeMap.DataType<allMessageType.General>[T], target: messageTypeMap.TargetType<allMessageType.General>[T]] : [data: messageTypeMap.DataType<allMessageType.General>[T]]) => Extract<import("../ws/general.js").Info, {
+    type: T;
+}> | Extract<import("../ws/general.js").Warning, {
+    type: T;
+}> | Extract<import("../ws/general.js").Error, {
     type: T;
 }>;

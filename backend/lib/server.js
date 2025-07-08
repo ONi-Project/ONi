@@ -2,8 +2,8 @@ import express from "express";
 import ejs from "ejs";
 import http from "http";
 import WebSocket from 'ws';
-import { wssWeb, wssOc } from "./websocket";
-import { loggerServer as logger } from "./logger";
+import { wssWeb, wssOc } from "./websocket.js";
+import { loggerServer as logger } from "./logger.js";
 import { newWebToServerMessage } from "@oni/interface";
 let Server = {
     init(config) {

@@ -1,6 +1,6 @@
 import { layoutModel, wsServerToWebGuard } from "@oni/interface"
-import { renderLayout } from "../renderer"
-import { eventEmitter } from "../websocket"
+import { renderLayout } from "../renderer.js"
+import { eventEmitter } from "../websocket.js"
 
 export const html = /*html*/`<div id="control__content" class="panel-content" hidden>
     <div class="animate__animated animate__fadeInUp animate__faster" style="margin-bottom: 0.5rem;padding: 0.25rem;display: flex;gap: 0.5rem;align-items: center;" variant="filled">

@@ -1,4 +1,4 @@
-import { isMessage } from "../ws/base.guard";
+import { isMessage } from "../ws/base.guard.js";
 describe("isMessage", () => {
     test("returns true for a valid Message object", () => {
         const validMessage = { type: "test", data: {} };

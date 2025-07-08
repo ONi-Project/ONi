@@ -1,7 +1,7 @@
-import { isMobileDevice } from "../utils"
-import { toggleDrawer, toggleFold } from "./navrail"
-import { user } from "../websocket"
-import { endpoint } from "../settings"
+import { isMobileDevice } from "../utils.js"
+import { toggleDrawer, toggleFold } from "./navrail.js"
+import { user } from "../websocket.js"
+import { endpoint } from "../settings.js"
 
 export const html = /*html*/`
 <mdui-top-app-bar scroll-behavior="shrink elevate" scroll-target="#main-content-area" style="position: relative;">

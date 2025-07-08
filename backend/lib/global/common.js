@@ -1,6 +1,6 @@
 import fs from "fs";
-import { loggerGlobal as logger } from "../logger";
-import { wsWebBroadcast } from "../websocket";
+import { loggerGlobal as logger } from "../logger.js";
+import { wsWebBroadcast } from "../websocket.js";
 import { commonModelGuard, newServerToWebMessage } from "@oni/interface";
 let common = {
     // 通用数据

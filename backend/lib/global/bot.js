@@ -1,6 +1,6 @@
 import fs from "fs";
-import { loggerGlobal as logger } from "../logger";
-import { wsOcSendByBotUuid, wsWebBroadcast } from "../websocket";
+import { loggerGlobal as logger } from "../logger.js";
+import { wsOcSendByBotUuid, wsWebBroadcast } from "../websocket.js";
 import { botModelGuard, newServerToOcMessage, newServerToWebMessage } from "@oni/interface";
 let bot = {
     // BOT 列表

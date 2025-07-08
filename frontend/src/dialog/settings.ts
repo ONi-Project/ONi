@@ -1,5 +1,5 @@
 import type { Button, Dialog } from "mdui"
-import { setToken } from "../settings"
+import { setToken } from "../settings.js"
 
 export const html = /*html*/`
 <mdui-dialog id="settings-dialog">

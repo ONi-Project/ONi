@@ -1,9 +1,9 @@
-import { picSource } from "../settings"
-import { eventEmitter, send } from "../websocket"
-import * as global from "../global"
+import { picSource } from "../settings.js"
+import { eventEmitter, send } from "../websocket.js"
+import * as global from "../global.js"
 import { aeModel, newWebToServerMessage, wsServerToWebGuard } from "@oni/interface"
-import { randomUUID } from "../utils"
-import { selectItem } from "../dialog/ae-item-select"
+import { randomUUID } from "../utils.js"
+import { selectItem } from "../dialog/ae-item-select.js"
 
 export function html(config: any) {
     return /*html*/`

@@ -1,5 +1,5 @@
-import Global from "../global/index";
-import { loggerTask as logger } from "../logger";
+import Global from "../global/index.js";
+import { loggerTask as logger } from "../logger.js";
 var mcServerStatus = {
     init(config) {
         // 定时更新 MC 服务器状态

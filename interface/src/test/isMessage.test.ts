@@ -1,5 +1,5 @@
-import { isMessage } from "../ws/base.guard"
-import { Message } from "../ws/base"
+import { isMessage } from "../ws/base.guard.js"
+import { Message } from "../ws/base.js"
 
 describe("isMessage", () => {
     test("returns true for a valid Message object", () => {

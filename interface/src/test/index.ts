@@ -1,5 +1,5 @@
-import * as serverToOcGuard from "../ws/server-to-oc.guard"
-import * as baseGuard from "../ws/base.guard"
+import * as serverToOcGuard from "../ws/server-to-oc.guard.js"
+import * as baseGuard from "../ws/base.guard.js"
 
 console.log(serverToOcGuard.isAuthResponse({
     type: "AuthResponse",

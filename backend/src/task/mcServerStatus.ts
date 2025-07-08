@@ -1,6 +1,6 @@
-import Global from "../global/index"
-import { Config } from "../interface"
-import { loggerTask as logger } from "../logger"
+import Global from "../global/index.js"
+import { Config } from "../interface.js"
+import { loggerTask as logger } from "../logger.js"
 import { mcServerStatusModel } from "@oni/interface"
 
 var mcServerStatus = {

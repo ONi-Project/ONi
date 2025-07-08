@@ -1,8 +1,8 @@
 import { Dialog, snackbar } from "mdui"
-import { picSource } from "../settings"
+import { picSource } from "../settings.js"
 import { Parser } from "expr-eval"
-import { eventEmitter, send } from "../websocket"
-import { randomUUID } from "../utils"
+import { eventEmitter, send } from "../websocket.js"
+import { randomUUID } from "../utils.js"
 import { allMessageType, newWebToServerMessage, wsServerToWebGuard } from "@oni/interface"
 
 export const html = /*html*/`

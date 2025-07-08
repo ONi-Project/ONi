@@ -1,10 +1,10 @@
 import { aeModel, allMessageType, botModel, commonModel, eventModel, mcServerStatusModel, redstoneModel, staticModel } from "@oni/interface"
-import { eventEmitter } from "./websocket"
+import { eventEmitter } from "./websocket.js"
 import { wsServerToWebGuard as toWebGuard, wsGeneralGuard } from "@oni/interface"
-import * as contentEvent from "./content/event"
-import { botTaskUpdate } from "./dialog/bot-task"
+import * as contentEvent from "./content/event.js"
+import { botTaskUpdate } from "./dialog/bot-task.js"
 import { snackbar } from "mdui"
-import { newGeneralMessage } from "@oni/interface/utils/createMessage"
+import { newGeneralMessage } from "@oni/interface"
 
 export let common: commonModel.CommonArray = []
 export let bot: botModel.BotArray = []

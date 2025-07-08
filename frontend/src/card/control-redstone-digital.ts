@@ -1,6 +1,6 @@
 import { type Switch } from "mdui"
-import { randomUUID } from "../utils"
-import { send } from "../websocket"
+import { randomUUID } from "../utils.js"
+import { send } from "../websocket.js"
 import { newWebToServerMessage } from "@oni/interface"
 
 export function html(config: any) {

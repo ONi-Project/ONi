@@ -1,5 +1,5 @@
-import { mcServerStatus } from "../global"
-import { eventEmitter } from "../websocket"
+import { mcServerStatus } from "../global.js"
+import { eventEmitter } from "../websocket.js"
 
 export function html(_config: any) {
     return /*html*/`

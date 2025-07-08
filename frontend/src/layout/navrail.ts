@@ -2,7 +2,7 @@ import { ListItem, setTheme, type NavigationDrawer } from 'mdui'
 import 'mdui/components/navigation-drawer.js'
 import 'mdui/components/navigation-rail-item.js'
 import 'mdui/components/navigation-rail.js'
-import { isMobileDevice } from '../utils'
+import { isMobileDevice } from '../utils.js'
 
 export const html = /*html*/`
 <div id="navi-drawer">

@@ -1,6 +1,6 @@
-import { eventEmitter, send } from "../websocket"
+import { eventEmitter, send } from "../websocket.js"
 import { eventModel, layoutModel, newWebToServerMessage, wsServerToWebGuard } from "@oni/interface"
-import * as global from "../global"
+import * as global from "../global.js"
 import { Chip } from "mdui"
 
 export const html = /*html*/`<div id="event__content" class="panel-content">

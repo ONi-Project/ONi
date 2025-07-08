@@ -1,5 +1,5 @@
-import type { Message } from "./base";
-import type { aeModel, botModel, commonModel, eventModel, layoutModel, mcServerStatusModel, redstoneModel, userModel, staticModel } from "../index";
+import type { Message } from "./base.js";
+import type { aeModel, botModel, commonModel, eventModel, layoutModel, mcServerStatusModel, redstoneModel, userModel, staticModel } from "../index.js";
 export type AuthResponse = Message<"AuthResponse", userModel.User | null>;
 export type DataMcServerStatusSet = Message<"DataMcServerStatusSet", mcServerStatusModel.McServerStatus>;
 export type AeOrderResult = Message<"AeOrderResult", aeModel.AeOrderResult>;

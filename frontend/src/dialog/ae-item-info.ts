@@ -1,8 +1,8 @@
 import type { Button, Dialog } from "mdui"
-import { ae } from "../global"
-import { numberDisplayConvert } from "../utils"
-import { showOrderDialog } from "./ae-order"
-import { picSource } from "../settings"
+import { ae } from "../global.js"
+import { numberDisplayConvert } from "../utils.js"
+import { showOrderDialog } from "./ae-order.js"
+import { picSource } from "../settings.js"
 import { aeModel } from "@oni/interface"
 
 export const html = /*html*/`

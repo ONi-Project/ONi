@@ -1,4 +1,4 @@
-import { Message, OcMessage } from "./base";
+import { Message, OcMessage } from "./base.js";
 
 export function isMessage(obj: unknown): obj is Message<string, unknown> {
     return (

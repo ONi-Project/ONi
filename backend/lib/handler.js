@@ -1,10 +1,10 @@
 import fs from "fs";
-import Global from "./global/index";
-import { loggerHandler as logger, loggerOcOverWs } from "./logger";
-import { wsOcSendByBotUuid, wsWebBroadcast } from "./websocket";
+import Global from "./global/index.js";
+import { loggerHandler as logger, loggerOcOverWs } from "./logger.js";
+import { wsOcSendByBotUuid, wsWebBroadcast } from "./websocket.js";
 import { wsBaseGuard, wsOcToServerGuard as fromOcGuard, wsWebToServerGuard as fromWebGuard } from "@oni/interface";
 import { newServerToWebMessage as toWeb, newServerToOcMessage as toOc, newGeneralMessage } from "@oni/interface";
-import { performanceTimer, send } from "./utils";
+import { performanceTimer, send } from "./utils.js";
 const handler = {
     webMessage(msg, session) {
         // 解析 JSON

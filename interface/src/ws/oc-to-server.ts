@@ -1,5 +1,5 @@
-import type { Message } from "./base"
-import { aeModel, botModel, commonModel, eventModel } from "../index"
+import type { Message } from "./base.js"
+import { aeModel, botModel, commonModel, eventModel } from "../index.js"
 
 export type AuthRequest = Message<"AuthRequest", {
     token: string

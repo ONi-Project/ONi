@@ -1,4 +1,4 @@
-import { allMessageType, messageTypeMap, wsBase } from "../index"
+import { allMessageType, messageTypeMap, wsBase } from "../index.js"
 
 const curriedCreateMessage = <M extends wsBase.Message<string, any>>(
     fixedM: M

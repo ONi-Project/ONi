@@ -1,6 +1,6 @@
 import { wsServerToWebGuard } from "@oni/interface"
-import { common } from "../global"
-import { eventEmitter } from "../websocket"
+import { common } from "../global.js"
+import { eventEmitter } from "../websocket.js"
 import { Circle } from "progressbar.js"
 
 export function html(config: any) {

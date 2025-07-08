@@ -1,6 +1,6 @@
 import { layoutModel, wsServerToWebGuard } from "@oni/interface"
-import { renderLayout } from "../renderer"
-import { eventEmitter } from "../websocket"
+import { renderLayout } from "../renderer.js"
+import { eventEmitter } from "../websocket.js"
 
 export const html = /*html*/`
 <div id="ae__content" class="panel-content" hidden>

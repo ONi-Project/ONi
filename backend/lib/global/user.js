@@ -1,5 +1,5 @@
 import fs from "fs";
-import { loggerGlobal as logger } from "../logger";
+import { loggerGlobal as logger } from "../logger.js";
 import { userModelGuard } from "@oni/interface";
 let user = {
     // 用户列表

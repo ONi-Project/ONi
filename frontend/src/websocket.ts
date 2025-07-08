@@ -1,7 +1,7 @@
 import { Snackbar, snackbar } from "mdui"
-import { endpoint, token } from "./settings"
-import { closeLoginDialog, openLoginDialog, setText } from "./dialog/login"
-import { initSlogan } from "./layout/topbar"
+import { endpoint, token } from "./settings.js"
+import { closeLoginDialog, openLoginDialog, setText } from "./dialog/login.js"
+import { initSlogan } from "./layout/topbar.js"
 
 import { allMessageType, newWebToServerMessage as toServer, userModel, wsBaseGuard, wsServerToWebGuard } from "@oni/interface"
 

@@ -385,13 +385,18 @@ export function init() {
             (targetElement as HTMLElement).style["display"] = "grid"
 
             aeCpus.forEach((cpu: aeModel.AeCpu, i: number) => {
-                const finalOutputTotal = cpu.busy ? cpu.finalOutput!.total : -1
-                const finalOutputAmount = cpu.busy ? cpu.finalOutput!.amount : 0
+                const finalOutputTotal = cpu.busy && cpu.finalOutput ? cpu.finalOutput.total : -1
+                const finalOutputAmount = cpu.busy && cpu.finalOutput ? cpu.finalOutput.amount : 0
                 const icon = cpu.busy ? "settings_suggest" : "download_done"
                 const iconBig = cpu.busy ? "hourglass_bottom" : "schedule"
                 const nameStr = cpu.name ? `- "${cpu.name}"` : ""
-                const statusStr = cpu.busy ? `合成中 · ${utils.timeLengthDisplayConvert(cpu.timeStarted!)}` : `空闲 · ${cpu.storage / 1024}K`
-                const finalOutput = cpu.busy ? `<div style="margin-top: .5rem;margin-bottom: .5rem;"><b>${cpu.finalOutput!.display}</b> - ${finalOutputTotal - finalOutputAmount} / ${finalOutputTotal}</div>` : ""
+
+                const timeStarted = cpu.timeStarted ? cpu.timeStarted : 0
+                const timeStartedStr = cpu.timeStarted ? utils.timeLengthDisplayConvert(timeStarted) : ""
+                const finalOutputDisplay = cpu.finalOutput ? cpu.finalOutput.display : ""
+                
+                const statusStr = cpu.busy ? `合成中 · ${timeStartedStr}` : `空闲 · ${cpu.storage / 1024}K`
+                const finalOutput = cpu.busy ? `<div style="margin-top: .5rem;margin-bottom: .5rem;"><b>${finalOutputDisplay}</b> - ${finalOutputTotal - finalOutputAmount} / ${finalOutputTotal}</div>` : ""
                 const percentage = ((finalOutputTotal - finalOutputAmount) / finalOutputTotal * 100).toFixed(0)
                 const progressBar = cpu.busy ? /*html*/`
                 <div style="display: flex;align-items: center;margin-bottom: 0.25rem;">

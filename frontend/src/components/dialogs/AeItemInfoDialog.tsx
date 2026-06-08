@@ -2,26 +2,21 @@ import { useRef, useState, useCallback } from "react"
 import type { Dialog } from "mdui"
 import { useDataStore } from "../../stores/useDataStore"
 import { numberDisplayConvert } from "../../lib/utils"
-// Item panel image source
-const picSource = "https://akyuu.cn/oni/itempanel"
+import { showOrderDialog } from "./AeOrderDialog"
 
-interface ItemInfo {
-  aeuuid: string
-  id: number
-  damage: number
-  itemType: string
-}
+const picSource = "https://akyuu.cn/oni/itempanel"
 
 export default function AeItemInfoDialog() {
   const dialogRef = useRef<Dialog>(null)
   const ae = useDataStore((s) => s.ae)
-  const [itemInfo, setItemInfo] = useState<ItemInfo | null>(null)
-  const [onRequestOrder, setOnRequestOrder] = useState<(() => void) | null>(null)
 
   const [display, setDisplay] = useState("")
   const [amount, setAmount] = useState("")
   const [iconSrc, setIconSrc] = useState("")
   const [craftable, setCraftable] = useState(false)
+
+  // Store item info for order request
+  const itemRef = useRef<{ aeuuid: string; item: any } | null>(null)
 
   const showItemInfo = useCallback(
     (aeuuid: string, id: number, damage: number, itemType: string) => {
@@ -39,7 +34,6 @@ export default function AeItemInfoDialog() {
           (i: any) => i.type === "fluid" && i.id === id
         )
       } else if (itemType === "vis") {
-        // TODO: vis
         return
       }
 
@@ -58,7 +52,7 @@ export default function AeItemInfoDialog() {
       setAmount(numberDisplayConvert(item.amount))
       setIconSrc(`${picSource}/${link}`)
       setCraftable(item.craftable)
-      setItemInfo({ aeuuid, id, damage, itemType })
+      itemRef.current = { aeuuid, item }
 
       if (dialogRef.current) {
         dialogRef.current.open = true
@@ -67,17 +61,20 @@ export default function AeItemInfoDialog() {
     [ae]
   )
 
+  // Always keep window.showItemInfo pointing to latest callback
+  const showItemInfoRef = useRef(showItemInfo)
+  showItemInfoRef.current = showItemInfo
+  ;(window as any).showItemInfo = (...args: any[]) =>
+    showItemInfoRef.current(...(args as [string, number, number, string]))
+
   const handleRequestOrder = () => {
-    if (onRequestOrder) {
-      onRequestOrder()
+    if (itemRef.current) {
+      showOrderDialog(itemRef.current.aeuuid, itemRef.current.item)
     }
     if (dialogRef.current) {
       dialogRef.current.open = false
     }
   }
-
-  // Expose the show function globally
-  ;(window as any).showItemInfo = showItemInfo
 
   return (
     <mdui-dialog

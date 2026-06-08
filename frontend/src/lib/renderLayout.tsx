@@ -31,13 +31,17 @@ export function DynamicLayout({ layout, animation = true }: DynamicLayoutProps) 
         }
 
         const cardKey = `${blockIndex}-${itemIndex}`
-        const delay = animation ? `${itemIndex * 0.03}s` : "0s"
+        const isGridFull = block.type === "grid-full"
+        // grid-full: 块级 fadeIn, 内部卡片无独立动画
+        // 其他: 块无动画, 每张卡片 stagger fadeInUp
+        const cardAnim = animation && !isGridFull
+        const delay = cardAnim ? `${itemIndex * 0.03}s` : "0s"
 
         return (
           <div
             key={cardKey}
-            className={animation ? "animate__animated animate__fadeInUp animate__faster" : ""}
-            style={animation ? { animationDelay: delay } : undefined}
+            className={cardAnim ? "animate__animated animate__fadeInUp animate__faster" : ""}
+            style={cardAnim ? { animationDelay: delay } : undefined}
           >
             <CardComponent config={item.config} />
           </div>

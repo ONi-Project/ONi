@@ -22,13 +22,10 @@ const railItems: RailItem[] = [
   { id: "setting", label: "设置", icon: "settings--outlined" },
 ]
 
-interface NavRailProps {
-  onToggleFold?: (folded: boolean) => void
-}
-
-export default function NavRail({ onToggleFold }: NavRailProps) {
+export default function NavRail() {
   const navigate = useNavigate()
   const location = useLocation()
+  const [folded, setFolded] = useState(true)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const drawerRef = useRef<HTMLDivElement>(null)
 
@@ -37,7 +34,6 @@ export default function NavRail({ onToggleFold }: NavRailProps) {
 
   useEffect(() => {
     if (isMobile) {
-      // Mobile mode: drawer overlay
       const dim = document.getElementById("navrail-dim")
       if (dim) {
         const handleDimClick = () => setDrawerOpen(false)
@@ -54,6 +50,17 @@ export default function NavRail({ onToggleFold }: NavRailProps) {
     }
   }
 
+  // Expose toggle functions globally for TopBar
+  useEffect(() => {
+    (window as any).__navRailToggle = () => {
+      if (isMobile) {
+        setDrawerOpen((prev) => !prev)
+      } else {
+        setFolded((prev) => !prev)
+      }
+    }
+  }, [isMobile])
+
   // Drawer style for mobile
   const drawerStyle: React.CSSProperties = isMobile
     ? {
@@ -61,8 +68,14 @@ export default function NavRail({ onToggleFold }: NavRailProps) {
         left: drawerOpen ? "0" : "-152px",
         zIndex: 100,
         transition: "left 0.3s",
+        minWidth: "152px",
+        width: "152px",
       }
-    : {}
+    : {
+        minWidth: folded ? "56px" : "140px",
+        width: folded ? "56px" : "140px",
+        transition: "width 0.2s, min-width 0.2s",
+      }
 
   return (
     <>
@@ -72,8 +85,8 @@ export default function NavRail({ onToggleFold }: NavRailProps) {
         style={{
           display: "flex",
           flexDirection: "column",
-          minWidth: "56px",
-          width: "56px",
+          whiteSpace: "nowrap",
+          overflowX: "hidden",
           ...drawerStyle,
         }}
       >
@@ -83,30 +96,18 @@ export default function NavRail({ onToggleFold }: NavRailProps) {
             id={`rail-${item.id}`}
             rounded
             icon={item.icon}
+            headline={folded && !isMobile ? "" : item.label}
             active={currentPage === item.id}
             onClick={() => handleItemClick(item.id)}
-            style={item.id === "setting" ? { marginTop: "auto", marginBottom: "12px" } : {}}
+            style={
+              item.id === "setting"
+                ? { marginTop: "auto", marginBottom: "12px" }
+                : {}
+            }
           >
-            {item.label}
           </mdui-list-item>
         ))}
       </div>
     </>
   )
-}
-
-export function toggleDrawer(open?: boolean) {
-  const dim = document.getElementById("navrail-dim")!
-  const drawer = document.getElementById("navi-drawer")!
-  const isOpen = open ?? drawer.style.left === "-152px"
-
-  if (isOpen) {
-    drawer.style.left = "0"
-    dim.style.opacity = "1"
-    dim.style.pointerEvents = "auto"
-  } else {
-    drawer.style.left = "-152px"
-    dim.style.opacity = "0"
-    dim.style.pointerEvents = "none"
-  }
 }

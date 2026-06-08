@@ -8,8 +8,8 @@ export default function OverviewPage() {
   const token = useAuthStore((s) => s.token)
   const layoutOverview = useDataStore((s) => s.layoutOverview)
 
-  // If no credentials, show login dialog
-  if (!endpoint && !token) {
+  // If no credentials or auth failed, show login dialog
+  if (!endpoint || !token) {
     return <LoginDialog />
   }
 

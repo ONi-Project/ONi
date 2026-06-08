@@ -3,8 +3,13 @@ import { useWebSocket } from "../../hooks/useWebSocket"
 import NavRail from "./NavRail"
 import TopBar from "./TopBar"
 import BgTexture from "./BgTexture"
+// Global dialogs rendered at this level for lifetime management
+import AeOrderDialog from "../dialogs/AeOrderDialog"
+import AeItemInfoDialog from "../dialogs/AeItemInfoDialog"
+import AeItemSelectDialog from "../dialogs/AeItemSelectDialog"
+import BotTaskDialog from "../dialogs/BotTaskDialog"
 
-// Lazy load pages
+// Pages
 import OverviewPage from "../../pages/OverviewPage"
 import EventPage from "../../pages/EventPage"
 import ControlPage from "../../pages/ControlPage"
@@ -56,6 +61,12 @@ export default function AppLayout() {
           <BgTexture />
         </div>
       </div>
+
+      {/* Global Dialogs - rendered once here for lifecycle */}
+      <AeOrderDialog />
+      <AeItemInfoDialog />
+      <AeItemSelectDialog />
+      <BotTaskDialog />
     </>
   )
 }

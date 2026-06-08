@@ -1,6 +1,6 @@
-import { useEffect } from "react"
 import { useLocation } from "react-router-dom"
 import { useAuthStore } from "../../stores/useAuthStore"
+import { isMobileDevice } from "../../lib/utils"
 
 const pageLabels: Record<string, string> = {
   overview: "看板",
@@ -20,33 +20,67 @@ export default function TopBar() {
 
   const currentPage = location.pathname.slice(1) || "overview"
   const pageLabel = pageLabels[currentPage] || "未知"
+  const isMobile = isMobileDevice()
+
+  const handleToggle = () => {
+    const fn = (window as any).__navRailToggle
+    if (fn) fn()
+  }
 
   return (
-    <div
-      id="topbar"
-      style={{
-        display: "flex",
-        alignItems: "center",
-        height: "4rem",
-        padding: "0 1rem",
-        borderBottom: "1px solid var(--mdui-color-outline-variant)",
-        gap: "0.5rem",
-      }}
+    <mdui-top-app-bar
+      scroll-behavior="shrink elevate"
+      scroll-target="#main-content-area"
+      style={{ position: "relative" }}
     >
-      <mdui-icon
-        id="navi-label"
-        name="home"
-        style={{ marginRight: "0.5rem", opacity: 0.5 }}
-      ></mdui-icon>
-      <span id="navi-label" style={{ fontSize: "1.25rem", fontWeight: 500 }}>
-        {pageLabel}
-      </span>
+      <mdui-button-icon
+        icon="menu"
+        id="navi-toggler"
+        style={{ marginLeft: "0.5rem" }}
+        onClick={handleToggle}
+      ></mdui-button-icon>
 
-      <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-        {user && (
-          <span style={{ opacity: 0.6, fontSize: "0.875rem" }}>{user.name}</span>
-        )}
-      </div>
-    </div>
+      <img
+        src="resources/icon.png"
+        style={{
+          height: "100%",
+          marginLeft: "0.5rem",
+          marginRight: "0.5rem",
+          opacity: 0.7,
+        }}
+        alt="ONi"
+      />
+
+      <mdui-top-app-bar-title>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <div style={{ fontWeight: "bolder" }}>ONi</div>
+          &nbsp;
+          <mdui-badge>dev</mdui-badge>
+        </div>
+        <div
+          slot="label-large"
+          style={{
+            fontWeight: "bold",
+            height: "100%",
+            fontSize: "2rem",
+            marginLeft: "3rem",
+            opacity: 0.9,
+          }}
+        >
+          {pageLabel}
+        </div>
+      </mdui-top-app-bar-title>
+
+      <div style={{ flexGrow: 1 }}></div>
+
+      {user && !isMobile && (
+        <div
+          id="slogan"
+          style={{ alignSelf: "center", opacity: 0.2, marginRight: "1rem" }}
+        >
+          {user.name}
+        </div>
+      )}
+    </mdui-top-app-bar>
   )
 }

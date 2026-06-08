@@ -15,17 +15,20 @@ export function useWebSocket() {
   const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
     undefined
   )
+  const mountedRef = useRef(false)
 
   const connect = useCallback(() => {
     const { endpoint, token } = useAuthStore.getState()
 
     if (!endpoint && !token) {
-      // No credentials saved - login dialog will be shown by UI
+      
       return
     }
 
     const session = new WebSocket("ws://" + endpoint + "/ws/web")
     useWebSocketStore.getState().setSession(session)
+
+    let errorHandled = false // Prevent duplicate handling
 
     session.onopen = () => {
       const { setConnected, setConnectedOnce } = useWebSocketStore.getState()
@@ -53,11 +56,21 @@ export function useWebSocket() {
     }
 
     session.onerror = () => {
-      snackbar({
-        message: "WebSocket 连接失败。",
-        autoCloseDelay: 60000,
-        closeable: false,
-      })
+      if (errorHandled) return
+      errorHandled = true
+
+      // Only show error if component is still mounted and it's first attempt
+      const { connectedOnce } = useWebSocketStore.getState()
+      if (!connectedOnce) {
+        snackbar({
+          message: "无法连接到后端，请检查地址是否正确。",
+          autoCloseDelay: 5000,
+          closeable: true,
+        })
+        // Clear credentials so OverviewPage shows login dialog
+        useAuthStore.getState().setEndpoint("")
+        useAuthStore.getState().setToken("")
+      }
       session.close()
     }
 
@@ -82,6 +95,15 @@ export function useWebSocket() {
                 closeable: false,
               })
             }, 300)
+          } else {
+            // Auth failed - clear token to show login dialog
+            console.log("令牌验证失败")
+            useAuthStore.getState().setToken("")
+            snackbar({
+              message: "令牌验证失败，请重新输入。",
+              autoCloseDelay: 5000,
+              closeable: true,
+            })
           }
           return
         }
@@ -95,15 +117,22 @@ export function useWebSocket() {
   }, [])
 
   useEffect(() => {
+    mountedRef.current = true
     useAuthStore.getState().loadFromStorage()
     connect()
 
     return () => {
+      mountedRef.current = false
       if (reconnectTimerRef.current) {
         clearTimeout(reconnectTimerRef.current)
       }
       const { session } = useWebSocketStore.getState()
-      session?.close()
+      if (session) {
+        // Remove onclose handler to prevent reconnection logic during unmount
+        session.onclose = null
+        session.onerror = null
+        session.close()
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

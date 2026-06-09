@@ -10,11 +10,12 @@ import IndicatorBarCard from "./IndicatorBar"
 import IndicatorCircularCard from "./IndicatorCircular"
 import AeOverviewCard from "./AeOverview"
 import BotOverviewCard from "./BotOverview"
+import EventItemCard from "./EventItem"
 
 // Card registry for dynamic layout rendering
 // Maps card IDs (from server layout JSON) to React components
 export const cardRegistry: Record<string, ComponentType<any>> = {
-  welcome: WelcomeCard,
+  "welcome": WelcomeCard,
   "no-event": NoEventCard,
   "server-status": ServerStatusCard,
   "user-info": UserInfoCard,
@@ -25,6 +26,7 @@ export const cardRegistry: Record<string, ComponentType<any>> = {
   "indicator-circular": IndicatorCircularCard,
   "ae-overview": AeOverviewCard,
   "bot-overview": BotOverviewCard,
+  "event-item": EventItemCard,
 }
 
 // Helper to get a card component by ID

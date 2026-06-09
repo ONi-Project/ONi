@@ -1,11 +1,9 @@
 import { useState, useMemo } from "react"
 import { motion } from "motion/react"
 import { useDataStore } from "../stores/useDataStore"
-import { sendMessage } from "../hooks/useWebSocket"
-import { newWebToServerMessage } from "@oni/interface"
+import { DynamicLayout } from "../lib/renderLayout"
 import { fadeInUp } from "../lib/animations"
-
-const priorityMap: Record<number, string> = { 0: "info", 1: "warning", 2: "dangerous" }
+import type { layoutModel } from "@oni/interface"
 
 export default function EventPage() {
   const events = useDataStore((s) => s.event)
@@ -52,6 +50,20 @@ export default function EventPage() {
     return result
   }, [events, statusFilter, priorityFilter, searchWord])
 
+  // Render event list with DynamicLayout
+  const layout: layoutModel.Layout = filteredEvents.length > 0
+    ? [
+        {
+          type: "grid-full",
+          content: filteredEvents.map((e) => ({
+            type: "card" as const,
+            id: "event-item",
+            config: { uuid: e.uuid },
+          })),
+        },
+      ]
+    : []
+
   return (
     <div id="event__content" className="panel-content">
       {/* Search */}
@@ -76,7 +88,7 @@ export default function EventPage() {
         initial="initial"
         animate="animate"
         transition={{ delay: 0.03 }}
-        className="flex mt-2 ml-1"
+        className="flex mt-2 ml-1 mb-4"
       >
         {/* Status filter */}
         <div>
@@ -85,7 +97,7 @@ export default function EventPage() {
               name="filter_list"
               className="opacity-50 text-sm"
             ></mdui-icon>
-            <span className="text-sm opacity-50">
+            <span className="text-sm opacity-50 ml-1">
               状态过滤器
             </span>
           </div>
@@ -130,7 +142,7 @@ export default function EventPage() {
               name="filter_list"
               className="opacity-50 text-sm"
             ></mdui-icon>
-            <span className="text-sm opacity-50">
+            <span className="text-sm opacity-50 ml-1">
               级别过滤器
             </span>
           </div>
@@ -168,65 +180,9 @@ export default function EventPage() {
       </motion.div>
 
       {/* Event list */}
-      <div
-        id="event__list"
-        className="mt-4 flex flex-col gap-2"
-      >
-        {filteredEvents.map((event, index) => {
-          const priorityStr = priorityMap[event.priority]
-          const isActive = event.status === 0
-
-          let bgClass = ""
-          if (isActive) {
-            if (priorityStr === "warning") bgClass = "bg-[rgba(var(--mdui-color-secondary-container),0.75)]"
-            else if (priorityStr === "dangerous") bgClass = "bg-[rgba(var(--mdui-color-tertiary-container),0.75)]"
-          }
-
-          return (
-            <motion.div
-              key={event.uuid}
-              variants={fadeInUp}
-              initial="initial"
-              animate="animate"
-              transition={{ delay: (index + 1) * 0.03 }}
-            >
-              <mdui-card
-                variant="filled"
-                className={`p-4 pl-6 pr-6 ${bgClass} ${isActive ? "" : "opacity-50"}`}
-              >
-                <div className="flex items-center gap-4">
-                  <div>
-                    <mdui-icon name={priorityStr}></mdui-icon>
-                  </div>
-                  <div>
-                    <div>{event.name}</div>
-                    <div className="text-sm opacity-50">
-                      {event.description}
-                    </div>
-                    <div className="opacity-25 text-sm">
-                      {new Date(event.timestamp).toLocaleString()}
-                    </div>
-                  </div>
-                  <mdui-checkbox
-                    className="ml-auto"
-                    checked={event.status === 1}
-                    onChange={(e: any) => {
-                      sendMessage(
-                        newWebToServerMessage("DataEventSet", {
-                          uuid: event.uuid,
-                          status: e.target.checked ? 1 : 0,
-                        })
-                      )
-                    }}
-                  ></mdui-checkbox>
-                </div>
-              </mdui-card>
-            </motion.div>
-          )
-        })}
-      </div>
-
-      {filteredEvents.length === 0 && (
+      {filteredEvents.length > 0 ? (
+        <DynamicLayout layout={layout} />
+      ) : (
         <div className="opacity-50 text-center mt-8">
           <motion.div
             variants={fadeInUp}

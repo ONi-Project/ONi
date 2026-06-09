@@ -85,7 +85,7 @@ const themeIcon: Record<ThemeMode, string> = {
 const themeLabel: Record<ThemeMode, string> = {
   light: "浅色",
   dark: "深色",
-  auto: "跟随系统",
+  auto: "系统",
 }
 
 export default function NavRail() {
@@ -160,15 +160,15 @@ export default function NavRail() {
   const drawerStyle: React.CSSProperties = isMobile
     ? {
         position: "fixed",
-        left: drawerOpen ? "0" : "-152px",
+        left: drawerOpen ? "0" : "-160px",
         zIndex: 100,
-        transition: "left 0.3s",
+        transition: "left 0.25s",
         minWidth: "152px",
         width: "152px",
       }
     : {
-        minWidth: folded ? "62px" : "140px",
-        width: folded ? "62px" : "140px",
+        minWidth: folded ? "56px" : "140px",
+        width: folded ? "56px" : "140px",
         transition: "width 0.2s, min-width 0.2s",
       }
 
@@ -244,7 +244,7 @@ export default function NavRail() {
         </mdui-list-item>
 
         {/* ── Theme color picker ──────────────────────────────── */}
-        <mdui-dropdown placement="right-start">
+        {/* <mdui-dropdown placement="right-start">
           <mdui-list-item
             slot="trigger"
             id="rail-color-picker"
@@ -276,7 +276,7 @@ export default function NavRail() {
               </mdui-menu-item>
             ))}
           </mdui-menu>
-        </mdui-dropdown>
+        </mdui-dropdown> */}
       </div>
     </>
   )

@@ -98,61 +98,46 @@ export default function BotEdit({ uuid, onBack }: BotEditProps) {
 
   return (
     <div className="bot__edit">
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          marginBottom: "0.5rem",
-          gap: "0.5rem",
-        }}
-      >
+      <div className="flex items-center mb-2 gap-2">
         <mdui-button-icon
           icon="arrow_back"
-          className="bot__edit-back"
           onClick={onBack}
         ></mdui-button-icon>
-        <div style={{ fontWeight: "bold", fontSize: "large" }}>
+        <div className="font-bold text-lg">
           编辑 - {botData.name}
         </div>
       </div>
 
       <div className="grid-full">
         <mdui-card className="card" variant="filled">
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div className="flex items-center gap-2">
             <mdui-icon
               name="smart_toy--outlined"
-              style={{ fontSize: "2rem" }}
+              className="text-[2rem]"
             ></mdui-icon>
             <div>
-              <div style={{ fontSize: "larger" }}>
+              <div className="text-lg">
                 <b>{botData.name}</b>
               </div>
             </div>
             <mdui-divider
               vertical
-              style={{ marginLeft: "0.5rem", marginRight: "0.5rem" }}
+              className="ml-2 mr-2"
             ></mdui-divider>
             <div>
-              <div style={{ opacity: 1 }}>在线 - WebSocket</div>
-              <div style={{ opacity: 0.25, fontSize: "smaller" }}>
+              <div className="opacity-100">在线 - WebSocket</div>
+              <div className="opacity-25 text-sm">
                 {botData.uuid}
               </div>
             </div>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.25rem",
-              marginTop: "0.25rem",
-            }}
-          >
-            <div style={{ display: "flex", opacity: 0.75, gap: "0.5rem" }}>
+          <div className="flex flex-col gap-1 mt-1">
+            <div className="flex opacity-75 gap-2">
               <mdui-icon name="schedule"></mdui-icon>
               <div>创建于 2021-08-15 12:00:00</div>
             </div>
-            <div style={{ display: "flex", opacity: 0.75, gap: "0.5rem" }}>
+            <div className="flex opacity-75 gap-2">
               <mdui-icon name="commit"></mdui-icon>
               <div>ONi Lib v1</div>
             </div>
@@ -163,20 +148,16 @@ export default function BotEdit({ uuid, onBack }: BotEditProps) {
       <div className="grid-l">
         {/* Task List */}
         <mdui-card className="card" variant="filled">
-          <div
-            className="card-title"
-            style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-          >
+          <div className="card-title flex items-center gap-2">
             <mdui-icon
               name="task_alt"
-              style={{ fontSize: "28px", alignSelf: "center" }}
+              className="text-[28px] self-center"
             ></mdui-icon>
             <div>任务列表</div>
           </div>
 
           <mdui-list
-            style={{ marginLeft: "-0.5rem", marginRight: "-0.5rem" }}
-            className="bot__edit-tasks"
+            className="-ml-2 -mr-2"
           >
             {taskEditMode
               ? taskEditPreview.map((task: any, idx: number) => {
@@ -189,31 +170,25 @@ export default function BotEdit({ uuid, onBack }: BotEditProps) {
                   )
                   return (
                     <mdui-list-item key={task.taskUuid || idx}>
-                      <div style={{ display: "flex", alignItems: "center" }}>
+                      <div className="flex items-center">
                         <mdui-icon
                           name={taskGroup.icon}
-                          style={{ marginRight: "1rem" }}
+                          className="mr-4"
                         ></mdui-icon>
                         <div>
                           <div>
                             {taskGroup.id}.{mode?.id}
-                            <span
-                              style={{
-                                opacity: 0.5,
-                                fontSize: "smaller",
-                                marginLeft: "0.5rem",
-                              }}
-                            >
+                            <span className="opacity-50 text-sm ml-2">
                               {mode?.description}
                             </span>
                           </div>
-                          <div style={{ opacity: 0.25, fontSize: "smaller" }}>
+                          <div className="opacity-25 text-sm">
                             {task.taskUuid}
                           </div>
                         </div>
                         <mdui-button-icon
                           icon="delete"
-                          style={{ marginLeft: "auto" }}
+                          className="ml-auto"
                           onClick={() => handleRemoveTask(task)}
                         ></mdui-button-icon>
                       </div>
@@ -231,25 +206,19 @@ export default function BotEdit({ uuid, onBack }: BotEditProps) {
                   )
                   return (
                     <mdui-list-item key={task.taskUuid || idx}>
-                      <div style={{ display: "flex", alignItems: "center" }}>
+                      <div className="flex items-center">
                         <mdui-icon
                           name={taskGroup.icon}
-                          style={{ marginRight: "1rem" }}
+                          className="mr-4"
                         ></mdui-icon>
                         <div>
                           <div>
                             {taskGroup.id}.{mode?.id}
-                            <span
-                              style={{
-                                opacity: 0.5,
-                                fontSize: "smaller",
-                                marginLeft: "0.5rem",
-                              }}
-                            >
+                            <span className="opacity-50 text-sm ml-2">
                               {mode?.description}
                             </span>
                           </div>
-                          <div style={{ opacity: 0.25, fontSize: "smaller" }}>
+                          <div className="opacity-25 text-sm">
                             {task.taskUuid}
                           </div>
                         </div>
@@ -258,15 +227,15 @@ export default function BotEdit({ uuid, onBack }: BotEditProps) {
                   )
                 })
               : (
-                <mdui-list-item style={{ opacity: 0.5 }}>
-                  <div style={{ display: "flex", alignItems: "center" }}>
+                <mdui-list-item className="opacity-50">
+                  <div className="flex items-center">
                     <mdui-icon
                       name="info"
-                      style={{ marginRight: "1rem" }}
+                      className="mr-4"
                     ></mdui-icon>
                     <div>
                       <div>任务列表为空</div>
-                      <div style={{ opacity: 0.25, fontSize: "smaller" }}>
+                      <div className="opacity-25 text-sm">
                         点击下方按钮进行编辑
                       </div>
                     </div>
@@ -276,18 +245,10 @@ export default function BotEdit({ uuid, onBack }: BotEditProps) {
           </mdui-list>
 
           {!taskEditMode ? (
-            <div
-              className="bot__edit-before-edit"
-              style={{
-                display: "flex",
-                gap: "0.5rem",
-                flexWrap: "wrap",
-                marginTop: "0.5rem",
-              }}
-            >
+            <div className="flex gap-2 flex-wrap mt-2">
               <mdui-chip
                 elevated
-                style={{ marginRight: "auto" }}
+                className="mr-auto"
                 onClick={handleEditTasks}
               >
                 编辑
@@ -295,15 +256,7 @@ export default function BotEdit({ uuid, onBack }: BotEditProps) {
               </mdui-chip>
             </div>
           ) : (
-            <div
-              className="bot__edit-after-edit"
-              style={{
-                display: "flex",
-                gap: "0.5rem",
-                flexWrap: "wrap",
-                marginTop: "0.5rem",
-              }}
-            >
+            <div className="flex gap-2 flex-wrap mt-2">
               <mdui-chip elevated onClick={handleApplyTasks}>
                 应用
                 <mdui-icon slot="icon" name="done"></mdui-icon>
@@ -314,7 +267,7 @@ export default function BotEdit({ uuid, onBack }: BotEditProps) {
               </mdui-chip>
               <mdui-chip
                 elevated
-                style={{ marginRight: "auto" }}
+                className="mr-auto"
                 onClick={handleAddTask}
               >
                 添加
@@ -326,34 +279,31 @@ export default function BotEdit({ uuid, onBack }: BotEditProps) {
 
         {/* Components */}
         <mdui-card className="card" variant="filled">
-          <div
-            className="card-title"
-            style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-          >
+          <div className="card-title flex items-center gap-2">
             <mdui-icon
               name="electrical_services"
-              style={{ fontSize: "32px", alignSelf: "center" }}
+              className="text-[32px] self-center"
             ></mdui-icon>
             <div>已连接的组件</div>
           </div>
 
           <mdui-list
-            style={{ marginLeft: "-0.5rem", marginRight: "-0.5rem", opacity: componentsLoading ? 0.5 : 1 }}
-            className="bot__edit-components"
+            className="-ml-2 -mr-2"
+            style={{ opacity: componentsLoading ? 0.5 : 1 }}
           >
             {(botData.components || []).length > 0 ? (
               botData.components.map((component: any, idx: number) => (
                 <mdui-list-item key={component.uuid || idx}>
-                  <div style={{ display: "flex", alignItems: "center" }}>
+                  <div className="flex items-center">
                     <mdui-icon
                       name={renderComponentIcon(component.class)}
-                      style={{ marginRight: "1rem" }}
+                      className="mr-4"
                     ></mdui-icon>
                     <div>
                       <div>
                         {component.description} ({component.class})
                       </div>
-                      <div style={{ opacity: 0.25, fontSize: "smaller" }}>
+                      <div className="opacity-25 text-sm">
                         {component.uuid}
                       </div>
                     </div>
@@ -361,15 +311,15 @@ export default function BotEdit({ uuid, onBack }: BotEditProps) {
                 </mdui-list-item>
               ))
             ) : (
-              <mdui-list-item style={{ opacity: 0.5 }}>
-                <div style={{ display: "flex", alignItems: "center" }}>
+              <mdui-list-item className="opacity-50">
+                <div className="flex items-center">
                   <mdui-icon
                     name="info"
-                    style={{ marginRight: "1rem" }}
+                    className="mr-4"
                   ></mdui-icon>
                   <div>
                     <div>组件列表为空</div>
-                    <div style={{ opacity: 0.25, fontSize: "smaller" }}>
+                    <div className="opacity-25 text-sm">
                       请检查 OC 状态
                     </div>
                   </div>
@@ -379,9 +329,8 @@ export default function BotEdit({ uuid, onBack }: BotEditProps) {
           </mdui-list>
 
           <mdui-chip
-            className="bot__edit-button-components-refresh"
             elevated
-            style={{ marginRight: "auto" }}
+            className="mr-auto"
             loading={componentsLoading}
             onClick={handleRefreshComponents}
           >
@@ -392,25 +341,15 @@ export default function BotEdit({ uuid, onBack }: BotEditProps) {
 
         {/* Operations */}
         <mdui-card className="card" variant="filled">
-          <div
-            className="card-title"
-            style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-          >
+          <div className="card-title flex items-center gap-2">
             <mdui-icon
               name="build"
-              style={{ fontSize: "24px", alignSelf: "center" }}
+              className="text-[24px] self-center"
             ></mdui-icon>
             <div>操作</div>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: "0.5rem",
-              flexWrap: "wrap",
-              marginTop: "0.5rem",
-            }}
-          >
+          <div className="flex gap-2 flex-wrap mt-2">
             <mdui-chip elevated>
               重启 {botData.name}
               <mdui-icon slot="icon" name="restart_alt"></mdui-icon>
@@ -421,15 +360,13 @@ export default function BotEdit({ uuid, onBack }: BotEditProps) {
             </mdui-chip>
           </div>
 
-          <mdui-divider
-            style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}
-          ></mdui-divider>
+          <mdui-divider className="my-2"></mdui-divider>
 
           <mdui-chip
             elevated
+            className="mr-auto"
             style={{
               backgroundColor: "rgb(var(--mdui-color-error-container))",
-              marginRight: "auto",
             }}
           >
             删除 {botData.name}

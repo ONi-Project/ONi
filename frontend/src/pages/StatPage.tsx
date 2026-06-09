@@ -1,28 +1,26 @@
 import { useState } from "react"
+import { motion } from "motion/react"
+import { fadeInUp } from "../lib/animations"
 
 export default function StatPage() {
   const [slValue, setSlValue] = useState(10)
 
   return (
     <div id="stat__content" className="panel-content">
-      <div
-        className="animate__animated animate__fadeInUp animate__faster"
-        style={{
-          marginBottom: "0.5rem",
-          padding: "0.25rem",
-          display: "flex",
-          gap: "0.5rem",
-          alignItems: "center",
-        }}
+      <motion.div
+        variants={fadeInUp}
+        initial="initial"
+        animate="animate"
+        className="mb-2 p-1 flex gap-2 items-center"
       >
         <mdui-text-field
           variant="outlined"
           icon="search"
           label="检索统计项目..."
         ></mdui-text-field>
-      </div>
+      </motion.div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+      <div className="flex items-center gap-4">
         <div>简化等级</div>
         <mdui-slider
           id="slider-SL"
@@ -31,13 +29,13 @@ export default function StatPage() {
           min="1"
           max="15"
           value={slValue}
-          style={{ width: "15rem" }}
+          className="w-60"
           onChange={(e: any) => setSlValue(e.target.value)}
         ></mdui-slider>
-        <span style={{ opacity: 0.5 }}>{slValue}</span>
+        <span className="opacity-50">{slValue}</span>
       </div>
 
-      <div className="grid-l" style={{ marginTop: "1rem" }}>
+      <div className="grid-l mt-4">
         <mdui-card className="stats-chart-card" variant="filled">
           <div className="chart">
             <canvas id="chart-battery"></canvas>

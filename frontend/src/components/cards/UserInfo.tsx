@@ -13,28 +13,20 @@ export default function UserInfoCard({ config }: UserInfoProps) {
 
   return (
     <mdui-card variant="filled" className="card">
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <div style={{ fontSize: "x-large" }}>
+      <div className="flex items-center">
+        <div className="text-xl">
           <b>{title}</b>
         </div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <div style={{ opacity: 0.5 }}>ONi Authorized Staff</div>
+      <div className="flex items-center">
+        <div className="opacity-50">ONi Authorized Staff</div>
       </div>
 
-      <div
-        style={{
-          opacity: 0.25,
-          display: "flex",
-          alignItems: "center",
-          alignSelf: "flex-end",
-          marginTop: "auto",
-        }}
-      >
+      <div className="opacity-25 flex items-center self-end mt-auto">
         <mdui-icon name="account_circle"></mdui-icon>
         &nbsp;
-        <div style={{ fontSize: "larger" }}>
+        <div className="text-lg">
           <b>{user?.name || "未知用户"}</b>
         </div>
       </div>

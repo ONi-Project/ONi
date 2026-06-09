@@ -6,7 +6,7 @@ interface GridFullProps {
 
 export default function GridFull({ children }: GridFullProps) {
   return (
-    <div className="grid-full" style={{ width: "100%" }}>
+    <div className="grid-full w-full">
       {children}
     </div>
   )

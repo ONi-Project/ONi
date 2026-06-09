@@ -155,68 +155,37 @@ export default function AeOrderDialog() {
     <mdui-dialog
       ref={dialogRef}
       id="ae__order-dialog"
-      style={{ padding: "0 !important" }}
+      className="p-0!"
     >
-      <div
-        className="card-title"
-        style={{ display: "flex", alignItems: "center", marginBottom: "0.5rem" }}
-      >
-        <mdui-icon name="send" style={{ marginRight: "0.5rem" }}></mdui-icon>
+      <div className="card-title flex items-center mb-2">
+        <mdui-icon name="send" className="mr-2"></mdui-icon>
         <div>请求订单</div>
       </div>
 
-      <mdui-card
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "0.5rem",
-          marginTop: "1rem",
-          padding: "1rem",
-        }}
-      >
+      <mdui-card className="flex items-center gap-2 mt-4 p-4">
         <img
           id="ae__order-item-img"
           src={itemImgSrc || "./resources/itempanel/item/8207_0.png"}
-          style={{ height: "3rem" }}
+          className="h-12"
           alt=""
         />
         <div id="ae__order-item-display">{itemDisplay}</div>
         <div
           id="ae__order-item-amount"
-          style={{ marginLeft: "auto", opacity: 0.5 }}
+          className="ml-auto opacity-50"
         >
           {itemAmount}
         </div>
       </mdui-card>
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "0.25rem",
-          marginTop: "1rem",
-        }}
-      >
+      <div className="flex items-center gap-1 mt-4">
         {[-100, -10, -1].map((val) => (
-          <div
-            key={val}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
+          <div key={val} className="flex items-center flex-col">
             <mdui-button-icon
               icon="remove"
               onClick={() => adjustNumber(val)}
             ></mdui-button-icon>
-            <div
-              style={{
-                fontSize: "x-small",
-                marginTop: "-0.8rem",
-                opacity: 0.5,
-              }}
-            >
+            <div className="text-xs -mt-3 opacity-50">
               {val}
             </div>
           </div>
@@ -224,7 +193,7 @@ export default function AeOrderDialog() {
 
         <mdui-text-field
           ref={inputRef as any}
-          style={{ marginTop: "0.25rem" }}
+          className="mt-1"
           label="请求数量"
           value={amount}
           onInput={(e: any) => setAmount(e.target.value)}
@@ -233,37 +202,24 @@ export default function AeOrderDialog() {
         ></mdui-text-field>
 
         {[1, 10, 100].map((val) => (
-          <div
-            key={val}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
+          <div key={val} className="flex items-center flex-col">
             <mdui-button-icon
               icon="add"
               onClick={() => adjustNumber(val)}
             ></mdui-button-icon>
-            <div
-              style={{
-                fontSize: "x-small",
-                marginTop: "-0.8rem",
-                opacity: 0.5,
-              }}
-            >
+            <div className="text-xs -mt-3 opacity-50">
               +{val}
             </div>
           </div>
         ))}
       </div>
 
-      <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem" }}>
+      <div className="flex gap-2 mt-4">
         <mdui-button
           id="ae__order-cancel"
           full-width
           variant="outlined"
-          style={{ flex: 1 }}
+          className="flex-1"
           onClick={() => { dialogRef.current!.open = false }}
         >
           取消
@@ -272,7 +228,7 @@ export default function AeOrderDialog() {
           ref={submitBtnRef}
           id="ae__order-submit"
           full-width
-          style={{ flex: 4 }}
+          className="flex-[4]"
           onClick={handleSubmit}
         >
           提交

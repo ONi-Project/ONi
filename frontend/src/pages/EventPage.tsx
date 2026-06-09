@@ -1,15 +1,17 @@
 import { useState, useMemo } from "react"
+import { motion } from "motion/react"
 import { useDataStore } from "../stores/useDataStore"
 import { sendMessage } from "../hooks/useWebSocket"
 import { newWebToServerMessage } from "@oni/interface"
+import { fadeInUp } from "../lib/animations"
+
+const priorityMap: Record<number, string> = { 0: "info", 1: "warning", 2: "dangerous" }
 
 export default function EventPage() {
   const events = useDataStore((s) => s.event)
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all")
   const [priorityFilter, setPriorityFilter] = useState<number[]>([0, 1, 2])
   const [searchWord, setSearchWord] = useState("")
-
-  const priorityMap: Record<number, string> = { 0: "info", 1: "warning", 2: "dangerous" }
 
   const togglePriority = (p: number) => {
     setPriorityFilter((prev) =>
@@ -53,15 +55,11 @@ export default function EventPage() {
   return (
     <div id="event__content" className="panel-content">
       {/* Search */}
-      <div
-        className="animate__animated animate__fadeInUp animate__faster"
-        style={{
-          marginBottom: "0.5rem",
-          padding: "0.25rem",
-          display: "flex",
-          gap: "0.5rem",
-          alignItems: "center",
-        }}
+      <motion.div
+        variants={fadeInUp}
+        initial="initial"
+        animate="animate"
+        className="mb-2 p-1 flex gap-2 items-center"
       >
         <mdui-text-field
           variant="outlined"
@@ -70,197 +68,175 @@ export default function EventPage() {
           value={searchWord}
           onChange={(e: any) => setSearchWord(e.target.value)}
         ></mdui-text-field>
-      </div>
+      </motion.div>
 
       {/* Filters */}
-      <div
-        className="animate__animated animate__fadeInUp animate__faster"
-        style={{
-          display: "flex",
-          marginTop: "0.5rem",
-          marginLeft: "0.25rem",
-        }}
+      <motion.div
+        variants={fadeInUp}
+        initial="initial"
+        animate="animate"
+        transition={{ delay: 0.03 }}
+        className="flex mt-2 ml-1"
       >
         {/* Status filter */}
         <div>
-          <div style={{ marginBottom: "0.25rem" }}>
+          <div className="mb-1">
             <mdui-icon
               name="filter_list"
-              style={{ opacity: 0.5, fontSize: "small" }}
+              className="opacity-50 text-sm"
             ></mdui-icon>
-            <span style={{ fontSize: "small", opacity: 0.5 }}>
+            <span className="text-sm opacity-50">
               状态过滤器
             </span>
           </div>
-          <mdui-chip
-            selected={statusFilter === "all"}
-            selectable
-            selected-icon="all_inclusive"
-            icon="all_inclusive"
-            onClick={() => setStatusFilter("all")}
-          >
-            全部
-          </mdui-chip>
-          <mdui-chip
-            selected={statusFilter === "active"}
-            selectable
-            selected-icon="clear"
-            icon="clear"
-            onClick={() => setStatusFilter("active")}
-          >
-            未处理
-          </mdui-chip>
-          <mdui-chip
-            selected={statusFilter === "inactive"}
-            selectable
-            selected-icon="done"
-            icon="done"
-            onClick={() => setStatusFilter("inactive")}
-          >
-            已处理
-          </mdui-chip>
+          <div className="flex gap-1">
+            <mdui-chip
+              selected={statusFilter === "all"}
+              selectable
+              selected-icon="all_inclusive"
+              icon="all_inclusive"
+              onClick={() => setStatusFilter("all")}
+            >
+              全部
+            </mdui-chip>
+            <mdui-chip
+              selected={statusFilter === "active"}
+              selectable
+              selected-icon="clear"
+              icon="clear"
+              onClick={() => setStatusFilter("active")}
+            >
+              未处理
+            </mdui-chip>
+            <mdui-chip
+              selected={statusFilter === "inactive"}
+              selectable
+              selected-icon="done"
+              icon="done"
+              onClick={() => setStatusFilter("inactive")}
+            >
+              已处理
+            </mdui-chip>
+
+          </div>
         </div>
 
-        <div
-          style={{
-            borderLeft: "1px solid rgba(128,128,128,0.5)",
-            marginLeft: "1.5rem",
-            marginRight: "1.5rem",
-          }}
-        ></div>
+        <div className="border-l border-[rgba(128,128,128,0.5)] mx-6"></div>
 
         {/* Priority filter */}
         <div>
-          <div style={{ marginBottom: "0.25rem" }}>
+          <div className="mb-1">
             <mdui-icon
               name="filter_list"
-              style={{ opacity: 0.5, fontSize: "small" }}
+              className="opacity-50 text-sm"
             ></mdui-icon>
-            <span style={{ fontSize: "small", opacity: 0.5 }}>
+            <span className="text-sm opacity-50">
               级别过滤器
             </span>
           </div>
-          <mdui-chip
-            selected={priorityFilter.includes(0)}
-            selectable
-            selected-icon="info"
-            icon="info"
-            onClick={() => togglePriority(0)}
-          >
-            通知
-          </mdui-chip>
-          <mdui-chip
-            selected={priorityFilter.includes(1)}
-            selectable
-            selected-icon="warning"
-            icon="warning"
-            onClick={() => togglePriority(1)}
-          >
-            警告
-          </mdui-chip>
-          <mdui-chip
-            selected={priorityFilter.includes(2)}
-            selectable
-            selected-icon="dangerous"
-            icon="dangerous"
-            onClick={() => togglePriority(2)}
-          >
-            紧急
-          </mdui-chip>
+          <div className="flex gap-1">
+            <mdui-chip
+              selected={priorityFilter.includes(0)}
+              selectable
+              selected-icon="info"
+              icon="info"
+              onClick={() => togglePriority(0)}
+            >
+              通知
+            </mdui-chip>
+            <mdui-chip
+              selected={priorityFilter.includes(1)}
+              selectable
+              selected-icon="warning"
+              icon="warning"
+              onClick={() => togglePriority(1)}
+            >
+              警告
+            </mdui-chip>
+            <mdui-chip
+              selected={priorityFilter.includes(2)}
+              selectable
+              selected-icon="dangerous"
+              icon="dangerous"
+              onClick={() => togglePriority(2)}
+            >
+              紧急
+            </mdui-chip>
+
+          </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Event list */}
       <div
         id="event__list"
-        style={{
-          marginTop: "1rem",
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.5rem",
-        }}
+        className="mt-4 flex flex-col gap-2"
       >
         {filteredEvents.map((event, index) => {
           const priorityStr = priorityMap[event.priority]
           const isActive = event.status === 0
-          const className = isActive
-            ? `event__card-${priorityStr}`
-            : "event__card-inactive"
+
+          let bgClass = ""
+          if (isActive) {
+            if (priorityStr === "warning") bgClass = "bg-[rgba(var(--mdui-color-secondary-container),0.75)]"
+            else if (priorityStr === "dangerous") bgClass = "bg-[rgba(var(--mdui-color-tertiary-container),0.75)]"
+          }
 
           return (
-            <mdui-card
+            <motion.div
               key={event.uuid}
-              variant="filled"
-              className={`card event__card animate__animated animate__fadeInUp animate__faster ${className}`}
-              style={{
-                padding: "1rem",
-                paddingLeft: "1.5rem",
-                paddingRight: "1.5rem",
-                ...(isActive ? {} : { opacity: 0.5 }),
-                animationDelay: `${index * 0.03}s`,
-              }}
+              variants={fadeInUp}
+              initial="initial"
+              animate="animate"
+              transition={{ delay: (index + 1) * 0.03 }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "1rem",
-                }}
+              <mdui-card
+                variant="filled"
+                className={`p-4 pl-6 pr-6 ${bgClass} ${isActive ? "" : "opacity-50"}`}
               >
-                <div>
-                  <mdui-icon name={priorityStr}></mdui-icon>
-                </div>
-                <div>
-                  <div>{event.name}</div>
-                  <div style={{ fontSize: "small", opacity: 0.5 }}>
-                    {event.description}
+                <div className="flex items-center gap-4">
+                  <div>
+                    <mdui-icon name={priorityStr}></mdui-icon>
                   </div>
-                  <div style={{ opacity: 0.25, fontSize: "small" }}>
-                    {new Date(event.timestamp).toLocaleString()}
+                  <div>
+                    <div>{event.name}</div>
+                    <div className="text-sm opacity-50">
+                      {event.description}
+                    </div>
+                    <div className="opacity-25 text-sm">
+                      {new Date(event.timestamp).toLocaleString()}
+                    </div>
                   </div>
+                  <mdui-checkbox
+                    className="ml-auto"
+                    checked={event.status === 1}
+                    onChange={(e: any) => {
+                      sendMessage(
+                        newWebToServerMessage("DataEventSet", {
+                          uuid: event.uuid,
+                          status: e.target.checked ? 1 : 0,
+                        })
+                      )
+                    }}
+                  ></mdui-checkbox>
                 </div>
-                <mdui-checkbox
-                  style={{ marginLeft: "auto" }}
-                  checked={event.status === 1}
-                  onChange={(e: any) => {
-                    sendMessage(
-                      newWebToServerMessage("DataEventSet", {
-                        uuid: event.uuid,
-                        status: e.target.checked ? 1 : 0,
-                      })
-                    )
-                  }}
-                ></mdui-checkbox>
-              </div>
-            </mdui-card>
+              </mdui-card>
+            </motion.div>
           )
         })}
       </div>
 
       {filteredEvents.length === 0 && (
-        <div style={{ opacity: 0.5, textAlign: "center", marginTop: "2rem" }}>
-          <div className="animate__animated animate__fadeInUp animate__faster">
+        <div className="opacity-50 text-center mt-8">
+          <motion.div
+            variants={fadeInUp}
+            initial="initial"
+            animate="animate"
+          >
             暂无事件
-          </div>
+          </motion.div>
         </div>
       )}
-
-      <style>{`
-        .event__card {
-          padding: 1rem;
-          padding-left: 1.5rem;
-          padding-right: 1.5rem;
-        }
-        .event__card-warning {
-          background-color: rgba(var(--mdui-color-secondary-container), 0.75) !important;
-        }
-        .event__card-dangerous {
-          background-color: rgba(var(--mdui-color-tertiary-container), 0.75) !important;
-        }
-        .event__card-inactive {
-          opacity: 0.5;
-        }
-      `}</style>
     </div>
   )
 }

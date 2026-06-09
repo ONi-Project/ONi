@@ -9,8 +9,8 @@ export default function ServerStatusCard(_props: ServerStatusProps) {
 
   if (!mcServerStatus) {
     return (
-      <mdui-card variant="filled" className="card card-server-status__card">
-        <div style={{ padding: "1rem", opacity: 0.5 }}>加载中...</div>
+      <mdui-card variant="filled" className="card">
+        <div className="p-4 opacity-50">加载中...</div>
       </mdui-card>
     )
   }
@@ -18,28 +18,28 @@ export default function ServerStatusCard(_props: ServerStatusProps) {
   const { ip, online, motd, players } = mcServerStatus
 
   return (
-    <mdui-card variant="filled" className="card card-server-status__card">
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <div style={{ fontSize: "larger" }}>
+    <mdui-card variant="filled" className="card">
+      <div className="flex items-center">
+        <div className="text-lg">
           <b>服务器状态</b>
         </div>
-        <div style={{ opacity: 0.5 }}>&nbsp;@&nbsp;</div>
-        <div style={{ opacity: 0.5 }}>{ip}</div>
+        <div className="opacity-50">&nbsp;@&nbsp;</div>
+        <div className="opacity-50">{ip}</div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div className="flex items-center">
         <mdui-icon name="bolt"></mdui-icon>
         &nbsp;
-        <div style={{ fontWeight: "bold" }}>
+        <div className="font-bold">
           {online ? "运行正常" : "服务器离线"}
         </div>
         &nbsp;
-        <div style={{ opacity: 0.5 }}>
+        <div className="opacity-50">
           ({players?.online ?? 0}/{players?.max ?? 1})
         </div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div className="flex items-center">
         <mdui-icon name="engineering"></mdui-icon>
         &nbsp;
         <div>
@@ -52,8 +52,8 @@ export default function ServerStatusCard(_props: ServerStatusProps) {
         </div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <div style={{ opacity: 0.25, fontSize: "smaller" }}>{motd}</div>
+      <div className="flex items-center">
+        <div className="opacity-25 text-sm">{motd}</div>
       </div>
     </mdui-card>
   )

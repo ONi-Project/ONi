@@ -9,14 +9,14 @@ export default function SettingsPage() {
   }
 
   return (
-    <div id="setting__content" className="panel-content" style={{ height: "100%" }}>
-      <div style={{ display: "flex", height: "100%", gap: "1rem" }}>
+    <div id="setting__content" className="panel-content h-full">
+      <div className="flex h-full gap-4">
         <div
           id="setting__navi"
-          style={{ width: "10rem", height: "100%" }}
+          className="w-40 h-full"
         >
           <mdui-menu
-            style={{ marginTop: "0rem", borderRadius: "0.75rem" }}
+            className="mt-0 rounded-xl"
           >
             <mdui-menu-item icon="brush" rounded>
               外观
@@ -30,8 +30,8 @@ export default function SettingsPage() {
           </mdui-menu>
         </div>
 
-        <div style={{ flexGrow: 1 }}>
-          <mdui-card variant="filled" className="card" style={{ padding: "1rem" }}>
+        <div className="flex-1">
+          <mdui-card variant="filled" className="card p-4">
             <h3>账户操作</h3>
             <mdui-button variant="filled" onClick={handleLogout}>
               退出登录

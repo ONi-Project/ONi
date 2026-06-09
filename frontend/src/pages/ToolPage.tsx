@@ -1,5 +1,7 @@
-import { useState, useRef, useCallback } from "react"
+import { useState, useRef } from "react"
+import { motion } from "motion/react"
 import type { Dialog } from "mdui"
+import { fadeInUp } from "../lib/animations"
 
 const voltageMap = [
   32, 128, 512, 2048, 8192, 32768, 131072, 524288,
@@ -32,79 +34,74 @@ export default function ToolPage() {
     <div id="tool__content" className="panel-content">
       <div className="grid-l">
         {/* Power Converter */}
-        <mdui-card
-          className="card animate__animated animate__fadeInUp animate__faster"
-          variant="filled"
-          id="tool__power-convert"
+        <motion.div
+          variants={fadeInUp}
+          initial="initial"
+          animate="animate"
         >
-          <div
-            className="card-title"
-            style={{ display: "flex", alignItems: "center" }}
+          <mdui-card
+            variant="filled"
+            className="card"
+            id="tool__power-convert"
           >
-            <mdui-icon
-              name="power"
-              style={{ fontSize: "32px", marginRight: "0.35rem" }}
-            ></mdui-icon>
-            <div>功率转换</div>
-          </div>
+            <div className="card-title flex items-center">
+              <mdui-icon
+                name="power"
+                className="text-[32px] mr-[0.35rem]"
+              ></mdui-icon>
+              <div>功率转换</div>
+            </div>
 
-          <div style={{ opacity: 0.5, fontSize: "large" }}>输入功率</div>
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-            <mdui-text-field
-              type="number"
-              label="电流 (A)"
-              value={amp}
-              onChange={(e: any) => setAmp(e.target.value)}
-            ></mdui-text-field>
-            <mdui-text-field
-              style={{ cursor: "pointer", width: "12rem" }}
-              label="电压等级"
-              readonly
-              value={voltageLabels[level - 1]}
-              onClick={() => {
-                if (selectDialogRef.current)
-                  selectDialogRef.current.open = true
-              }}
-            ></mdui-text-field>
-          </div>
+            <div className="opacity-50 text-lg">输入功率</div>
+            <div className="flex items-center gap-4">
+              <mdui-text-field
+                type="number"
+                label="电流 (A)"
+                value={amp}
+                onChange={(e: any) => setAmp(e.target.value)}
+              ></mdui-text-field>
+              <mdui-text-field
+                className="cursor-pointer w-48"
+                label="电压等级"
+                readonly
+                value={voltageLabels[level - 1]}
+                onClick={() => {
+                  if (selectDialogRef.current)
+                    selectDialogRef.current.open = true
+                }}
+              ></mdui-text-field>
+            </div>
 
-          <div style={{ opacity: 0.5, fontSize: "large", marginTop: "1rem" }}>
-            输出功率
-          </div>
-          {voltageLabels.map((label, i) => {
-            const result = power / voltageMap[i]
-            return (
-              <div key={i} className={`power-box-${i + 1}`}>
-                {label.split(" ")[0]}: <b>{isNaN(result) ? "0.00" : result.toFixed(2)}</b> A
-              </div>
-            )
-          })}
-        </mdui-card>
+            <div className="opacity-50 text-lg mt-4">
+              输出功率
+            </div>
+            {voltageLabels.map((label, i) => {
+              const result = power / voltageMap[i]
+              return (
+                <div key={i}>
+                  {label.split(" ")[0]}: <b>{isNaN(result) ? "0.00" : result.toFixed(2)}</b> A
+                </div>
+              )
+            })}
+          </mdui-card>
+        </motion.div>
 
-        <mdui-card
-          className="card animate__animated animate__fadeInUp animate__faster"
-          variant="filled"
-        >
-          test
-        </mdui-card>
-        <mdui-card
-          className="card animate__animated animate__fadeInUp animate__faster"
-          variant="filled"
-        >
-          test
-        </mdui-card>
-        <mdui-card
-          className="card animate__animated animate__fadeInUp animate__faster"
-          variant="filled"
-        >
-          test
-        </mdui-card>
-        <mdui-card
-          className="card animate__animated animate__fadeInUp animate__faster"
-          variant="filled"
-        >
-          test
-        </mdui-card>
+        {[1, 2, 3, 4].map((i) => (
+          <motion.div
+            key={i}
+            variants={fadeInUp}
+            initial="initial"
+            animate="animate"
+            transition={{ delay: i * 0.03 }}
+          >
+            <mdui-card
+              variant="filled"
+              className="card"
+            >
+              test
+            </mdui-card>
+          </motion.div>
+        ))}
       </div>
 
       {/* Voltage selector dialog */}

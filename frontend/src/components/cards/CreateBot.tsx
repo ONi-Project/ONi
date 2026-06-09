@@ -1,5 +1,5 @@
 export default function CreateBotCard() {
   return (
-    <div style={{ textAlign: "center", opacity: 0.5 }}>+ Create Bot</div>
+    <div className="text-center opacity-50">+ Create Bot</div>
   )
 }

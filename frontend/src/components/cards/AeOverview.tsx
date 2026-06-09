@@ -1,4 +1,9 @@
 import { useNavigate } from "react-router-dom"
+import { useDataStore } from "../../stores/useDataStore"
+import {
+  timePassedDisplayConvert,
+  timeDisplayConvert,
+} from "../../lib/utils"
 
 interface AeOverviewProps {
   config?: {
@@ -10,8 +15,12 @@ interface AeOverviewProps {
 
 export default function AeOverviewCard({ config }: AeOverviewProps) {
   const navigate = useNavigate()
+  const aeList = useDataStore((s) => s.ae)
 
-  if (!config) return null
+  if (!config?.uuid) return null
+
+  const ae = aeList.find((item) => item.uuid === config.uuid)
+  if (!ae) return null
 
   const handleView = () => {
     navigate(`/ae?view=${config.uuid}`)
@@ -21,76 +30,74 @@ export default function AeOverviewCard({ config }: AeOverviewProps) {
     navigate(`/ae?edit=${config.uuid}`)
   }
 
+  const activeCpus = ae.cpus.filter((cpu) => cpu.active).length
+  const busyCpus = ae.cpus.filter((cpu) => cpu.busy).length
+  const totalCpus = ae.cpus.length
+
+  const enabledMaintains = ae.levelMaintains.filter((m) => m.enabled).length
+  const totalMaintains = ae.levelMaintains.length
+
   return (
-    <mdui-card className="card ae__list-item" variant="filled">
-      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+    <mdui-card className="card" variant="filled">
+      <div className="flex items-center gap-2">
         <mdui-icon
           name="grid_on--outlined"
-          style={{ fontSize: "2rem" }}
+          className="text-[2rem]"
         ></mdui-icon>
 
         <div>
-          <div style={{ fontSize: "larger", whiteSpace: "nowrap" }}>
-            <b>{config.name}</b>
+          <div className="text-lg whitespace-nowrap">
+            <b>{ae.name}</b>
           </div>
         </div>
 
         <mdui-divider
           vertical
-          style={{ marginLeft: "0.5rem", marginRight: "0.5rem" }}
+          className="ml-2 mr-2"
         ></mdui-divider>
 
         <div>
-          <div className="ae__overview-time-updated" style={{ opacity: 1 }}>
-            ...
+          <div className="opacity-100">
+            {timePassedDisplayConvert(ae.timeUpdated)}
           </div>
-          <div style={{ opacity: 0.25, fontSize: "smaller" }}>
-            {config.uuid}
+          <div className="opacity-25 text-sm">
+            {ae.uuid}
           </div>
         </div>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.25rem",
-          marginTop: "0.25rem",
-        }}
-      >
-        <div style={{ display: "flex", opacity: 0.75, gap: "0.5rem" }}>
+      <div className="flex flex-col gap-1 mt-1">
+        <div className="flex opacity-75 gap-2">
           <mdui-icon name="schedule"></mdui-icon>
-          <div className="ae__overview-time-created">...</div>
+          <div>
+            创建于 {timeDisplayConvert(ae.timeCreated)}
+          </div>
         </div>
 
-        <div style={{ display: "flex", opacity: 0.75, gap: "0.5rem" }}>
+        <div className="flex opacity-75 gap-2">
           <mdui-icon name="memory"></mdui-icon>
-          <div className="ae__overview-cpu-status">...</div>
+          <div>
+            {totalCpus-busyCpus}/{totalCpus} 空闲 CPU
+          </div>
         </div>
 
-        <div style={{ display: "flex", opacity: 0.75, gap: "0.5rem" }}>
+        <div className="flex opacity-75 gap-2">
           <mdui-icon name="category"></mdui-icon>
-          <div className="ae__overview-maintain">...</div>
+          <div>
+            {enabledMaintains}/{totalMaintains} 库存维持启用
+          </div>
         </div>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "0.5rem",
-          marginTop: "0.5rem",
-        }}
-      >
-        <mdui-chip elevated className="ae__button-view" onClick={handleView}>
+      <div className="flex items-center gap-2 mt-2">
+        <mdui-chip elevated onClick={handleView}>
           查看
           <mdui-icon slot="icon" name="pageview"></mdui-icon>
         </mdui-chip>
 
         <mdui-chip
           elevated
-          style={{ marginRight: "auto" }}
-          className="ae__button-edit"
+          className="mr-auto"
           onClick={handleEdit}
         >
           编辑

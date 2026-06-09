@@ -8,7 +8,7 @@ const AeEdit = lazy(() => import("../components/tabs/AeEdit"))
 
 export default function AePage() {
   const ae = useDataStore((s) => s.ae)
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const viewUuid = searchParams.get("view")
   const editUuid = searchParams.get("edit")
   const [viewMode, setViewMode] = useState<string | null>(null)
@@ -21,7 +21,7 @@ export default function AePage() {
 
   const handleBack = () => {
     setViewMode(null)
-    window.history.replaceState({}, "", "/ae")
+    setSearchParams({}, { replace: true })
   }
 
   const Fallback = () => <div>加载中...</div>
@@ -43,18 +43,13 @@ export default function AePage() {
       <div id="ae__content" className="panel-content">
         <div
           id="ae__topbar"
-          style={{
-            display: "flex",
-            gap: "0.5rem",
-            alignItems: "center",
-            marginBottom: "0.5rem",
-          }}
+          className="flex gap-2 items-center mb-2"
         >
           <mdui-text-field
             variant="outlined"
             icon="search"
             label="检索 AE 网络..."
-            style={{ flex: 1 }}
+            className="flex-1"
           ></mdui-text-field>
           <mdui-button icon="add">添加</mdui-button>
         </div>

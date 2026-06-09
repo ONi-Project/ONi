@@ -1,5 +1,7 @@
+import { motion } from "motion/react"
 import { useDataStore } from "../stores/useDataStore"
 import { DynamicLayout } from "../lib/renderLayout"
+import { fadeInUp } from "../lib/animations"
 
 export default function ControlPage() {
   const redstone = useDataStore((s) => s.redstone)
@@ -35,22 +37,18 @@ export default function ControlPage() {
 
   return (
     <div id="control__content" className="panel-content">
-      <div
-        className="animate__animated animate__fadeInUp animate__faster"
-        style={{
-          marginBottom: "0.5rem",
-          padding: "0.25rem",
-          display: "flex",
-          gap: "0.5rem",
-          alignItems: "center",
-        }}
+      <motion.div
+        variants={fadeInUp}
+        initial="initial"
+        animate="animate"
+        className="mb-2 p-1 flex gap-2 items-center"
       >
         <mdui-text-field
           variant="outlined"
           icon="search"
           label="检索红石控制器..."
         ></mdui-text-field>
-      </div>
+      </motion.div>
       <div id="control__list">
         <DynamicLayout layout={layout} />
       </div>

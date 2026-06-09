@@ -19,62 +19,45 @@ export default function BotOverviewCard({ config }: BotOverviewProps) {
 
   return (
     <mdui-card className="card" variant="filled">
-      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+      <div className="flex items-center gap-2">
         <mdui-icon
           name="smart_toy--outlined"
-          style={{ fontSize: "2rem" }}
+          className="text-[2rem]"
         ></mdui-icon>
 
         <div>
-          <div style={{ fontSize: "larger" }}>
+          <div className="text-lg">
             <b>{config.name}</b>
           </div>
         </div>
 
         <mdui-divider
           vertical
-          style={{ marginLeft: "0.5rem", marginRight: "0.5rem" }}
+          className="ml-2 mr-2"
         ></mdui-divider>
 
         <div>
-          <div style={{ opacity: 1 }}>在线 - WebSocket</div>
-          <div style={{ opacity: 0.25, fontSize: "smaller" }}>
-            {config.uuid}
-          </div>
+          <div className="opacity-100">在线 - WebSocket</div>
+          <div className="opacity-25 text-sm">{config.uuid}</div>
         </div>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.25rem",
-          marginTop: "0.25rem",
-        }}
-      >
-        <div style={{ display: "flex", opacity: 0.75, gap: "0.5rem" }}>
+      <div className="flex flex-col gap-1 mt-1">
+        <div className="flex opacity-75 gap-2">
           <mdui-icon name="schedule"></mdui-icon>
           <div>创建于 2021-08-15 12:00:00</div>
         </div>
 
-        <div style={{ display: "flex", opacity: 0.75, gap: "0.5rem" }}>
+        <div className="flex opacity-75 gap-2">
           <mdui-icon name="commit"></mdui-icon>
           <div>ONi Lib v1</div>
         </div>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "0.5rem",
-          marginTop: "0.5rem",
-        }}
-      >
+      <div className="flex items-center gap-2 mt-2">
         <mdui-chip
           elevated
-          style={{ marginRight: "auto" }}
-          className="bot__button-edit"
+          className="mr-auto"
           onClick={handleEdit}
         >
           编辑

@@ -31,52 +31,41 @@ export default function TopBar() {
     <mdui-top-app-bar
       scroll-behavior="shrink elevate"
       scroll-target="#main-content-area"
-      style={{ position: "relative" }}
+      className="relative p-3"
     >
       <mdui-button-icon
         icon="menu"
         id="navi-toggler"
-        style={{ marginLeft: "0.5rem" }}
+        className=""
         onClick={handleToggle}
       ></mdui-button-icon>
 
       <img
         src="resources/icon.png"
-        style={{
-          height: "100%",
-          marginLeft: "0.5rem",
-          marginRight: "0.5rem",
-          opacity: 0.7,
-        }}
+        className="h-full ml-2 mr-2 opacity-70"
         alt="ONi"
       />
 
       <mdui-top-app-bar-title>
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <div style={{ fontWeight: "bolder" }}>ONi</div>
+        <div className="flex flex-row">
+          <div className="font-bold">ONi</div>
           &nbsp;
           <mdui-badge>dev</mdui-badge>
         </div>
         <div
           slot="label-large"
-          style={{
-            fontWeight: "bold",
-            height: "100%",
-            fontSize: "2rem",
-            marginLeft: "3rem",
-            opacity: 0.9,
-          }}
+          className="font-bold h-full text-3xl ml-12 opacity-90"
         >
           {pageLabel}
         </div>
       </mdui-top-app-bar-title>
 
-      <div style={{ flexGrow: 1 }}></div>
+      <div className="flex-1"></div>
 
       {user && !isMobile && (
         <div
           id="slogan"
-          style={{ alignSelf: "center", opacity: 0.2, marginRight: "1rem" }}
+          className="self-center opacity-20 mr-4"
         >
           {user.name}
         </div>

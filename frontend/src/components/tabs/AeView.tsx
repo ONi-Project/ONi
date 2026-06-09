@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from "react"
+import { useState, useCallback, useRef } from "react"
 import { throttle } from "mdui"
 import * as pinyinPro from "pinyin-pro"
 import { useDataStore } from "../../stores/useDataStore"
@@ -165,20 +165,12 @@ export default function AeView({ uuid, onBack }: AeViewProps) {
   return (
     <div className="ae__view">
       {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          marginBottom: "0.5rem",
-          gap: "0.5rem",
-        }}
-      >
+      <div className="flex items-center mb-2 gap-2">
         <mdui-button-icon
           icon="arrow_back"
-          className="ae__view-back"
           onClick={onBack}
         ></mdui-button-icon>
-        <div style={{ fontWeight: "bold", fontSize: "large" }}>
+        <div className="font-bold text-lg">
           查看 - {aeData.name}
         </div>
       </div>
@@ -186,54 +178,47 @@ export default function AeView({ uuid, onBack }: AeViewProps) {
       {/* Info card */}
       <div className="grid-full">
         <mdui-card className="card" variant="filled">
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div className="flex items-center gap-2">
             <mdui-icon
               name="grid_on--outlined"
-              style={{ fontSize: "2rem" }}
+              className="text-[2rem]"
             ></mdui-icon>
             <div>
-              <div style={{ fontSize: "larger", whiteSpace: "nowrap" }}>
+              <div className="text-lg whitespace-nowrap">
                 <b>{aeData.name}</b>
               </div>
             </div>
             <mdui-divider
               vertical
-              style={{ marginLeft: "0.5rem", marginRight: "0.5rem" }}
+              className="ml-2 mr-2"
             ></mdui-divider>
             <div>
-              <div className="ae__overview-time-updated" style={{ opacity: 1 }}>
+              <div className="opacity-100">
                 {timePassedDisplayConvert(aeData.timeUpdated)}
               </div>
-              <div style={{ opacity: 0.25, fontSize: "smaller" }}>
+              <div className="opacity-25 text-sm">
                 {aeData.uuid}
               </div>
             </div>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.25rem",
-              marginTop: "0.25rem",
-            }}
-          >
-            <div style={{ display: "flex", opacity: 0.75, gap: "0.5rem" }}>
+          <div className="flex flex-col gap-1 mt-1">
+            <div className="flex opacity-75 gap-2">
               <mdui-icon name="schedule"></mdui-icon>
-              <div className="ae__overview-time-created">
+              <div>
                 {timeDisplayConvert(aeData.timeCreated)}
               </div>
             </div>
-            <div style={{ display: "flex", opacity: 0.75, gap: "0.5rem" }}>
+            <div className="flex opacity-75 gap-2">
               <mdui-icon name="memory"></mdui-icon>
-              <div className="ae__overview-cpu-status">
+              <div>
                 {aeData.cpus?.filter((c: any) => !c.busy).length || 0} /{" "}
                 {aeData.cpus?.length || 0} 核心空闲
               </div>
             </div>
-            <div style={{ display: "flex", opacity: 0.75, gap: "0.5rem" }}>
+            <div className="flex opacity-75 gap-2">
               <mdui-icon name="category"></mdui-icon>
-              <div className="ae__overview-maintain">test</div>
+              <div>test</div>
             </div>
           </div>
         </mdui-card>
@@ -243,30 +228,15 @@ export default function AeView({ uuid, onBack }: AeViewProps) {
       <div className="grid-l">
         {/* CPU Card */}
         <mdui-card className="card" variant="filled">
-          <div
-            className="card-title"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
+          <div className="card-title flex items-center gap-2">
             <mdui-icon
               name="memory"
-              style={{ fontSize: "32px", alignSelf: "center" }}
+              className="text-[32px] self-center"
             ></mdui-icon>
             <div>CPU</div>
           </div>
 
-          <div
-            className="ae__view-cpu-list"
-            style={{
-              marginTop: "0.5rem",
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(20rem, 1fr))",
-              gap: "0.5rem",
-            }}
-          >
+          <div className="mt-2 grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-2">
             {cpusDisplay.length > 0 ? (
               cpusDisplay.map((cpu: any, i: number) => {
                 const finalOutputTotal =
@@ -314,37 +284,22 @@ export default function AeView({ uuid, onBack }: AeViewProps) {
                 return (
                   <mdui-card
                     key={cpu.uuid || i}
-                    style={{
-                      padding: "1rem",
-                      paddingLeft: "1.25rem",
-                      paddingRight: "1.25rem",
-                      position: "relative",
-                    }}
+                    className="p-4 pl-5 pr-5 relative"
                   >
-                    <div style={{ display: "flex", alignItems: "center" }}>
+                    <div className="flex items-center">
                       <mdui-icon
                         name={iconBig}
-                        style={{
-                          position: "absolute",
-                          top: "1rem",
-                          right: "1rem",
-                          opacity: 0.1,
-                          fontSize: "3rem",
-                        }}
+                        className="absolute top-4 right-4 opacity-10 text-[3rem]"
                       ></mdui-icon>
                       <mdui-icon name={icon}></mdui-icon>
                       &nbsp;&nbsp;
                       <div>
                         <div>
                           CPU {i}{" "}
-                          <span style={{ opacity: 0.7 }}>{nameStr}</span>
+                          <span className="opacity-70">{nameStr}</span>
                         </div>
                         <div
-                          style={{
-                            fontWeight: "normal",
-                            fontSize: ".8rem",
-                            opacity: 0.5,
-                          }}
+                          className="font-normal text-sm opacity-50"
                           dangerouslySetInnerHTML={{ __html: statusStr }}
                         />
                       </div>
@@ -359,17 +314,8 @@ export default function AeView({ uuid, onBack }: AeViewProps) {
                 )
               })
             ) : (
-              <mdui-card
-                className="ae__view-cpu-list-nothing"
-                style={{ padding: "0.75rem" }}
-              >
-                <div
-                  style={{
-                    textAlign: "center",
-                    opacity: 0.5,
-                    margin: "0.75rem 0",
-                  }}
-                >
+              <mdui-card className="p-3">
+                <div className="text-center opacity-50 my-3">
                   没有找到 CPU 信息
                 </div>
               </mdui-card>
@@ -378,16 +324,11 @@ export default function AeView({ uuid, onBack }: AeViewProps) {
 
           {cpus.length > cpusPerPage && (
             <mdui-chip
-              className={
-                cpusShowMore
-                  ? "ae__view-cpu-list-less-button"
-                  : "ae__view-cpu-list-more-button"
-              }
               elevated
               icon={
                 cpusShowMore ? "keyboard_arrow_up" : "keyboard_arrow_down"
               }
-              style={{ padding: "0.5rem", height: "auto" }}
+              className="p-2 h-auto"
               onClick={() => setCpusShowMore(!cpusShowMore)}
             >
               {cpusShowMore ? "收起 CPU 列表" : "展开 CPU 列表..."}
@@ -397,29 +338,16 @@ export default function AeView({ uuid, onBack }: AeViewProps) {
 
         {/* Inventory Card */}
         <mdui-card className="card" variant="filled">
-          <div
-            className="card-title"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
+          <div className="card-title flex items-center gap-2">
             <mdui-icon
               name="storage"
-              style={{ fontSize: "28px", alignSelf: "center" }}
+              className="text-[28px] self-center"
             ></mdui-icon>
             <div>库存</div>
           </div>
 
           {/* Type filter buttons */}
-          <div
-            style={{
-              display: "flex",
-              marginTop: "0.5rem",
-              gap: "0.5rem",
-            }}
-          >
+          <div className="flex mt-2 gap-2">
             {[
               { filter: "all", label: "全部", icon: "all_inclusive" },
               { filter: "item", label: "物品", icon: "category" },
@@ -428,7 +356,6 @@ export default function AeView({ uuid, onBack }: AeViewProps) {
             ].map((btn) => (
               <mdui-chip
                 key={btn.filter}
-                className="ae__view-storage-filter-button"
                 selected={filterType === btn.filter}
                 elevated
                 icon={btn.icon}
@@ -445,7 +372,6 @@ export default function AeView({ uuid, onBack }: AeViewProps) {
 
           {/* Search input */}
           <mdui-text-field
-            className="ae__view-storage-filter-search-input"
             label="检索库存..."
             value={filterWord}
             onInput={throttle((e: any) => {
@@ -455,17 +381,8 @@ export default function AeView({ uuid, onBack }: AeViewProps) {
           ></mdui-text-field>
 
           {/* Sort/filter controls */}
-          <div
-            style={{
-              display: "flex",
-              marginTop: "0.5rem",
-              gap: "0.5rem",
-              marginBottom: "0rem",
-              alignItems: "center",
-            }}
-          >
+          <div className="flex mt-2 gap-2 mb-0 items-center">
             <mdui-chip
-              className="ae__view-storage-filter-craftable-button"
               elevated
               icon="settings_suggest"
               selectedIcon="settings_suggest"
@@ -481,7 +398,6 @@ export default function AeView({ uuid, onBack }: AeViewProps) {
               {renderCraftableLabel()}
             </mdui-chip>
             <mdui-chip
-              className="ae__view-storage-filter-sort-button"
               elevated
               icon="sort"
               selectedIcon="settings_suggest"
@@ -505,16 +421,7 @@ export default function AeView({ uuid, onBack }: AeViewProps) {
 
           {/* Item grid */}
           {filteredItems.items.length > 0 ? (
-            <mdui-card
-              className="ae__view-item-list"
-              style={{
-                display: "grid",
-                padding: "0.75rem",
-                gridTemplateColumns:
-                  "repeat(auto-fill, minmax(3rem, 1fr))",
-                gap: "0.25rem",
-              }}
-            >
+            <mdui-card className="grid grid-cols-[repeat(auto-fill,minmax(3rem,1fr))] gap-1 p-3">
               {filteredItems.items.map((item: any, idx: number) => {
                 let link = ""
                 if (item.type === "item") {
@@ -528,39 +435,23 @@ export default function AeView({ uuid, onBack }: AeViewProps) {
                 return (
                   <div
                     key={`${item.id}-${item.damage || 0}-${idx}`}
-                    className="hover-highlight ae__view-item-list-item"
-                    style={{ position: "relative", cursor: "pointer" }}
+                    className="hover-highlight relative cursor-pointer"
                     onClick={() => handleItemClick(item)}
                     onMouseMove={(e) => handleItemMouseOver(e, item)}
                     onMouseOut={handleItemMouseOut}
                   >
                     <img
                       src={`${picSource}/${link}`}
-                      style={{ height: "3rem" }}
+                      className="h-12"
                       alt=""
                     />
-                    <div
-                      style={{
-                        position: "absolute",
-                        bottom: "1px",
-                        right: "1px",
-                        textAlign: "right",
-                        textShadow: "0px 0px 4px rgba(0,0,0,1)",
-                      }}
-                    >
+                    <div className="absolute bottom-[1px] right-[1px] text-right [text-shadow:0px_0px_4px_rgba(0,0,0,1)]">
                       {numberDisplayConvert(item.amount)}
                     </div>
                     {item.craftable && (
                       <mdui-icon
                         name="settings_suggest"
-                        style={{
-                          position: "absolute",
-                          top: "1px",
-                          right: "1px",
-                          fontSize: "18px",
-                          color: "rgb(var(--mdui-color-primary))",
-                          textShadow: "0px 0px 4px rgba(0,0,0,1)",
-                        }}
+                        className="absolute top-[1px] right-[1px] text-lg text-[rgb(var(--mdui-color-primary))] [text-shadow:0px_0px_4px_rgba(0,0,0,1)]"
                       ></mdui-icon>
                     )}
                   </div>
@@ -568,32 +459,14 @@ export default function AeView({ uuid, onBack }: AeViewProps) {
               })}
 
               {filteredItems.hasMore && (
-                <div
-                  style={{
-                    position: "relative",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <div style={{ fontSize: "large", opacity: 0.75 }}>
-                    ...
-                  </div>
+                <div className="relative flex items-center justify-center">
+                  <div className="text-lg opacity-75">...</div>
                 </div>
               )}
             </mdui-card>
           ) : (
-            <mdui-card
-              className="ae__view-item-list-nothing"
-              style={{ padding: "0.75rem" }}
-            >
-              <div
-                style={{
-                  textAlign: "center",
-                  opacity: 0.5,
-                  margin: "0.75rem 0",
-                }}
-              >
+            <mdui-card className="p-3">
+              <div className="text-center opacity-50 my-3">
                 没有找到符合条件的物品
               </div>
             </mdui-card>
@@ -602,10 +475,9 @@ export default function AeView({ uuid, onBack }: AeViewProps) {
           {/* Show more button */}
           {filteredItems.hasMore && (
             <mdui-chip
-              className="ae__view-item-list-more-button"
               elevated
               icon="keyboard_arrow_down"
-              style={{ padding: "0.5rem", height: "auto" }}
+              className="p-2 h-auto"
               onClick={() =>
                 setFilterPage((prev) => prev + 1)
               }

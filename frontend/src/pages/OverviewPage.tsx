@@ -1,6 +1,8 @@
+import { motion } from "motion/react"
 import { useAuthStore } from "../stores/useAuthStore"
 import { useDataStore } from "../stores/useDataStore"
 import { DynamicLayout } from "../lib/renderLayout"
+import { fadeInUp } from "../lib/animations"
 import LoginDialog from "../components/dialogs/LoginDialog"
 
 export default function OverviewPage() {
@@ -19,34 +21,19 @@ export default function OverviewPage() {
       <div id="overview__content" className="panel-content">
         <div
           id="overview__loading"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginTop: "10rem",
-          }}
+          className="flex flex-col items-center mt-40"
         >
-          <div
-            className="animate__animated animate__fadeInUp animate__faster"
-            style={{
-              margin: "2rem",
-              width: "25rem",
-              maxWidth: "90%",
-              textAlign: "center",
-            }}
+          <motion.div
+            variants={fadeInUp}
+            initial="initial"
+            animate="animate"
+            className="m-8 w-[25rem] max-w-[90%] text-center"
           >
-            <div
-              style={{
-                fontSize: "larger",
-                textAlign: "center",
-                marginBottom: "1rem",
-                opacity: 0.75,
-              }}
-            >
+            <div className="text-lg text-center mb-4 opacity-75">
               少女祈祷中...
             </div>
             <mdui-circular-progress></mdui-circular-progress>
-          </div>
+          </motion.div>
         </div>
       </div>
     )

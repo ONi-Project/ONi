@@ -135,69 +135,52 @@ export default function AeEdit({ uuid, onBack }: AeEditProps) {
 
   return (
     <div className="ae__edit">
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          marginBottom: "0.5rem",
-          gap: "0.5rem",
-        }}
-      >
+      <div className="flex items-center mb-2 gap-2">
         <mdui-button-icon
           icon="arrow_back"
-          className="ae__edit-back"
           onClick={onBack}
         ></mdui-button-icon>
-        <div style={{ fontWeight: "bold", fontSize: "large" }}>
+        <div className="font-bold text-lg">
           编辑 - {aeData.name}
         </div>
       </div>
 
       <div className="grid-full">
         <mdui-card className="card" variant="filled">
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div className="flex items-center gap-2">
             <mdui-icon
               name="grid_on--outlined"
-              style={{ fontSize: "2rem" }}
+              className="text-[2rem]"
             ></mdui-icon>
             <div>
-              <div style={{ fontSize: "larger", whiteSpace: "nowrap" }}>
+              <div className="text-lg whitespace-nowrap">
                 <b>{aeData.name}</b>
               </div>
             </div>
             <mdui-divider
               vertical
-              style={{ marginLeft: "0.5rem", marginRight: "0.5rem" }}
+              className="ml-2 mr-2"
             ></mdui-divider>
             <div>
-              <div className="ae__overview-time-updated" style={{ opacity: 1 }}>
-                ...
-              </div>
-              <div style={{ opacity: 0.25, fontSize: "smaller" }}>
+              <div className="opacity-100">...</div>
+              <div className="opacity-25 text-sm">
                 {aeData.uuid}
               </div>
             </div>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.25rem",
-              marginTop: "0.25rem",
-            }}
-          >
-            <div style={{ display: "flex", opacity: 0.75, gap: "0.5rem" }}>
+          <div className="flex flex-col gap-1 mt-1">
+            <div className="flex opacity-75 gap-2">
               <mdui-icon name="schedule"></mdui-icon>
-              <div className="ae__overview-time-created">...</div>
+              <div>...</div>
             </div>
-            <div style={{ display: "flex", opacity: 0.75, gap: "0.5rem" }}>
+            <div className="flex opacity-75 gap-2">
               <mdui-icon name="memory"></mdui-icon>
-              <div className="ae__overview-cpu-status">...</div>
+              <div>...</div>
             </div>
-            <div style={{ display: "flex", opacity: 0.75, gap: "0.5rem" }}>
+            <div className="flex opacity-75 gap-2">
               <mdui-icon name="category"></mdui-icon>
-              <div className="ae__overview-maintain">...</div>
+              <div>...</div>
             </div>
           </div>
         </mdui-card>
@@ -205,73 +188,43 @@ export default function AeEdit({ uuid, onBack }: AeEditProps) {
 
       <div className="grid-l">
         <mdui-card className="card" variant="filled" style={{ gap: "0.5rem" }}>
-          <div
-            className="card-title"
-            style={{ marginBottom: "0.5rem", display: "flex", alignItems: "center" }}
-          >
+          <div className="card-title mb-2 flex items-center">
             <mdui-icon
               name="grading"
-              style={{ fontSize: "28px", marginRight: "0.5rem", alignSelf: "center" }}
+              className="text-[28px] mr-2 self-center"
             ></mdui-icon>
             <div>库存维持</div>
           </div>
 
-          <div
-            className="ae__maintain-list"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "1rem",
-              marginBottom: "1rem",
-            }}
-          >
+          <div className="flex flex-col gap-4 mb-4">
             {usedList.length > 0 ? (
               usedList.map((maintain: any, i: number) => (
-                <mdui-card
-                  key={maintain.uuid || i}
-                  style={{ paddingBottom: "0.5rem", gap: "0.5rem" }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                      padding: "1rem",
-                      marginBottom: "-1rem",
-                    }}
-                  >
+                <mdui-card style={{ paddingBottom: "0.5rem" }}>
+                  <div className="flex items-center gap-2 p-4 -mb-4">
                     <mdui-icon
-                      style={{ marginLeft: "0.25rem" }}
+                      className="ml-1"
                       name="receipt_long"
                     ></mdui-icon>
                     <div>
-                      <div
-                        style={{
-                          fontWeight: "bold",
-                          fontSize: "large",
-                          marginLeft: "0.25rem",
-                        }}
-                      >
+                      <div className="font-bold text-lg ml-1">
                         队列 #{i + 1}
                       </div>
                     </div>
                     {editMode && (
                       <mdui-button-icon
-                        style={{ marginLeft: "auto" }}
+                        className="ml-auto"
                         icon="settings"
                       ></mdui-button-icon>
                     )}
                     <mdui-switch
-                      style={{
-                        marginRight: "0.25rem",
-                        ...(editMode ? {} : { marginLeft: "auto" }),
-                      }}
+                      className="mr-1"
+                      style={editMode ? {} : { marginLeft: "auto" }}
                       checked={maintain.enabled}
                       onClick={() => handleToggle(i)}
                     ></mdui-switch>
                   </div>
 
-                  <mdui-list style={{ marginLeft: "1rem", marginRight: "1rem" }}>
+                  <mdui-list className="mx-4">
                     {maintain.list.map((item: any, ii: number) => {
                       const currentItem = aeData.items?.find(
                         (_: any) => _.id === item.id && _.damage === item.damage
@@ -288,21 +241,15 @@ export default function AeEdit({ uuid, onBack }: AeEditProps) {
 
                       return (
                         <mdui-list-item key={ii}>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "0.75rem",
-                            }}
-                          >
+                          <div className="flex items-center gap-3">
                             <img
                               src={`${picSource}/${item.type}/${item.id}_${item.damage}.png`}
-                              style={{ height: "3rem" }}
+                              className="h-12"
                               alt=""
                             />
                             <div>
                               <div>{item.display}</div>
-                              <div style={{ fontSize: "smaller", opacity: 0.5 }}>
+                              <div className="text-sm opacity-50">
                                 {info}
                               </div>
                             </div>
@@ -311,7 +258,7 @@ export default function AeEdit({ uuid, onBack }: AeEditProps) {
                                 <mdui-text-field
                                   value={item.request}
                                   type="number"
-                                  style={{ width: "8rem", marginLeft: "auto" }}
+                                  className="w-32 ml-auto"
                                   variant="outlined"
                                   label="单次请求量"
                                   onChange={(e: any) =>
@@ -321,7 +268,7 @@ export default function AeEdit({ uuid, onBack }: AeEditProps) {
                                 <mdui-text-field
                                   value={item.amount}
                                   type="number"
-                                  style={{ width: "8rem" }}
+                                  className="w-32"
                                   variant="outlined"
                                   label="维持总量"
                                   onChange={(e: any) =>
@@ -334,7 +281,7 @@ export default function AeEdit({ uuid, onBack }: AeEditProps) {
                                 ></mdui-button-icon>
                               </>
                             ) : (
-                              <div style={{ opacity: 0.5, textAlign: "right", marginLeft: "auto" }}>
+                              <div className="opacity-50 text-right ml-auto">
                                 {current} / {item.amount}
                               </div>
                             )}
@@ -346,12 +293,7 @@ export default function AeEdit({ uuid, onBack }: AeEditProps) {
                     {editMode && (
                       <mdui-list-item>
                         <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "0.75rem",
-                            cursor: "pointer",
-                          }}
+                          className="flex items-center gap-3 cursor-pointer"
                           onClick={() => handleAddItem(i)}
                         >
                           <mdui-icon name="add"></mdui-icon>
@@ -363,27 +305,21 @@ export default function AeEdit({ uuid, onBack }: AeEditProps) {
                 </mdui-card>
               ))
             ) : (
-              <div style={{ opacity: 0.5, textAlign: "center", padding: "2rem" }}>
+              <div className="opacity-50 text-center p-8">
                 暂无库存维持配置
               </div>
             )}
           </div>
 
           {!editMode ? (
-            <div
-              className="ae__edit-maintain-before-edit"
-              style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginTop: "0.5rem" }}
-            >
-              <mdui-chip elevated style={{ marginRight: "auto" }} onClick={handleEdit}>
+            <div className="flex gap-2 flex-wrap mt-2">
+              <mdui-chip elevated className="mr-auto" onClick={handleEdit}>
                 编辑
                 <mdui-icon slot="icon" name="edit"></mdui-icon>
               </mdui-chip>
             </div>
           ) : (
-            <div
-              className="ae__edit-maintain-after-edit"
-              style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginTop: "0.5rem" }}
-            >
+            <div className="flex gap-2 flex-wrap mt-2">
               <mdui-chip elevated onClick={handleApply}>
                 应用
                 <mdui-icon slot="icon" name="done"></mdui-icon>
@@ -392,7 +328,7 @@ export default function AeEdit({ uuid, onBack }: AeEditProps) {
                 取消
                 <mdui-icon slot="icon" name="close"></mdui-icon>
               </mdui-chip>
-              <mdui-chip elevated style={{ marginRight: "auto" }} onClick={handleAdd}>
+              <mdui-chip elevated className="mr-auto" onClick={handleAdd}>
                 添加
                 <mdui-icon slot="icon" name="add"></mdui-icon>
               </mdui-chip>
@@ -404,10 +340,9 @@ export default function AeEdit({ uuid, onBack }: AeEditProps) {
           <div className="card-title">操作</div>
           <mdui-chip
             elevated
+            className="mr-auto mt-2"
             style={{
               backgroundColor: "rgb(var(--mdui-color-error-container))",
-              marginRight: "auto",
-              marginTop: "0.5rem",
             }}
           >
             删除 {aeData.name}

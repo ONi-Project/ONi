@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from "react"
+import { useRef, useState, useCallback } from "react"
 import type { Dialog } from "mdui"
 import { throttle } from "mdui"
 import * as pinyinPro from "pinyin-pro"
@@ -38,10 +38,14 @@ export default function AeItemSelectDialog() {
   })
   const [currentAe, setCurrentAe] = useState<aeModel.Ae | null>(null)
 
-  const filteredItems = useCallback(() => {
-    if (!currentAe) return { items: [], total: 0, hasMore: false }
+  // Store current AE data for filtering
+  const aeRef = useRef(currentAe)
+  aeRef.current = currentAe
 
-    let items = [...currentAe.items]
+  const filteredItems = useCallback(() => {
+    if (!aeRef.current) return { items: [], total: 0, hasMore: false }
+
+    let items = [...aeRef.current.items]
 
     // Filter by type
     if (search.type !== "all") {
@@ -96,7 +100,7 @@ export default function AeItemSelectDialog() {
     const hasMore = sliced.length < total
 
     return { items: sliced, total, hasMore }
-  }, [currentAe, search])
+  }, [search]) // safe because we use aeRef
 
   const result = filteredItems()
 
@@ -191,26 +195,18 @@ export default function AeItemSelectDialog() {
     <mdui-dialog
       ref={dialogRef}
       id="ae__item-select"
-      style={{ padding: "0 !important" }}
+      className="p-0!"
     >
-      <div
-        className="card-title"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          marginBottom: "0.5rem",
-          width: "30rem",
-        }}
-      >
+      <div className="card-title flex items-center mb-2 w-[30rem]">
         <mdui-icon
           name="category"
-          style={{ marginRight: "0.5rem" }}
+          className="mr-2"
         ></mdui-icon>
         <div>选择一个物品</div>
       </div>
 
       {/* Type filter chips */}
-      <div style={{ display: "flex", marginTop: "1.5rem", gap: "0.5rem" }}>
+      <div className="flex mt-6 gap-2">
         {[
           { filter: "all", label: "全部", icon: "all_inclusive" },
           { filter: "item", label: "物品", icon: "category" },
@@ -235,8 +231,7 @@ export default function AeItemSelectDialog() {
 
       {/* Search input */}
       <mdui-text-field
-        style={{ marginTop: "0.5rem" }}
-        className="ae__item-select-storage-filter-search-input"
+        className="mt-2"
         label="检索库存..."
         value={search.word}
         onInput={throttle((e: any) => {
@@ -245,17 +240,8 @@ export default function AeItemSelectDialog() {
       ></mdui-text-field>
 
       {/* Filter/sort controls */}
-      <div
-        style={{
-          display: "flex",
-          marginTop: "1rem",
-          gap: "0.5rem",
-          marginBottom: "0.5rem",
-          alignItems: "center",
-        }}
-      >
+      <div className="flex mt-4 gap-2 mb-2 items-center">
         <mdui-chip
-          className="ae__item-select-storage-filter-craftable-button"
           elevated
           icon="settings_suggest"
           selectedIcon="settings_suggest"
@@ -264,7 +250,6 @@ export default function AeItemSelectDialog() {
           {craftableLabel}
         </mdui-chip>
         <mdui-chip
-          className="ae__item-select-storage-filter-sort-button"
           elevated
           icon="sort"
           selectedIcon="settings_suggest"
@@ -277,13 +262,7 @@ export default function AeItemSelectDialog() {
       {/* Item grid */}
       {result.items.length > 0 ? (
         <mdui-card
-          className="ae__item-select-item-list"
-          style={{
-            display: "grid",
-            padding: "0.75rem",
-            gridTemplateColumns: "repeat(auto-fill, minmax(3rem, 1fr))",
-            gap: "0.25rem",
-          }}
+          className="grid grid-cols-[repeat(auto-fill,minmax(3rem,1fr))] gap-1 p-3"
         >
           {result.items.map((item: any, idx: number) => {
             let link = ""
@@ -298,40 +277,21 @@ export default function AeItemSelectDialog() {
             return (
               <div
                 key={`${item.id}-${item.damage || 0}-${idx}`}
-                className="hover-highlight ae__item-select-item-list-item"
-                style={{
-                  position: "relative",
-                  cursor: "pointer",
-                }}
+                className="hover-highlight relative cursor-pointer"
                 onClick={() => handleItemClick(item)}
               >
                 <img
                   src={`${picSource}/${link}`}
-                  style={{ height: "3rem" }}
+                  className="h-12"
                   alt=""
                 />
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: "1px",
-                    right: "1px",
-                    textAlign: "right",
-                    textShadow: "0px 0px 4px rgba(0,0,0,1)",
-                  }}
-                >
+                <div className="absolute bottom-[1px] right-[1px] text-right [text-shadow:0px_0px_4px_rgba(0,0,0,1)]">
                   {numberDisplayConvert(item.amount)}
                 </div>
                 {item.craftable && (
                   <mdui-icon
                     name="settings_suggest"
-                    style={{
-                      position: "absolute",
-                      top: "1px",
-                      right: "1px",
-                      fontSize: "18px",
-                      color: "rgb(var(--mdui-color-primary))",
-                      textShadow: "0px 0px 4px rgba(0,0,0,1)",
-                    }}
+                    className="absolute top-[1px] right-[1px] text-lg text-[rgb(var(--mdui-color-primary))] [text-shadow:0px_0px_4px_rgba(0,0,0,1)]"
                   ></mdui-icon>
                 )}
               </div>
@@ -339,31 +299,14 @@ export default function AeItemSelectDialog() {
           })}
 
           {result.hasMore && (
-            <div
-              style={{
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <div style={{ fontSize: "large", opacity: 0.75 }}>...</div>
+            <div className="relative flex items-center justify-center">
+              <div className="text-lg opacity-75">...</div>
             </div>
           )}
         </mdui-card>
       ) : (
-        <mdui-card
-          className="ae__item-select-item-list-nothing"
-          style={{ padding: "0.75rem" }}
-        >
-          <div
-            style={{
-              textAlign: "center",
-              opacity: 0.5,
-              marginTop: "0.75rem",
-              marginBottom: "0.75rem",
-            }}
-          >
+        <mdui-card className="p-3">
+          <div className="text-center opacity-50 my-3">
             没有找到符合条件的物品
           </div>
         </mdui-card>
@@ -372,8 +315,7 @@ export default function AeItemSelectDialog() {
       {/* Show more button */}
       {result.hasMore && (
         <mdui-chip
-          style={{ marginTop: "0.5rem", padding: "0.5rem", height: "auto" }}
-          className="ae__item-select-item-list-more-button"
+          className="mt-2 p-2 h-auto"
           elevated
           icon="keyboard_arrow_down"
           onClick={() =>
@@ -386,7 +328,7 @@ export default function AeItemSelectDialog() {
 
       <mdui-button
         id="ae__item-select-close"
-        style={{ marginTop: "1.5rem" }}
+        className="mt-6"
         variant="outlined"
         full-width
         onClick={handleClose}

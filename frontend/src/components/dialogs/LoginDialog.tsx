@@ -46,7 +46,7 @@ export default function LoginDialog() {
     >
       <div
         id="dialog-login-text"
-        style={{ opacity: 0.8, marginBottom: "1rem" }}
+        className="opacity-80 mb-4"
       >
         欢迎来到 ONi！请输入后端地址和令牌来登录。
       </div>
@@ -58,7 +58,7 @@ export default function LoginDialog() {
         clearable
         id="dialog-login-input-endpoint"
         label="后端地址"
-        style={{ marginBottom: "0.5rem" }}
+        className="mb-2"
         value={endpoint}
       ></mdui-text-field>
       <mdui-text-field

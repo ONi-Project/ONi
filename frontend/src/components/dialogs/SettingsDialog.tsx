@@ -20,7 +20,7 @@ export default function SettingsDialog() {
       <mdui-button
         variant="outlined"
         id="button-settings-discard"
-        style={{ marginTop: "1rem" }}
+        className="mt-4"
         onClick={() => { dialogRef.current!.open = false }}
       >
         取消

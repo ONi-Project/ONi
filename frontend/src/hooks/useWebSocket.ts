@@ -16,6 +16,8 @@ export function useWebSocket() {
     undefined
   )
   const mountedRef = useRef(false)
+  const reconnectNotifiedRef = useRef(false)
+  const reconnectSnackbarRef = useRef<ReturnType<typeof snackbar> | null>(null)
 
   const connect = useCallback(() => {
     const { endpoint, token } = useAuthStore.getState()
@@ -34,6 +36,13 @@ export function useWebSocket() {
       const { setConnected, setConnectedOnce } = useWebSocketStore.getState()
       setConnected(true)
       setConnectedOnce(true)
+      // Close the reconnection notification if still visible
+      if (reconnectSnackbarRef.current) {
+        reconnectSnackbarRef.current.open = false
+        reconnectSnackbarRef.current = null
+      }
+      // Reset reconnection flag so next disconnection shows notification again
+      reconnectNotifiedRef.current = false
       console.log("ws 连接成功")
       session.send(JSON.stringify(toServer("AuthRequest", { token })))
     }
@@ -43,11 +52,15 @@ export function useWebSocket() {
       setConnected(false)
 
       if (connectedOnce) {
-        snackbar({
-          message: "WebSocket 连接已断开，正在尝试重新连接...",
-          autoCloseDelay: 60000,
-          closeable: false,
-        })
+        // Only show notification once per disconnection cycle
+        if (!reconnectNotifiedRef.current) {
+          reconnectNotifiedRef.current = true
+          reconnectSnackbarRef.current = snackbar({
+            message: "WebSocket 连接已断开，正在尝试重新连接...",
+            autoCloseDelay: 60000,
+            closeable: false,
+          })
+        }
         reconnectTimerRef.current = setTimeout(() => {
           connect()
         }, 1000)

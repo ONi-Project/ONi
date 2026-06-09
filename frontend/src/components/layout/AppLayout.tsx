@@ -28,21 +28,15 @@ export default function AppLayout() {
     <>
       <TopBar />
 
-      <div
-        style={{
-          display: "flex",
-          width: "100dvw",
-          height: "calc(100dvh - 4rem)",
-        }}
-      >
+      <div className="flex w-screen h-[calc(100dvh-4rem)]">
         <NavRail />
 
         <div id="navrail-dim" />
 
-        <div style={{ overflow: "hidden", width: "100%" }}>
+        <div className="overflow-hidden w-full">
           <div
             id="main-content-area"
-            style={{ width: "100%", height: "100%", overflow: "auto" }}
+            className="w-full h-full overflow-auto"
           >
             <Routes>
               <Route path="/" element={<Navigate to="/overview" replace />} />

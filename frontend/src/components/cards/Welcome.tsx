@@ -1,15 +1,15 @@
 export default function WelcomeCard() {
   return (
     <mdui-card variant="filled" className="card">
-      <div className="card-welcome__card-content">
-        <div className="card-welcome__image-container">
+      <div className="flex flex-col h-full md:flex-row">
+        <div className="flex-1 flex justify-center items-center">
           <img
-            className="card-welcome__responsive-image"
+            className="max-h-[30rem] max-w-[30rem] object-contain w-full h-auto"
             src="resources/oni_large.png"
             alt="ONi Logo"
           />
         </div>
-        <div className="card-welcome__text-container">
+        <div className="flex-1 flex flex-col justify-center p-4">
           <div>
             <h1>欢迎使用 ONi！</h1>
             <p>
@@ -21,10 +21,10 @@ export default function WelcomeCard() {
             </p>
             <p>本卡片为示例卡片，主页支持自定义，详见其他标签页。</p>
           </div>
-          <div style={{ marginTop: "auto", width: "fit-content" }}>
+          <div className="mt-auto w-fit">
             <mdui-chip
               elevated
-              style={{ marginRight: "0.5rem" }}
+              className="mr-2"
               href="https://github.com/ONi-Project/ONi/"
               target="_blank"
             >
@@ -40,43 +40,6 @@ export default function WelcomeCard() {
           </div>
         </div>
       </div>
-
-      <style>{`
-        .card-welcome__card-content {
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-        }
-        .card-welcome__image-container {
-          flex: 1;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        .card-welcome__responsive-image {
-          max-height: 30rem;
-          max-width: 30rem;
-          object-fit: contain;
-          width: 100%;
-          height: auto;
-        }
-        .card-welcome__text-container {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          padding: 1rem;
-        }
-        @media (min-width: 550px) {
-          .card-welcome__card-content {
-            flex-direction: row;
-          }
-          .card-welcome__image-container,
-          .card-welcome__text-container {
-            flex: 1;
-          }
-        }
-      `}</style>
     </mdui-card>
   )
 }

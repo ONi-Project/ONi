@@ -81,47 +81,37 @@ export default function AeItemInfoDialog() {
       ref={dialogRef}
       close-on-overlay-click
       id="ae__item-info-dialog"
-      style={{ padding: "0 !important" }}
+      className="p-0!"
     >
-      <div
-        className="card-title"
-        style={{ display: "flex", alignItems: "center", marginBottom: "0.5rem" }}
-      >
-        <mdui-icon name="category" style={{ marginRight: "0.5rem" }}></mdui-icon>
+      <div className="card-title flex items-center mb-2">
+        <mdui-icon name="category" className="mr-2"></mdui-icon>
         <div>物品信息</div>
       </div>
 
       <mdui-card
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "0.5rem",
-          marginTop: "1rem",
-          padding: "1rem",
-          width: "20rem",
-        }}
+        className="flex items-center gap-2 mt-4 p-4 w-80"
       >
         <img
           id="ae__item-info-dialog-icon"
           src={iconSrc || "./resources/itempanel/item/2_0.png"}
-          style={{ height: "3rem" }}
+          className="h-12"
           alt=""
         />
         <div id="ae__item-info-dialog-display">{display}</div>
         <div
           id="ae__item-info-dialog-amount"
-          style={{ marginLeft: "auto", opacity: 0.5 }}
+          className="ml-auto opacity-50"
         >
           {amount}
         </div>
       </mdui-card>
 
-      <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem" }}>
+      <div className="flex gap-2 mt-4">
         <mdui-button
           full-width
           id="ae__item-info-dialog-close-button"
           variant="outlined"
-          style={{ flex: 1 }}
+          className="flex-1"
           onClick={() => { dialogRef.current!.open = false }}
         >
           关闭
@@ -129,7 +119,7 @@ export default function AeItemInfoDialog() {
         <mdui-button
           full-width
           id="ae__item-info-dialog-request-button"
-          style={{ flex: 4 }}
+          className="flex-[4]"
           disabled={!craftable}
           onClick={handleRequestOrder}
         >

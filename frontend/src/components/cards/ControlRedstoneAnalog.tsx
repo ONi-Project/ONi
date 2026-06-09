@@ -40,23 +40,17 @@ export default function ControlRedstoneAnalogCard({
   return (
     <mdui-card
       variant="filled"
-      className="card control-redstone-analog__card"
+      className="card"
     >
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <div style={{ fontSize: "x-large", fontWeight: "bold" }}>
+      <div className="flex items-center">
+        <div className="text-xl font-bold">
           {config.name}
         </div>
       </div>
 
-      <div style={{ opacity: 0.5 }}>{config.description}</div>
+      <div className="opacity-50">{config.description}</div>
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          marginTop: "0.5rem",
-        }}
-      >
+      <div className="flex items-center mt-2">
         <mdui-slider
           ref={sliderRef}
           tickmarks
@@ -64,7 +58,7 @@ export default function ControlRedstoneAnalogCard({
           value={sliderValue}
           onChange={handleChange}
         ></mdui-slider>
-        <div style={{ opacity: 0.25, marginLeft: "0.5rem" }}>
+        <div className="opacity-25 ml-2">
           {sliderValue}
         </div>
       </div>

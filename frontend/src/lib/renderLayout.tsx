@@ -1,13 +1,19 @@
 import type { ComponentType, ReactNode } from "react"
+import { motion } from "motion/react"
 import type { layoutModel } from "@oni/interface"
 import { cardRegistry } from "../components/cards"
 import { blockRegistry } from "../components/blocks"
+import { fadeIn, fadeInUp, staggerContainer } from "./animations"
 
 /**
  * DynamicLayout - Server-driven layout renderer (React version)
  *
  * Takes a layout JSON from the server and renders the appropriate
  * card/block components using component registries.
+ *
+ * Animation strategy:
+ * - grid-full: block-level fadeIn, no per-card animation
+ * - Other grids: block has no animation, cards stagger fadeInUp
  */
 interface DynamicLayoutProps {
   layout: layoutModel.Layout
@@ -22,6 +28,7 @@ export function DynamicLayout({ layout, animation = true }: DynamicLayoutProps) 
       return null
     }
 
+    const isGridFull = block.type === "grid-full"
     const children = block.content.map((item, itemIndex) => {
       if (item.type === "card") {
         const CardComponent = getCardComponent(item.id)
@@ -31,18 +38,19 @@ export function DynamicLayout({ layout, animation = true }: DynamicLayoutProps) 
         }
 
         const cardKey = `${blockIndex}-${itemIndex}`
-        const isGridFull = block.type === "grid-full"
+
         // grid-full: 块级 fadeIn, 内部卡片无独立动画
-        // 其他: 块无动画, 每张卡片 stagger fadeInUp
-        const cardAnim = animation && !isGridFull
-        const delay = cardAnim ? `${itemIndex * 0.03}s` : "0s"
+        // 其他: 卡片 stagger fadeInUp
+        if (animation && !isGridFull) {
+          return (
+            <motion.div key={cardKey} variants={fadeInUp}>
+              <CardComponent config={item.config} />
+            </motion.div>
+          )
+        }
 
         return (
-          <div
-            key={cardKey}
-            className={cardAnim ? "animate__animated animate__fadeInUp animate__faster" : ""}
-            style={cardAnim ? { animationDelay: delay } : undefined}
-          >
+          <div key={cardKey}>
             <CardComponent config={item.config} />
           </div>
         )
@@ -58,15 +66,37 @@ export function DynamicLayout({ layout, animation = true }: DynamicLayoutProps) 
 
     const blockKey = `block-${blockIndex}`
 
+    // grid-full: 整个 block 做 fadeIn 动画
+    if (animation && isGridFull) {
+      return (
+        <motion.div
+          key={blockKey}
+          variants={fadeIn}
+          initial="initial"
+          animate="animate"
+          transition={{ duration: 0.4 }}
+        >
+          <BlockComponent>{children}</BlockComponent>
+        </motion.div>
+      )
+    }
+
+    // 其他 grid: block 包裹 stagger 容器, 内部卡片依次 fadeInUp
+    if (animation) {
+      return (
+        <motion.div
+          key={blockKey}
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
+        >
+          <BlockComponent>{children}</BlockComponent>
+        </motion.div>
+      )
+    }
+
     return (
-      <div
-        key={blockKey}
-        className={
-          block.type === "grid-full" && animation
-            ? "animate__animated animate__fadeIn animate__faster"
-            : ""
-        }
-      >
+      <div key={blockKey}>
         <BlockComponent>{children}</BlockComponent>
       </div>
     )

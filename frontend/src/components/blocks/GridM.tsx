@@ -6,14 +6,7 @@ interface GridMProps {
 
 export default function GridM({ children }: GridMProps) {
   return (
-    <div
-      className="grid-m"
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(22rem, 1fr))",
-        gap: "1rem",
-      }}
-    >
+    <div className="grid-m grid-cols-[repeat(auto-fill,minmax(22rem,1fr))] gap-4">
       {children}
     </div>
   )

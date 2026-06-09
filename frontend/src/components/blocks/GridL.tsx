@@ -6,14 +6,7 @@ interface GridLProps {
 
 export default function GridL({ children }: GridLProps) {
   return (
-    <div
-      className="grid-l"
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(30rem, 1fr))",
-        gap: "1rem",
-      }}
-    >
+    <div className="grid-l grid-cols-[repeat(auto-fill,minmax(30rem,1fr))] gap-4">
       {children}
     </div>
   )

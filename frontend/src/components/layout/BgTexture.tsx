@@ -6,40 +6,21 @@ export default function BgTexture() {
   return (
     <div
       id="bg-texture"
-      style={{ opacity: connected ? 1 : 0.15, transition: "opacity 0.3s" }}
+      className="z-[-1]" 
+      style={{ opacity: connected ? 0.01 : 0.025 }}
     >
       <img
-        src="resources/texture_1.png"
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          zIndex: -1,
-          opacity: 0.08,
-          pointerEvents: "none",
-          userSelect: "none",
-        }}
-        hidden={!connected}
+        src="resources/texture_higan.png"
+        className="fixed top-0 left-0 w-full h-full object-cover -z-1 opacity-8 pointer-events-none select-none"
+        style={{ opacity: !connected ? 1 : 0, transition: "opacity 0.5s" }}
+        hidden={connected}
         alt=""
       />
       <img
-        src="resources/texture_higan.png"
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          zIndex: -1,
-          opacity: 0.08,
-          pointerEvents: "none",
-          userSelect: "none",
-        }}
-        hidden={connected}
+        src="resources/texture_1.png"
+        className="fixed top-0 left-0 w-full h-full object-cover -z-1 opacity-8 pointer-events-none select-none"
+        style={{ opacity: connected ? 0.5 : 0, transition: "opacity 0.5s" }}
+        hidden={!connected}
         alt=""
       />
     </div>

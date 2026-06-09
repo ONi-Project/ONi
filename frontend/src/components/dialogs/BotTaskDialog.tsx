@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react"
+import { useState, useRef, useCallback } from "react"
 import type { Dialog } from "mdui"
 import { useDataStore } from "../../stores/useDataStore"
 import { randomUUID } from "../../lib/utils"
@@ -162,49 +162,33 @@ export default function BotTaskDialog() {
       <mdui-dialog
         ref={dialog1Ref}
         id="bot__task-dialog-step1"
-        style={{ padding: "0 !important" }}
+        className="p-0!"
       >
-        <div
-          className="card-title"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "0.5rem",
-          }}
-        >
+        <div className="card-title flex items-center mb-2">
           <mdui-icon
             name="tips_and_updates"
-            style={{ marginRight: "0.5rem" }}
+            className="mr-2"
           ></mdui-icon>
           <div>Suika - 任务添加向导</div>
-          <div style={{ opacity: 0.5, marginLeft: "0.5rem" }}>(1/3)</div>
+          <div className="opacity-50 ml-2">(1/3)</div>
         </div>
 
-        <div style={{ opacity: 0.5 }}>请选择任务类型：</div>
+        <div className="opacity-50">请选择任务类型：</div>
 
-        <mdui-card
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            marginTop: "1rem",
-            padding: "1rem",
-            maxWidth: "100%",
-          }}
-        >
-          <mdui-list style={{ width: "100%", marginTop: "-0.5rem", marginBottom: "-0.5rem" }}>
+        <mdui-card className="flex items-center gap-2 mt-4 p-4 max-w-full">
+          <mdui-list className="w-full -mt-2 -mb-2">
             <mdui-collapse id="bot__task-dialog-step1-list" accordion>
               {botTask.map((task: any) => (
                 <mdui-collapse-item key={task.id} value={task.id}>
                   <mdui-list-item slot="header" icon={task.icon}>
                     <div>{task.id}</div>
-                    <div style={{ opacity: 0.5 }}>{task.description}</div>
+                    <div className="opacity-50">{task.description}</div>
                     <mdui-icon
                       slot="end-icon"
                       name="keyboard_arrow_down"
                     ></mdui-icon>
                   </mdui-list-item>
-                  <div style={{ marginLeft: "3rem" }}>
+                  <div className="ml-12">
                     {task.mode
                       .filter((mode: any) =>
                         mode.hidden && !showHidden ? false : true
@@ -220,7 +204,7 @@ export default function BotTaskDialog() {
                           }}
                         >
                           <div>{mode.id}</div>
-                          <div style={{ opacity: 0.5 }}>
+                          <div className="opacity-50">
                             {mode.description}
                           </div>
                           <mdui-icon
@@ -240,27 +224,20 @@ export default function BotTaskDialog() {
           </mdui-list>
         </mdui-card>
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            marginTop: "1rem",
-          }}
-        >
+        <div className="flex items-center gap-2 mt-4">
           <mdui-switch
             id="bot__task-dialog-step1-show-hidden-switch"
             checked={showHidden}
             onChange={() => setShowHidden(!showHidden)}
           ></mdui-switch>
-          <div style={{ opacity: 0.5 }}>显示隐藏的任务</div>
+          <div className="opacity-50">显示隐藏的任务</div>
         </div>
 
-        <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem" }}>
+        <div className="flex gap-2 mt-4">
           <mdui-button
             full-width
             variant="outlined"
-            style={{ flex: 1 }}
+            className="flex-1"
             onClick={() => {
               if (dialog1Ref.current) dialog1Ref.current.open = false
             }}
@@ -270,7 +247,7 @@ export default function BotTaskDialog() {
           <mdui-button
             full-width
             id="bot__task-dialog-step1-next-button"
-            style={{ flex: 4 }}
+            className="flex-[4]"
             disabled={!selectedTask}
             onClick={goToStep2}
           >
@@ -285,58 +262,37 @@ export default function BotTaskDialog() {
       <mdui-dialog
         ref={dialog2Ref}
         id="bot__task-dialog-step2"
-        style={{ padding: "0 !important" }}
+        className="p-0!"
       >
-        <div
-          className="card-title"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "0.5rem",
-          }}
-        >
+        <div className="card-title flex items-center mb-2">
           <mdui-icon
             name="tips_and_updates"
-            style={{ marginRight: "0.5rem" }}
+            className="mr-2"
           ></mdui-icon>
           <div>Suika - 任务添加向导</div>
-          <div style={{ opacity: 0.5, marginLeft: "0.5rem" }}>(2/3)</div>
+          <div className="opacity-50 ml-2">(2/3)</div>
         </div>
 
-        <div style={{ opacity: 0.5 }}>请填写任务参数：</div>
+        <div className="opacity-50">请填写任务参数：</div>
 
         {modeInfo && (
           <>
-            <mdui-card
-              style={{
-                marginTop: "1rem",
-                padding: "1rem",
-                maxWidth: "100%",
-                width: "40rem",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  marginBottom: "0.5rem",
-                }}
-              >
+            <mdui-card className="mt-4 p-4 max-w-full w-[40rem]">
+              <div className="flex items-center gap-2 mb-2">
                 <mdui-icon
                   id="bot__task-dialog-step2-icon"
                   name={modeInfo.task.icon || "grid_on"}
                 ></mdui-icon>
-                <div style={{ marginLeft: "0.25rem" }}>
+                <div className="ml-1">
                   <div
                     id="bot__task-dialog-step2-id"
-                    style={{ fontWeight: "bold" }}
+                    className="font-bold"
                   >
                     {selectedTask}
                   </div>
                   <div
                     id="bot__task-dialog-step2-description"
-                    style={{ opacity: 0.5, fontSize: "small" }}
+                    className="opacity-50 text-sm"
                   >
                     {modeInfo.mode.description}
                   </div>
@@ -345,43 +301,29 @@ export default function BotTaskDialog() {
 
               <mdui-list
                 id="bot__task-dialog-step2-config-list"
-                style={{
-                  marginTop: "-1rem",
-                  marginBottom: "-0.5rem",
-                  padding: "0.5rem",
-                }}
+                className="-mt-4 -mb-2 p-2"
               >
                 {modeInfo.mode.config?.length > 0 ? (
                   modeInfo.mode.config.map((cfg: any) => (
                     <div
                       key={cfg.id}
-                      style={{
-                        display: "flex",
-                        marginTop: "1rem",
-                        alignItems: "center",
-                      }}
+                      className="flex mt-4 items-center"
                     >
                       <div>
                         <div>
                           {cfg.id}
-                          <span
-                            style={{
-                              marginLeft: "0.5rem",
-                              opacity: 0.5,
-                              fontSize: "small",
-                            }}
-                          >
+                          <span className="ml-2 opacity-50 text-sm">
                             {cfg.type}
                             {!cfg.required ? "?" : ""}
                           </span>
                         </div>
-                        <div style={{ opacity: 0.5, fontSize: "small" }}>
+                        <div className="opacity-50 text-sm">
                           {cfg.description}
                         </div>
                       </div>
                       {cfg.type === "boolean" ? (
                         <mdui-switch
-                          style={{ marginLeft: "auto" }}
+                          className="ml-auto"
                           checked={configValues[cfg.id] ?? true}
                           onChange={(e: any) =>
                             setConfigValues((prev) => ({
@@ -394,7 +336,7 @@ export default function BotTaskDialog() {
                         cfg.type === "aeUuid" ? (
                         <mdui-select
                           end-icon="keyboard_arrow_down"
-                          style={{ marginLeft: "auto", width: "10rem" }}
+                          className="ml-auto w-40"
                           variant="outlined"
                           value={configValues[cfg.id] || ""}
                           onChange={(e: any) =>
@@ -413,7 +355,7 @@ export default function BotTaskDialog() {
                         </mdui-select>
                       ) : (
                         <mdui-text-field
-                          style={{ marginLeft: "auto", width: "10rem" }}
+                          className="ml-auto w-40"
                           type={cfg.type === "number" ? "number" : "text"}
                           variant="outlined"
                           clearable
@@ -432,39 +374,19 @@ export default function BotTaskDialog() {
                     </div>
                   ))
                 ) : (
-                  <div
-                    style={{
-                      marginTop: "1rem",
-                      opacity: 0.5,
-                      textAlign: "center",
-                    }}
-                  >
+                  <div className="mt-4 opacity-50 text-center">
                     此模式无配置项
                   </div>
                 )}
               </mdui-list>
             </mdui-card>
 
-            <mdui-card
-              style={{
-                marginTop: "1rem",
-                padding: "1rem",
-                maxWidth: "100%",
-                width: "40rem",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  marginBottom: "0.5rem",
-                }}
-              >
+            <mdui-card className="mt-4 p-4 max-w-full w-[40rem]">
+              <div className="flex items-center gap-2 mb-2">
                 <mdui-icon name="public"></mdui-icon>
-                <div style={{ marginLeft: "0.25rem" }}>
-                  <div style={{ fontWeight: "bold" }}>global</div>
-                  <div style={{ opacity: 0.5, fontSize: "small" }}>
+                <div className="ml-1">
+                  <div className="font-bold">global</div>
+                  <div className="opacity-50 text-sm">
                     全局配置
                   </div>
                 </div>
@@ -472,38 +394,22 @@ export default function BotTaskDialog() {
 
               <mdui-list
                 id="bot__task-dialog-step2-global-config-list"
-                style={{
-                  marginTop: "-1rem",
-                  marginBottom: "-0.5rem",
-                  padding: "0.5rem",
-                }}
+                className="-mt-4 -mb-2 p-2"
               >
-                <div
-                  style={{
-                    display: "flex",
-                    marginTop: "1rem",
-                    alignItems: "center",
-                  }}
-                >
+                <div className="flex mt-4 items-center">
                   <div>
                     <div>
                       interval
-                      <span
-                        style={{
-                          marginLeft: "0.5rem",
-                          opacity: 0.5,
-                          fontSize: "small",
-                        }}
-                      >
+                      <span className="ml-2 opacity-50 text-sm">
                         number
                       </span>
                     </div>
-                    <div style={{ opacity: 0.5, fontSize: "small" }}>
+                    <div className="opacity-50 text-sm">
                       任务执行的间隔时间，单位为秒。
                     </div>
                   </div>
                   <mdui-text-field
-                    style={{ marginLeft: "auto", width: "10rem" }}
+                    className="ml-auto w-40"
                     type="number"
                     variant="outlined"
                     clearable
@@ -521,12 +427,12 @@ export default function BotTaskDialog() {
           </>
         )}
 
-        <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem" }}>
+        <div className="flex gap-2 mt-4">
           <mdui-button
             full-width
             id="bot__task-dialog-step2-back-button"
             variant="outlined"
-            style={{ flex: 1 }}
+            className="flex-1"
             onClick={goBackToStep1}
           >
             上一步
@@ -534,7 +440,7 @@ export default function BotTaskDialog() {
           <mdui-button
             full-width
             id="bot__task-dialog-step2-next-button"
-            style={{ flex: 4 }}
+            className="flex-[4]"
             onClick={goToStep3}
           >
             下一步
@@ -546,50 +452,36 @@ export default function BotTaskDialog() {
       <mdui-dialog
         ref={dialog3Ref}
         id="bot__task-dialog-step3"
-        style={{ padding: "0 !important" }}
+        className="p-0!"
       >
-        <div
-          className="card-title"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "0.5rem",
-          }}
-        >
+        <div className="card-title flex items-center mb-2">
           <mdui-icon
             name="tips_and_updates"
-            style={{ marginRight: "0.5rem" }}
+            className="mr-2"
           ></mdui-icon>
           <div>Suika - 任务添加向导</div>
-          <div style={{ opacity: 0.5, marginLeft: "0.5rem" }}>(3/3)</div>
+          <div className="opacity-50 ml-2">(3/3)</div>
         </div>
 
-        <div style={{ opacity: 0.5 }}>
+        <div className="opacity-50">
           请确认添加的任务正确无误：
         </div>
 
-        <mdui-card
-          style={{
-            marginTop: "1rem",
-            padding: "1rem",
-            maxWidth: "100%",
-            width: "40rem",
-          }}
-        >
+        <mdui-card className="mt-4 p-4 max-w-full w-[40rem]">
           <pre
             id="bot__task-dialog-step3-preview"
-            style={{ fontFamily: "Noto Sans Mono" }}
+            className="font-[Noto_Sans_Mono]"
           >
             {output ? JSON.stringify(output, null, 4) : ""}
           </pre>
         </mdui-card>
 
-        <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem" }}>
+        <div className="flex gap-2 mt-4">
           <mdui-button
             full-width
             id="bot__task-dialog-step3-back-button"
             variant="outlined"
-            style={{ flex: 1 }}
+            className="flex-1"
             onClick={goBackToStep2}
           >
             上一步
@@ -597,7 +489,7 @@ export default function BotTaskDialog() {
           <mdui-button
             full-width
             id="bot__task-dialog-step3-next-button"
-            style={{ flex: 4 }}
+            className="flex-[4]"
             onClick={confirmAddTask}
           >
             添加任务到 Suika

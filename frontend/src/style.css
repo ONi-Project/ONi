@@ -1,3 +1,7 @@
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/utilities" layer(utilities);
+
+
 .panel-content {
   margin: 0.5rem;
 }
@@ -73,9 +77,9 @@
   gap: 0.25rem;
 }
 
-mdui-card[variant="filled"] {
+/* mdui-card[variant="filled"] {
   background-color: rgba(var(--mdui-color-surface-container-highest), 0.75);
-}
+} */
 
 .card-title {
   font-size: larger;
@@ -83,11 +87,6 @@ mdui-card[variant="filled"] {
   display: flex;
   align-items: center;
   vertical-align: middle;
-}
-
-/* 样式覆盖 */
-.animate__animated.animate__faster {
-  animation-duration: 0.4s;
 }
 
 .hover-highlight {
@@ -100,22 +99,7 @@ mdui-card[variant="filled"] {
 }
 
 
-#bg-texture {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 120%;
-  height: 120%;
-  z-index: -3;
-  opacity: 0.01;
-  mix-blend-mode: lighten;
-}
 
-#bg-texture img {
-  object-fit: cover;
-  width: 120%;
-  height: 120%;
-}
 
 mdui-top-app-bar:not([shrink]) {
   background: linear-gradient(to bottom, rgba(var(--mdui-color-surface-container)), rgba(0, 0, 0, 0));
@@ -153,25 +137,6 @@ mdui-top-app-bar:not([shrink]) {
   overflow: hidden;
 }
 
-#navi-drawer {
-  transition: min-width 0.25s, width 0.25s, left 0.25s;
-  height: calc(100dvh - 4rem - 6px);
-  padding-top: 6px;
-  padding-left: 6px;
-  padding-right: 6px;
-  min-width: 56px;
-  width: 56px;
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  /* background-color: rgb(var(--mdui-color-surface-container-low)); */
-}
-
-/* #navrail-area mdui-list-item {
-  --shape-corner-rounded: 0.75rem;
-} */
-
 #navi-drawer-bg {
   position: absolute;
   bottom: -80px;
@@ -195,9 +160,9 @@ mdui-top-app-bar:not([shrink]) {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
-  transition: backdrop-filter 0.25s, opacity 0.25s;
+  background-color: rgba(var(--mdui-color-surface-container), 0.55);
+  backdrop-filter: blur(20px);
+  transition: backdrop-filter 0.25s, opacity 0.25s, background-color 0.25s;
   z-index: 10;
   opacity: 0;
   pointer-events: none;
